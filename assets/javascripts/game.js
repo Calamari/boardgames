@@ -82,27 +82,29 @@
       if (this._board[from.y][from.x] === this.thisPlayerNr &&
           !this._board[to.y][to.x]) {
         var distance = getDistance(from, to);
-        if (distance === 1) {
-          this._move(from, to);
-        } else if (distance === 2) {
-          this._jump(from, to);
+        if (distance === 1 || distance === 2) {
+          if (distance === 1) {
+            this._move(from, to);
+          } else {
+            this._jump(from, to);
+          }
+          this._captureEnemies(to.x, to.y);
+          this.nextPlayer();
         }
       }
     },
     _move: function(from, to) {
-      this._logger.log('Move piece');
+      this._logger.log('Moved piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
       ++this._countPieces;
       if (this._countPieces === BOARDSIZE * BOARDSIZE) {
         this._gameEnded();
       }
-      this._captureEnemies(to.x, to.y);
     },
     _jump: function(from, to) {
-      this._logger.log('Jump with piece');
+      this._logger.log('Jumped piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
       this._board[from.y][from.x] = null;
-      this._captureEnemies(to.x, to.y);
     },
     _captureEnemies: function(x, y) {
       var xi, yi;
@@ -114,6 +116,9 @@
         }
       }
 
+    },
+    nextPlayer: function() {
+      this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;
     },
     _gameEnded: function() {
       this._logger.log('Game ended');
@@ -148,7 +153,7 @@
         this._drawSelection(context, this._selected.x, this._selected.y);
         this._drawMoveArea(context, this._selected.x, this._selected.y);
       }
-      if (this._hovered) {
+      if (this._hovered && this.isTurn()) {
         this._drawHover(context, this._hovered.x, this._hovered.y);
       }
     },
