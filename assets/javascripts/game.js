@@ -1,7 +1,7 @@
 
 (function(win, doc, Canvas) {
   "use strict";
-  var BOARDSIZE = 10,
+  var BOARDSIZE = 8,
 
       Game = function(canvasId, config) {
         this._config = config;
@@ -33,9 +33,9 @@
         }
       }
       this._board[0][0] = 1;
-      this._board[9][0] = 1;
-      this._board[0][9] = 2;
-      this._board[9][9] = 2;
+      this._board[BOARDSIZE-1][0] = 1;
+      this._board[0][BOARDSIZE-1] = 2;
+      this._board[BOARDSIZE-1][BOARDSIZE-1] = 2;
     },
     _setupObservers: function(canvasId) {
       var self = this;
@@ -150,7 +150,7 @@
       var cellWidth = this._config.cellWidth,
           tileWidth = cellWidth - 4;
       if (player == 1) {
-        context.strokeRect(x * cellWidth + 2, y * cellWidth + 2, tileWidth, tileWidth);
+        context.strokeRect(x * cellWidth + 3, y * cellWidth + 3, tileWidth-2, tileWidth-2);
       } else {
         context.fillRect(x * cellWidth + 2, y * cellWidth + 2, tileWidth, tileWidth);
       }
