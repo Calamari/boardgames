@@ -18,8 +18,7 @@
   <script src="/javascripts/game.js"></script>
   <script src="/javascripts/chat.js"></script>
   <script>
-    var socket = io.connect('http://localhost:8124'),
-        chat   = new Chat('#chat', socket),
+    var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat')),
         logger = (function() {
           return {
             log: function(text) {
@@ -30,15 +29,10 @@
 
     new Game('canvas', {
       cellWidth: 40,
-      socket: socket,
+      socket: io.connect('http://localhost:8124/game'),
       thisPlayerNr: 1,
       actualPlayer: 1,
       logger: logger
-    });
-
-    socket.on('news', function (data) {
-      console.log(data);
-      socket.emit('my other event', { my: 'data' });
     });
   </script>
 </body>
