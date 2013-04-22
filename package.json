@@ -1,0 +1,20 @@
+{
+  "author": "Georg Tavonius <g.tavonius@gmail.com> (http://jaz-lounge.com)",
+  "name": "multiplication",
+  "description": "A 2 player game where to win with having the most tiles at the end.",
+  "version": "0.0.1",
+  "engines": {
+    "node": "~0.8"
+  },
+  "dependencies": {
+    "socket.io": "0.9.x",
+    "connect": "2.7.x",
+    "dispatch": "0.2.x",
+    "quip": "0.x",
+    "handlebars": "1.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  }
+}
