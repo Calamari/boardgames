@@ -1,5 +1,4 @@
 body {
-
 }
 
 p {
@@ -9,12 +8,17 @@ p {
 }
 
 #canvas {
-  float: left;
+  display: inline-block;
 }
 
 #chat {
-  float: left;
+  display: inline-block;
   margin-left: 20px;
+  padding-bottom: 20px;
+  position: relative;
+  vertical-align: top;
+  height: 95%;
+  width: 400px;
 }
 
 #chat .system {
@@ -31,4 +35,18 @@ p {
 
 #chat .someone {
   color: #333;
+}
+
+#chat .content {
+  position: absolute;
+  top: 0;
+  bottom: 22px;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+#chat input {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
