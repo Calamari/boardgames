@@ -38,6 +38,7 @@
       this._board[BOARDSIZE-1][0] = 1;
       this._board[0][BOARDSIZE-1] = 2;
       this._board[BOARDSIZE-1][BOARDSIZE-1] = 2;
+      this._countPieces = 4;
     },
     _initGame: function() {
       if (this.actualPlayer === this.thisPlayerNr) {
@@ -91,11 +92,31 @@
     _move: function(from, to) {
       this._logger.log('Move piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
+      ++this._countPieces;
+      if (this._countPieces === BOARDSIZE * BOARDSIZE) {
+        this._gameEnded();
+      }
+      this._captureEnemies(to.x, to.y);
     },
     _jump: function(from, to) {
       this._logger.log('Jump with piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
       this._board[from.y][from.x] = null;
+      this._captureEnemies(to.x, to.y);
+    },
+    _captureEnemies: function(x, y) {
+      var xi, yi;
+      for (xi=-1; xi<=1; ++xi) {
+        for (yi=-1; yi<=1; ++yi) {
+          if (this._board[yi+y] && this._board[yi+y][xi+x]) {
+            this._board[yi+y][xi+x] = this.thisPlayerNr;
+          }
+        }
+      }
+
+    },
+    _gameEnded: function() {
+      this._logger.log('Game ended');
     },
     _selectTile: function(point) {
       this._selected = point;
