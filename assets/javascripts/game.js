@@ -6,9 +6,11 @@
       Game = function(canvasId, config) {
         this._config = config;
         this._socket = config.socket;
+        this._logger = config.logger;
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
         this._initBoard();
+        this._initGame();
         this._createCanvas(canvasId, config);
         this._setupObservers(canvasId);
       };
@@ -36,6 +38,13 @@
       this._board[BOARDSIZE-1][0] = 1;
       this._board[0][BOARDSIZE-1] = 2;
       this._board[BOARDSIZE-1][BOARDSIZE-1] = 2;
+    },
+    _initGame: function() {
+      if (this.actualPlayer === this.thisPlayerNr) {
+        this._logger.log('Game started. It\'s your turn.');
+      } else {
+        this._logger.log('Game started. The other player plays first.');
+      }
     },
     _setupObservers: function(canvasId) {
       var self = this;
@@ -73,18 +82,18 @@
           !this._board[to.y][to.x]) {
         var distance = getDistance(from, to);
         if (distance === 1) {
-          console.log("move");
           this._move(from, to);
         } else if (distance === 2) {
-          console.log("jump");
           this._jump(from, to);
         }
       }
     },
     _move: function(from, to) {
+      this._logger.log('Move piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
     },
     _jump: function(from, to) {
+      this._logger.log('Jump with piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
       this._board[from.y][from.x] = null;
     },

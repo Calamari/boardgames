@@ -2,5 +2,33 @@ body {
 
 }
 
+p {
+  font-size: 16px;
+  line-height: 1.45em;
+  margin: 0;
+}
+
 #canvas {
+  float: left;
+}
+
+#chat {
+  float: left;
+  margin-left: 20px;
+}
+
+#chat .system {
+  color: #999;
+}
+
+#chat .you {
+  color: #090;
+}
+
+#chat .enemy {
+  color: #900;
+}
+
+#chat .someone {
+  color: #333;
 }
