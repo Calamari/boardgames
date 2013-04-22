@@ -13,6 +13,16 @@
         this._setupObservers(canvasId);
       };
 
+  function getDistance(from, to) {
+    if (from === to) {
+      console.log("TOO");
+      return 0;
+    }
+    var xDistance = Math.abs(Math.abs(from.x) - Math.abs(to.x)),
+        yDistance = Math.abs(Math.abs(from.y) - Math.abs(to.y));
+    return Math.max(xDistance, yDistance);
+  }
+
   Game.prototype = {
     _initBoard: function() {
       this._board = [];
@@ -48,7 +58,7 @@
       if (this.isTurn()) {
         if (this._selected) {
           if (this._selected != point) {
-            this._move(this._selected, point);
+            this.move(this._selected, point);
           }
           this._selected = null;
         } else {
@@ -58,8 +68,25 @@
         }
       }
     },
+    move: function(from, to) {
+      if (this._board[from.y][from.x] === this.thisPlayerNr &&
+          !this._board[to.y][to.x]) {
+        var distance = getDistance(from, to);
+        if (distance === 1) {
+          console.log("move");
+          this._move(from, to);
+        } else if (distance === 2) {
+          console.log("jump");
+          this._jump(from, to);
+        }
+      }
+    },
     _move: function(from, to) {
-console.log("move");
+      this._board[to.y][to.x] = this._board[from.y][from.x];
+    },
+    _jump: function(from, to) {
+      this._board[to.y][to.x] = this._board[from.y][from.x];
+      this._board[from.y][from.x] = null;
     },
     _selectTile: function(point) {
       this._selected = point;
