@@ -15,7 +15,12 @@
   <script>
     var socket = io.connect('http://localhost:8124');
 
-    new Game('canvas', { cellWidth: 40, socket: socket });
+    new Game('canvas', {
+      cellWidth: 40,
+      socket: socket,
+      thisPlayerNr: 1,
+      actualPlayer: 1
+    });
 
     socket.on('news', function (data) {
       console.log(data);
