@@ -1,7 +1,7 @@
 
 module.exports = function(app) {
   var io = require('socket.io').listen(app),
-      participants = { _free: [] };
+      participants = {};
 
   function addToChannel(socket, channel) {
     if (!participants[channel]) {
@@ -23,7 +23,7 @@ module.exports = function(app) {
   }
 
   var chat = io
-    .of('/game')
+    .of('/chat')
     .on('connection', function (socket) {
       socket.on('to channel', function(data) {
         var channel = data.channel;
@@ -41,7 +41,9 @@ module.exports = function(app) {
         if (data.channel) {
           if (participants[data.channel]) {
             participants[data.channel].map(function(s) {
-              s.emit('message', data);
+              if (s !== socket) {
+                s.emit('message', data);
+              }
             });
           }
         } else {

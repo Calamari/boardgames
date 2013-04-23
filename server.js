@@ -15,6 +15,6 @@ var connect = require('connect'),
 
 
 server.listen(8124);
-require(__dirname + '/game_controller.js')(server);
+require(__dirname + '/chat_controller.js')(server);
 
 console.log("server started on http://127.0.0.1:8124");
