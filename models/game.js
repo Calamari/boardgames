@@ -28,6 +28,14 @@ gameSchema.methods.addPlayer = function(playerName) {
   }
 };
 
+gameSchema.methods.startGame = function() {
+  var definition = GameTypes.get(this.type);
+  if (this.players.length < definition.minPlayers) {
+    return new Error('NOT_ENOUGH_PLAYERS');
+  }
+  this.board = definition.newBoard(this);
+};
+
 var Game = mongoose.model('Game', gameSchema);
 
 module.exports = Game;

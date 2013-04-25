@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
+    sinon    = require('sinon'),
 
-    Game = require('../../models/game');
+    Game      = require('../../models/game'),
+    GameTypes = require('../../models/game_types');
 
 describe('Game', function() {
 
@@ -43,6 +45,43 @@ describe('Game', function() {
     it('has set an empty board', function(done) {
       game.board.should.eql({});
       done();
+    });
+  });
+
+  describe('#startGame', function() {
+    var game,
+        testGameDef = {
+          minPlayers: 2,
+          maxPlayers: 2,
+          newBoard: function() {
+            return { foo: 42 };
+          }
+        },
+        orig;
+    beforeEach(function() {
+      orig = GameTypes.get;
+      sinon.spy(testGameDef, 'newBoard');
+      GameTypes.get = function() { return testGameDef; };
+      game = new Game({ type: 'TestGame' });
+    });
+
+    afterEach(function() {
+      GameTypes.get = orig;
+      testGameDef.newBoard.restore();
+    });
+
+    it('returns error if not enough players', function() {
+      var err = game.startGame();
+      err.message.should.eql('NOT_ENOUGH_PLAYERS');
+    });
+
+    it('calls GameTypes.newBoard to get the initial board', function() {
+      game.addPlayer('alf');
+      game.addPlayer('ralf');
+      game.startGame();
+      testGameDef.newBoard.calledOnce.should.eql(true);
+      testGameDef.newBoard.calledWith(game).should.eql(true);
+      game.board.should.eql({ foo: 42 });
     });
   });
 
