@@ -11,7 +11,9 @@
     "connect": "2.7.x",
     "dispatch": "0.2.x",
     "quip": "0.x",
-    "handlebars": "1.x"
+    "handlebars": "1.x",
+    "mongoose": "3.x",
+    "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git"
   },
   "devDependencies": {
     "mocha": "*",
