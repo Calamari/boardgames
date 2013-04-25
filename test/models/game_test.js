@@ -73,15 +73,73 @@ describe('Game', function() {
     it('returns error if not enough players', function() {
       var err = game.startGame();
       err.message.should.eql('NOT_ENOUGH_PLAYERS');
+      game.started.should.eql(false);
     });
 
-    it('calls GameTypes.newBoard to get the initial board', function() {
-      game.addPlayer('alf');
-      game.addPlayer('ralf');
+
+    describe('when having enough players', function() {
+      beforeEach(function() {
+        game.addPlayer('alf');
+        game.addPlayer('ralf');
+      });
+
+      it('calls GameTypes.newBoard to get the initial board', function() {
+        game.startGame();
+        testGameDef.newBoard.calledOnce.should.eql(true);
+        testGameDef.newBoard.calledWith(game).should.eql(true);
+        game.board.should.eql({ foo: 42 });
+      });
+
+      it('sets started property of game to true', function() {
+        game.started.should.eql(false);
+        game.startGame();
+        game.started.should.eql(true);
+      });
+
+      it('sets actualPlayer to the first one', function() {
+        game.startGame();
+        game.actualPlayer.should.eql(1);
+      });
+    });
+  });
+
+  describe('#getPlayerPosition', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
+    });
+
+    it('returns number of player starting at 1', function() {
+      game.getPlayerPosition('jon').should.equal(1);
+      game.getPlayerPosition('john').should.equal(2);
+    });
+
+    it('returns false if not found', function() {
+      game.getPlayerPosition('babe').should.equal(false);
+    });
+  });
+
+  describe('#isPlayersTurn', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
       game.startGame();
-      testGameDef.newBoard.calledOnce.should.eql(true);
-      testGameDef.newBoard.calledWith(game).should.eql(true);
-      game.board.should.eql({ foo: 42 });
+    });
+
+    it('works with user names', function() {
+      game.isPlayersTurn('jon').should.equal(true);
+      game.isPlayersTurn('johnny').should.equal(false);
+      game.isPlayersTurn('john').should.equal(false);
+    });
+
+    it('works with user player position', function() {
+      game.isPlayersTurn(1).should.equal(true);
+      game.isPlayersTurn(0).should.equal(false);
+      game.isPlayersTurn(2).should.equal(false);
     });
   });
 

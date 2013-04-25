@@ -11,6 +11,8 @@ var gameSchema = mongoose.Schema({
     players: { 'type': [String] },
     board: { 'type': Mixed, 'default': {} },
     type: { 'type': String, 'required': true },
+    started: { 'type': Boolean, 'default': false },
+    actualPlayer: { 'type': Number },
     log: { 'type': [String] },
     createdAt: { 'type': Date, 'default': Date.now }
 });
@@ -34,6 +36,18 @@ gameSchema.methods.startGame = function() {
     return new Error('NOT_ENOUGH_PLAYERS');
   }
   this.board = definition.newBoard(this);
+  this.started = true;
+  this.actualPlayer = 1;
+};
+
+gameSchema.methods.getPlayerPosition = function(playerName) {
+  var index = this.players.indexOf(playerName);
+  return index === -1 ? false : index+1;
+};
+
+gameSchema.methods.isPlayersTurn = function(player) {
+  var index = typeof player === 'string' ? this.players.indexOf(player)+1 : player;
+  return index === this.actualPlayer ? true : false;
 };
 
 var Game = mongoose.model('Game', gameSchema);
