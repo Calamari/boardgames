@@ -2,9 +2,7 @@
 "use strict";
 
 var Games = {
-  'Multiplication': {
-    maxPlayers: 2
-  }
+  'Multiplication': require('./games/multiplication')
 };
 
 var GameTypes = (function() {
