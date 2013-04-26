@@ -1,0 +1,19 @@
+<html>
+<head>
+  <title>Login into games, games, games, …</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+<body>
+  <h1>Login</h1>
+
+  {{#if error}}
+    <p>ERROR: {{error}}</p>
+  {{/if}}
+
+  <form method="post" action="/login">
+    <input type="text" name="username">
+    <button type="submit">login</button>
+  </form>
+</body>
+</html>

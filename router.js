@@ -1,6 +1,9 @@
 var Handlebars = require('handlebars'),
     fs         = require('fs'),
-    dispatch   = require('dispatch');
+    dispatch   = require('dispatch'),
+    async      = require('async'),
+
+    undef;
 
 // TODO: this could be exportet in an node module:
 var templates = [];
@@ -18,12 +21,49 @@ fs.readdirSync(__dirname + '/views').forEach(function(file) {
   });
 });
 
+function redirectIfLogin(req, res, next) {
+  if (req.session.username) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+// allows to create a function with some before filters
+function Action(filters, cb) {
+  if (cb === undef) {
+    cb = filters;
+    filters = [];
+  }
+
+  return function(req, res, next) {
+    async.applyEach(filters, req, res, function() {
+      cb(req, res, next);
+    });
+  };
+}
+
 module.exports = dispatch({
-  '/': function(req, res, next) {
+  '/': new Action([redirectIfLogin], function(req, res, next) {
     res.html(templates.index({
       openGames: [],
       waitingGames: [],
       channel: '_free'
     }));
+  }),
+  '/login': {
+    GET: new Action(function(req, res, next) {
+      res.html(templates.login({}));
+    }),
+    POST: new Action(function(req, res, next) {
+      var username = req.body.username.trim();
+
+      if (username) {
+        req.session.username = username;
+        res.redirect('/');
+      } else {
+        res.html(templates.login({ error: 'Enter a name!' }));
+      }
+    })
   }
 });
