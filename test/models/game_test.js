@@ -143,6 +143,24 @@ describe('Game', function() {
     });
   });
 
+  describe('#nextTurn', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
+      game.startGame();
+    });
+
+    it('works as expected', function() {
+      game.actualPlayer.should.eql(1);
+      game.nextTurn();
+      game.actualPlayer.should.eql(2);
+      game.nextTurn();
+      game.actualPlayer.should.eql(1);
+    });
+  });
+
   describe('#addPlayer', function() {
     var game;
     beforeEach(function(done) {

@@ -50,6 +50,13 @@ gameSchema.methods.isPlayersTurn = function(player) {
   return index === this.actualPlayer ? true : false;
 };
 
+gameSchema.methods.nextTurn = function(player) {
+  ++this.actualPlayer;
+  if (this.actualPlayer > GameTypes.get(this.type).maxPlayers) {
+    this.actualPlayer = 1;
+  }
+};
+
 var Game = mongoose.model('Game', gameSchema);
 
 module.exports = Game;
