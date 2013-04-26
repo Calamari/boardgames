@@ -20,7 +20,10 @@ fs.readdirSync(__dirname + '/views').forEach(function(file) {
 
 module.exports = dispatch({
   '/': function(req, res, next) {
-    console.log(req.query);
-    res.html(templates.index({ channel: req.query.game || '_free' }));
+    res.html(templates.index({
+      openGames: [],
+      waitingGames: [],
+      channel: '_free'
+    }));
   }
 });
