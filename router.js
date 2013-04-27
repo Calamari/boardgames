@@ -51,6 +51,18 @@ function gamesOfPlayer(req, res, next) {
   });
 }
 
+function loadGameOr404(req, res, next, id) {
+  var Game = mongoose.model('Game');
+  Game.findById(id, function(err, game) {
+    if (err) {
+      res.notFound('404');
+    } else {
+      req.game = game;
+      next();
+    }
+  });
+}
+
 // allows to create a function with some before filters
 function Action(filters, cb) {
   if (cb === undef) {
@@ -59,7 +71,7 @@ function Action(filters, cb) {
   }
 
   return function(req, res, next) {
-    var args = arguments;
+    var args           = arguments;
     async.applyEach(filters, req, res, function() {
       cb.apply(this, args);
     });
@@ -79,14 +91,27 @@ module.exports = dispatch({
   }),
   '/game': {
     '/:id': new Action([redirectIfLogin], function(req, res, next, id) {
-      var Game = mongoose.model('Game');
-      Game.findById(id, function(err, game) {
-        if (err) {
-          res.notFound();
+      loadGameOr404(req, res, function() {
+        res.html('TODO '+ req.game);
+      }, id);
+    }),
+    '/:id/join': new Action([redirectIfLogin], function(req, res, next, id) {
+      loadGameOr404(req, res, function() {
+        if (req.game.canJoin(req.session.username)) {
+          req.game.addPlayer(req.session.username);
+          if (req.game.isReady()) {
+            req.game.startGame();
+            // TODO: send socket message
+          }
+          req.game.save(function(err) {
+            if (err) { req.flash('error', 'You can not join this game.') };
+            res.redirect('/game/' + req.game.id);
+          });
         } else {
-          res.html('TODO');
+          req.flash('error', 'You can not join this game.');
+          res.redirect('/game/' + req.game.id);
         }
-      });
+      }, id);
     }),
     '/:type/new': new Action([redirectIfLogin], function(req, res, next, type) {
       var Game = mongoose.model('Game'),
