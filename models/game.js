@@ -57,6 +57,20 @@ gameSchema.methods.nextTurn = function(player) {
   }
 };
 
+//TODO: tests
+gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
+  this.find({ players: { $ne: username }, started: false }, function(err, games) {
+    console.log("GAMES", err, games);
+    if (err) {
+      cb(err);
+    } else {
+      cb(null, games.filter(function(game) {
+        return game.players.length < GameTypes.get(game.type).maxPlayers;
+      }));
+    }
+  });
+};
+
 var Game = mongoose.model('Game', gameSchema);
 
 module.exports = Game;

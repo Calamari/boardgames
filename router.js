@@ -30,6 +30,27 @@ function redirectIfLogin(req, res, next) {
   }
 }
 
+function gamesOfPlayer(req, res, next) {
+  var Game = mongoose.model('Game'),
+      username = req.session.username;
+  Game.find({ 'players': username }, function(err, games) {
+    if (!err) {
+      req.runningGames = games.filter(function(game) {
+        return game.started;
+      });
+      req.waitingGames = games.filter(function(game) {
+        return !game.started;
+      });
+    }
+    Game.findWherePlayerCanJoin(username, function(err, games) {
+      if (!err) {
+        req.openGames = games;
+      }
+      next();
+    });
+  });
+}
+
 // allows to create a function with some before filters
 function Action(filters, cb) {
   if (cb === undef) {
@@ -46,12 +67,13 @@ function Action(filters, cb) {
 }
 
 module.exports = dispatch({
-  '/': new Action([redirectIfLogin], function(req, res, next) {
+  '/': new Action([redirectIfLogin, gamesOfPlayer], function(req, res, next) {
     res.html(templates.index({
       errorMessage: req.flash('error'),
       username: req.session.username,
-      openGames: [],
-      waitingGames: [],
+      openGames: req.openGames,
+      runningGames: req.runningGames,
+      waitingGames: req.waitingGames,
       channel: '_free'
     }));
   }),
@@ -71,7 +93,6 @@ module.exports = dispatch({
           game = new Game({ type: 'Multiplication'});
       game.addPlayer(req.session.username);
       game.save(function(err) {
-        console.log(err, game);
         if (err) {
           req.flash('error', 'Game could not be created.');
           res.redirect('/');

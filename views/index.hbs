@@ -11,12 +11,20 @@
     <p class="error-message">{{errorMessage}}</p>
   {{/if}}
 
-
-  {{#if openGames}}
-    <h2>Your open games:</h2>
+  {{#if waitingGames}}
+    <h2>Your games waiting for players:</h2>
     <ul>
-      {{#each openGames}}
-        <li>Opponent: {{username}} - <a href="/game/{{gameId}}">go</a></li>
+      {{#each waitingGames}}
+        <li>Players: {{players}} - <a href="/game/{{id}}">go</a></li>
+      {{/each}}
+    </ul>
+  {{/if}}
+
+  {{#if runningGames}}
+    <h2>Your running games:</h2>
+    <ul>
+      {{#each runningGames}}
+        <li>Players: {{players}} - <a href="/game/{{id}}">go</a></li>
       {{/each}}
     </ul>
   {{/if}}
@@ -26,11 +34,11 @@
     <li><a href="/game/multiplication/new">of <strong>cloned</strong></a></li>
   </ul>
 
-  {{#if waitingGames}}
+  {{#if openGames}}
     <h2>Games waiting for players:</h2>
     <ul>
-      {{#each waitingGames}}
-        <li>Opponent: {{username}} - <a href="/game/{{gameId}}">go</a></li>
+      {{#each openGames}}
+        <li>Players: {{players}} - <a href="/game/{{id}}/join">join</a></li>
       {{/each}}
     </ul>
   {{/if}}
