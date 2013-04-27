@@ -65,5 +65,9 @@ module.exports = dispatch({
         res.html(templates.login({ error: 'Enter a name!' }));
       }
     })
-  }
+  },
+  '/logout': new Action(function(req, res, next) {
+    delete req.session.username;
+    res.redirect('/login');
+  })
 });
