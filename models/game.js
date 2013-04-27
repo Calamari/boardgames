@@ -57,6 +57,19 @@ gameSchema.methods.nextTurn = function(player) {
   }
 };
 
+gameSchema.methods.canJoin = function(player) {
+  if (!this.started && this.players.length < GameTypes.get(this.type).maxPlayers && !this.getPlayerPosition(player)) {
+    return true;
+  }
+  return false;
+};
+
+gameSchema.methods.isReady = function() {
+  return this.started || (this.players.length >= GameTypes.get(this.type).minPlayers &&
+                          this.players.length <= GameTypes.get(this.type).maxPlayers);
+};
+
+
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
   this.find({ players: { $ne: username }, started: false }, function(err, games) {

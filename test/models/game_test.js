@@ -143,6 +143,55 @@ describe('Game', function() {
     });
   });
 
+  describe('#isReady', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+    });
+
+    it('returns false if not enough players', function() {
+      game.isReady().should.equal(false);
+    });
+
+    it('returns true if enough players', function() {
+      game.addPlayer('john');
+      game.isReady().should.equal(true);
+    });
+
+    it('returns true if already started', function() {
+      game.addPlayer('john');
+      game.startGame();
+      game.isReady().should.equal(true);
+    });
+  });
+
+  describe('#canJoin', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+    });
+
+    it('works if place is free and not started', function() {
+      game.canJoin('john').should.equal(true);
+    });
+
+    it('returns false if player is already participant', function() {
+      game.canJoin('jon').should.equal(false);
+    });
+
+    it('returns false if game already started', function() {
+      game.started = true; // never do this directly in real life!!
+      game.canJoin('john').should.equal(false);
+    });
+
+    it('returns false if maxPlayers would exceed', function() {
+      game.addPlayer('john');
+      game.canJoin('johnny').should.equal(false);
+    });
+  });
+
   describe('#nextTurn', function() {
     var game;
     beforeEach(function() {
