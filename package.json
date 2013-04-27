@@ -9,8 +9,10 @@
   "dependencies": {
     "socket.io": "0.9.x",
     "connect": "2.7.x",
+    "connect-flash": "0.1.x",
     "dispatch": "0.2.x",
     "quip": "0.x",
+    "async": "0.2.x",
     "handlebars": "1.x",
     "mongoose": "3.x",
     "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git"

@@ -2,6 +2,7 @@ var Handlebars = require('handlebars'),
     fs         = require('fs'),
     dispatch   = require('dispatch'),
     async      = require('async'),
+    mongoose   = require('mongoose'),
 
     undef;
 
@@ -37,8 +38,9 @@ function Action(filters, cb) {
   }
 
   return function(req, res, next) {
+    var args = arguments;
     async.applyEach(filters, req, res, function() {
-      cb(req, res, next);
+      cb.apply(this, args);
     });
   };
 }
@@ -46,11 +48,39 @@ function Action(filters, cb) {
 module.exports = dispatch({
   '/': new Action([redirectIfLogin], function(req, res, next) {
     res.html(templates.index({
+      errorMessage: req.flash('error'),
+      username: req.session.username,
       openGames: [],
       waitingGames: [],
       channel: '_free'
     }));
   }),
+  '/game': {
+    '/:id': new Action([redirectIfLogin], function(req, res, next, id) {
+      var Game = mongoose.model('Game');
+      Game.findById(id, function(err, game) {
+        if (err) {
+          res.notFound();
+        } else {
+          res.html('TODO');
+        }
+      });
+    }),
+    '/:type/new': new Action([redirectIfLogin], function(req, res, next, type) {
+      var Game = mongoose.model('Game'),
+          game = new Game({ type: 'Multiplication'});
+      game.addPlayer(req.session.username);
+      game.save(function(err) {
+        console.log(err, game);
+        if (err) {
+          req.flash('error', 'Game could not be created.');
+          res.redirect('/');
+        } else {
+          res.redirect('/game/' + game.id);
+        }
+      });
+    })
+  },
   '/login': {
     GET: new Action(function(req, res, next) {
       res.html(templates.login({}));

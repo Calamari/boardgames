@@ -4,7 +4,8 @@
 var connect  = require('connect'),
     quip     = require('quip'),
     http     = require('http'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    flash    = require('connect-flash');
 
 module.exports = function(router, mongoUrl) {
   mongoose.connect(mongoUrl);
@@ -16,6 +17,7 @@ module.exports = function(router, mongoUrl) {
         .use(connect.cookieSession({ secret: 'multiplication-game-sess' }))
         .use(connect.bodyParser())
         .use(connect.query())
+        .use(flash())
         .use(quip())
         .use(router),
 
