@@ -1,7 +1,8 @@
 
-module.exports = function(app) {
-  var io = require('socket.io').listen(app),
-      participants = {};
+module.exports = function(app, io) {
+  "use strict";
+
+  var participants = {};
 
   function addToChannel(socket, channel) {
     if (!participants[channel]) {

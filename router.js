@@ -6,6 +6,8 @@ var Handlebars = require('handlebars'),
 
     undef;
 
+require('./models/game');
+
 // TODO: this could be exportet in an node module:
 var templates = [];
 
@@ -16,6 +18,7 @@ templates.load = function(filename) {
 fs.readdirSync(__dirname + '/views').forEach(function(file) {
   var filename = __dirname + '/views/' + file,
       name     = file.replace('.hbs', '');
+
   templates[name] = templates.load(filename);
   fs.watch(filename, function reloadTemplate(event) {
     templates[name] = templates.load(filename);
@@ -31,8 +34,9 @@ function redirectIfLogin(req, res, next) {
 }
 
 function gamesOfPlayer(req, res, next) {
-  var Game = mongoose.model('Game'),
+  var Game     = mongoose.model('Game'),
       username = req.session.username;
+
   Game.find({ 'players': username }, function(err, games) {
     if (!err) {
       req.runningGames = games.filter(function(game) {
@@ -53,6 +57,7 @@ function gamesOfPlayer(req, res, next) {
 
 function loadGameOr404(req, res, next, id) {
   var Game = mongoose.model('Game');
+
   Game.findById(id, function(err, game) {
     if (err) {
       res.notFound('404');
@@ -71,7 +76,7 @@ function Action(filters, cb) {
   }
 
   return function(req, res, next) {
-    var args           = arguments;
+    var args = arguments;
     async.applyEach(filters, req, res, function() {
       cb.apply(this, args);
     });
@@ -92,7 +97,9 @@ module.exports = dispatch({
   '/game': {
     '/:id': new Action([redirectIfLogin], function(req, res, next, id) {
       loadGameOr404(req, res, function() {
-        res.html('TODO '+ req.game);
+        req.socketeer.set('gameId', req.game.id);
+        req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.session.username });
+        res.html(templates.game({ game: req.game, socketeerId: req.socketeerId }));
       }, id);
     }),
     '/:id/join': new Action([redirectIfLogin], function(req, res, next, id) {
@@ -101,10 +108,10 @@ module.exports = dispatch({
           req.game.addPlayer(req.session.username);
           if (req.game.isReady()) {
             req.game.startGame();
-            // TODO: send socket message
+            req.socketeer.where({ gameId: req.game.id }).send('actions', { gameStarted: true });
           }
           req.game.save(function(err) {
-            if (err) { req.flash('error', 'You can not join this game.') };
+            if (err) { req.flash('error', 'You can not join this game.'); }
             res.redirect('/game/' + req.game.id);
           });
         } else {
@@ -116,6 +123,7 @@ module.exports = dispatch({
     '/:type/new': new Action([redirectIfLogin], function(req, res, next, type) {
       var Game = mongoose.model('Game'),
           game = new Game({ type: 'Multiplication'});
+
       game.addPlayer(req.session.username);
       game.save(function(err) {
         if (err) {

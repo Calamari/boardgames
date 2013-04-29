@@ -1,11 +1,13 @@
 
 (function(win, doc, Canvas) {
   "use strict";
+
   var BOARDSIZE = 8,
 
       Game = function(canvasId, config) {
         this._config = config;
         this._socket = config.socket;
+        this._socketeer = new Socketeer(config.socket, config.socketeerId);
         this._logger = config.logger;
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
@@ -41,11 +43,15 @@
       this._countPieces = 4;
     },
     _initGame: function() {
-      if (this.actualPlayer === this.thisPlayerNr) {
-        this._logger.log('Game started. It\'s your turn.');
-      } else {
-        this._logger.log('Game started. The other player plays first.');
-      }
+      var self = this;
+      this._socketeer.onReady(function() {
+        if (self.actualPlayer === self.thisPlayerNr) {
+          self._logger.log('Game started. It\'s your turn.');
+        } else {
+          self._logger.log('Game started. The other player plays first.');
+        }
+      });
+      // TODO: gameStartedAction
     },
     _setupObservers: function(canvasId) {
       var self = this;
