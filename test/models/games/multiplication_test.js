@@ -151,10 +151,10 @@ describe('Games/Multiplication', function() {
             Multiplication.actions.move(game, { from: [0,0], to: [2,0], user: 'one' }, function(err, data) {
               data.removePieces.should.be.instanceOf(Array);
               data.removePieces.should.have.lengthOf(1);
-              data.removePieces[0].should.eql([0,0]);
+              data.removePieces[0].should.eql({ x: 0, y: 0 });
               data.addPieces.should.be.instanceOf(Array);
               data.addPieces.should.have.lengthOf(1);
-              data.addPieces[0].should.eql([2,0]);
+              data.addPieces[0].should.eql({ x: 2, y: 0, player: 1 });
               data.newPlayer.should.eql(2);
               done();
             });
@@ -164,9 +164,9 @@ describe('Games/Multiplication', function() {
             Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
               data.capturedPieces.should.be.instanceOf(Array);
               data.capturedPieces.should.have.lengthOf(3);
-              data.capturedPieces.should.includeEql([0,1]);
-              data.capturedPieces.should.includeEql([1,1]);
-              data.capturedPieces.should.includeEql([2,1]);
+              data.capturedPieces.should.includeEql({ x: 0, y: 1, player: 1 });
+              data.capturedPieces.should.includeEql({ x: 1, y: 1, player: 1 });
+              data.capturedPieces.should.includeEql({ x: 2, y: 1, player: 1 });
               data.newPlayer.should.eql(2);
               done();
             });
@@ -178,7 +178,7 @@ describe('Games/Multiplication', function() {
           Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
             data.removePieces.should.have.lengthOf(0);
             data.addPieces.should.have.lengthOf(1);
-            data.addPieces[0].should.eql([1,0]);
+            data.addPieces[0].should.eql({ x: 1, y: 0, player: 1 });
             data.newPlayer.should.eql(2);
             done();
           });

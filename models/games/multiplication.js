@@ -7,8 +7,8 @@ function getDistance(from, to) {
   if (from === to) {
     return 0;
   }
-  var xDistance = Math.abs(Math.abs(from[0]) - Math.abs(to[0])),
-      yDistance = Math.abs(Math.abs(from[1]) - Math.abs(to[1]));
+  var xDistance = Math.abs(Math.abs(from.x) - Math.abs(to.x)),
+      yDistance = Math.abs(Math.abs(from.y) - Math.abs(to.y));
   return Math.max(xDistance, yDistance);
 }
 
@@ -30,6 +30,11 @@ function captureUnitsAround(stones, playerNumber, x, y) {
   getNeighbours(x, y).forEach(function(field) {
     if (stones[field[1]][field[0]] && stones[field[1]][field[0]] !== playerNumber) {
       stones[field[1]][field[0]] = playerNumber;
+      field = {
+        x: field[0],
+        y: field[1],
+        player: playerNumber
+      };
       capturedPieces.push(field);
     }
   });
@@ -61,11 +66,11 @@ var gameDef = {
           distance;
 
       // from and to can be point objects or arrays with 2 numbers
-      if (from && from.x !== undef && from.y !== undef) {
-        from = [from.x, from.y];
+      if (Array.isArray(from)) {
+        from = { x: from[0], y: from[1] };
       }
-      if (to && to.x !== undef && to.y !== undef) {
-        to = [to.x, to.y];
+      if (Array.isArray(to)) {
+        to = { x: to[0], y: to[1] };
       }
 
       if (!game.started) {
@@ -74,23 +79,24 @@ var gameDef = {
         cb(new Error('ARGUMENT_ERROR'));
       } else if (!game.isPlayersTurn(playerNumber)) {
         cb(new Error('NOT_YOUR_TURN'));
-      } else if (game.board.stones[from[1]][from[0]] !== playerNumber) {
+      } else if (game.board.stones[from.y][from.x] !== playerNumber) {
         cb(new Error('NOT_YOUR_PIECE'));
       } else {
         distance = getDistance(from, to);
-        if (distance > 2 || game.board.stones[to[1]][to[0]]) {
+        if (distance > 2 || game.board.stones[to.y][to.x]) {
           // to far or field already occupied
           cb(new Error('INVALID_MOVE'));
         } else {
           addPieces = [];
           removePieces = [];
           if (distance === 2) {
-            game.board.stones[from[1]][from[0]] = 0;
+            game.board.stones[from.y][from.x] = 0;
             removePieces.push(from);
           }
-          game.board.stones[to[1]][to[0]] = playerNumber;
+          game.board.stones[to.y][to.x] = playerNumber;
+          to.player = playerNumber;
           addPieces.push(to);
-          capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to[0], to[1]);
+          capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to.x, to.y);
           game.nextTurn();
           game.markModified('board');
           cb(null, {

@@ -80,6 +80,9 @@
               self._gameStarted = true;
               self._startGame();
               break;
+            case 'update':
+              self._updateGame(value);
+              break
           }
         }
       });
@@ -96,6 +99,37 @@
         .on('click', function(event) {
           self._handleClick(self._hovered);
         });
+    },
+    _updateGame: function(data) {
+      for (var key in data) {
+        var value = data[key],
+            self  = this;
+
+        switch(key) {
+          case 'actualPlayer':
+          case 'newPlayer':
+            this.actualPlayer = value;
+            if (this.actualPlayer == this.thisPlayerNr) {
+              this._logger.log('It\'s your turn again.');
+            }
+            break;
+          case 'addPieces':
+            value.forEach(function(piece) {
+              self._board[piece.y][piece.x] = piece.player;
+            });
+            break;
+          case 'removePieces':
+            value.forEach(function(piece) {
+              self._board[piece.y][piece.x] = 0;
+            });
+            break;
+          case 'capturedPieces':
+            value.forEach(function(piece) {
+              self._board[piece.y][piece.x] = piece.player;
+            });
+            break;
+        }
+      }
     },
     _positionToCoords: function(px, py) {
       var cellWidth = this._config.cellWidth;
@@ -129,27 +163,7 @@
           this._captureEnemies(to.x, to.y);
           this.nextPlayer();
           this._socketeer.emit('action', { action: 'move', from: from, to: to }, function(data) {
-            for (var key in data) {
-              var value = data[key];
-              switch(key) {
-                case 'actualPlayer':
-                case 'newPlayer':
-                  self.actualPlayer = value;
-                  if (self.actualPlayer == self.thisPlayerNr) {
-                    self._logger.log('It\'s your turn again.');
-                  }
-                  break;
-                case 'addPieces':
-                  //TODO
-                  break;
-                case 'removePieces':
-                  //TODO
-                  break;
-                case 'capturedPieces':
-                  //TODO
-                  break;
-              }
-            }
+            self._updateGame(data);
           });
         }
       }
