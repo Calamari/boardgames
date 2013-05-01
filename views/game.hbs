@@ -40,6 +40,7 @@
       gameId: '{{game.id}}',
       {{#if game.started}} gameStarted: {{game.started}},{{/if}}
       thisPlayerNr: {{thisPlayerPosition}},
+      isSpectator: {{bool thisSpectator}},
       actualPlayer: {{game.actualPlayer}},
       logger: logger
     });

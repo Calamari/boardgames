@@ -58,10 +58,14 @@ gameSchema.methods.nextTurn = function(player) {
 };
 
 gameSchema.methods.canJoin = function(player) {
-  if (!this.started && this.players.length < GameTypes.get(this.type).maxPlayers && !this.getPlayerPosition(player)) {
+  if (!this.started && this.players.length < GameTypes.get(this.type).maxPlayers && !this.isPlayer(player)) {
     return true;
   }
   return false;
+};
+
+gameSchema.methods.isPlayer = function(player) {
+  return !!this.getPlayerPosition(player);
 };
 
 gameSchema.methods.isReady = function() {

@@ -192,6 +192,22 @@ describe('Game', function() {
     });
   });
 
+  describe('#isPlayer', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+    });
+
+    it('is true if player is player in that game', function() {
+      game.isPlayer('jon').should.equal(true);
+    });
+
+    it('is false if player is not player in that game', function() {
+      game.isPlayer('john').should.equal(false);
+    });
+  });
+
   describe('#nextTurn', function() {
     var game;
     beforeEach(function() {

@@ -28,7 +28,8 @@ module.exports = {
       req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.session.username });
       res.html(templates.game({
         game:               req.game,
-        thisPlayerPosition: req.game.getPlayerPosition(req.session.username),
+        thisSpectator:      !req.game.isPlayer(req.session.username),
+        thisPlayerPosition: req.game.getPlayerPosition(req.session.username) || 0,
         socketeerId:        req.socketeerId
       }));
     }, id);

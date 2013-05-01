@@ -10,6 +10,7 @@
         this._socket = config.socket;
         this._socketeer = new Socketeer(config.socket, config.socketeerId);
         this._logger = config.logger;
+        this.isSpectator = config.isSpectator;
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
         this._gameStarted = config.gameStarted;
@@ -55,10 +56,12 @@
       });
     },
     _startGame: function() {
-      if (this.actualPlayer === this.thisPlayerNr) {
-        this._logger.log('Game started. It\'s your turn.');
+      if (this.isSpectator) {
+        this._logger.log('You are just spectating.');
+      } else if (this.actualPlayer === this.thisPlayerNr) {
+        this._logger.log('It\'s your turn.');
       } else {
-        this._logger.log('Game started. The other player plays first.');
+        this._logger.log('The other player plays.');
       }
       this._createCanvas(this._canvasId, this._config);
       this._setupObservers(this._canvasId);
