@@ -192,6 +192,32 @@ describe('Game', function() {
     });
   });
 
+  describe('#giveUp', function() {
+    var game, clock;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('one');
+      game.addPlayer('two');
+      game.startGame();
+    });
+
+    it('sets game to ended', function() {
+      game.giveUp('one');
+      game.ended.should.eql(true);
+    });
+
+    it('sets timestamp endedAt', function() {
+      game.giveUp('one');
+      game.endedAt.should.not.eql(null);
+    });
+
+    it('sets winner to the other player', function() {
+      // TODO: write a test for three players, there is no winner then?
+      game.giveUp('one');
+      game.winner.should.eql('two');
+    });
+  });
+
   describe('#isPlayer', function() {
     var game;
     beforeEach(function() {

@@ -12,10 +12,13 @@ var gameSchema = mongoose.Schema({
     board: { 'type': Mixed, 'default': {} },
     type: { 'type': String, 'required': true },
     started: { 'type': Boolean, 'default': false },
+    ended: { 'type': Boolean, 'default': false },
     actualPlayer: { 'type': Number },
     turns: { 'type': Number, 'default': 0 },
     log: { 'type': [String] },
-    createdAt: { 'type': Date, 'default': Date.now }
+    createdAt: { 'type': Date, 'default': Date.now },
+    startedAt: { 'type': Date },
+    endedAt: { 'type': Date }
 });
 
 gameSchema.path('type').validate(function(value) {
@@ -90,6 +93,13 @@ gameSchema.methods.action = function(action, data, cb) {
       });
     }
   });
+};
+
+gameSchema.methods.giveUp = function(player) {
+  this.ended = true;
+  this.endedAt = Date.now();
+  this.winner = this.players[0] === player ? this.players[1] : this.players[0];
+  // TODO: add statistics to user
 };
 
 
