@@ -24,6 +24,7 @@ module.exports = {
   '/:id': new Action([auth.redirectIfLogin], function(req, res, next, id) {
     loadGameOr404(req, res, function() {
       req.socketeer.set('gameId', req.game.id);
+      req.socketeer.set('username', req.session.username);
       req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.session.username });
       res.html(templates.game({
         game:               req.game,

@@ -210,6 +210,47 @@ describe('Game', function() {
     });
   });
 
+  describe('#action', function() {
+    var game, Multiplication;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('one');
+      game.addPlayer('two');
+      game.startGame();
+      Multiplication = GameTypes.get('Multiplication');
+      sinon.spy(Multiplication.actions, 'move');
+      sinon.spy(game, 'save');
+      sinon.spy(game, 'markModified');
+    });
+
+    afterEach(function() {
+      Multiplication.actions.move.restore();
+      game.save.restore();
+      game.markModified.restore();
+    });
+
+    it('calls the action method of associated game definition', function(done) {
+      var callMe,
+          cb = function() {
+            console.log("ARGS", game.markModified);
+            game.save.called.should.eql(true);
+            game.markModified.calledWith('board').should.eql(true);
+            done();
+          };
+      game.action('move', { from: [0,0], to: [0,1], user: 'one' }, cb);
+      Multiplication.actions.move.calledWith(game, { from: [0,0], to: [0,1], user: 'one' }).should.eql(true);
+    });
+
+    it('has game saved after doing the action', function(done) {
+      game.action('move', { from: [0,0], to: [0,1], user: 'one' }, function() {
+        Game.findById(game.id, function(err, loadedGame) {
+          loadedGame.board.stones[1][0].should.eql(1);
+          done();
+        });
+      });
+    });
+  });
+
   describe('#addPlayer', function() {
     var game;
     beforeEach(function(done) {

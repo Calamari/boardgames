@@ -116,9 +116,10 @@
       }
     },
     move: function(from, to) {
-      if (this._board[from.y][from.x] === this.thisPlayerNr &&
-          !this._board[to.y][to.x]) {
-        var distance = getDistance(from, to);
+      if (this._board[from.y][from.x] === this.thisPlayerNr && !this._board[to.y][to.x]) {
+        var distance = getDistance(from, to),
+            self     = this;
+
         if (distance === 1 || distance === 2) {
           if (distance === 1) {
             this._move(from, to);
@@ -127,6 +128,29 @@
           }
           this._captureEnemies(to.x, to.y);
           this.nextPlayer();
+          this._socketeer.emit('action', { action: 'move', from: from, to: to }, function(data) {
+            for (var key in data) {
+              var value = data[key];
+              switch(key) {
+                case 'actualPlayer':
+                case 'newPlayer':
+                  self.actualPlayer = value;
+                  if (self.actualPlayer == self.thisPlayerNr) {
+                    self._logger.log('It\'s your turn again.');
+                  }
+                  break;
+                case 'addPieces':
+                  //TODO
+                  break;
+                case 'removePieces':
+                  //TODO
+                  break;
+                case 'capturedPieces':
+                  //TODO
+                  break;
+              }
+            }
+          });
         }
       }
     },
@@ -152,7 +176,6 @@
           }
         }
       }
-
     },
     nextPlayer: function() {
       this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;

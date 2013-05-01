@@ -69,6 +69,19 @@ gameSchema.methods.isReady = function() {
                           this.players.length <= GameTypes.get(this.type).maxPlayers);
 };
 
+gameSchema.methods.action = function(action, data, cb) {
+  var self = this;
+  GameTypes.get(this.type).actions[action](this, data, function(err, data) {
+    if (err) {
+      cb(err);
+    } else {
+      self.save(function(err) {
+        cb(err, data);
+      });
+    }
+  });
+};
+
 
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {

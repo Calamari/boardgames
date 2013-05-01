@@ -1,6 +1,8 @@
 /*jslint node: true */
 "use strict";
 
+var undef;
+
 function getDistance(from, to) {
   if (from === to) {
     return 0;
@@ -58,6 +60,14 @@ var gameDef = {
           addPieces, removePieces, capturedPieces,
           distance;
 
+      // from and to can be point objects or arrays with 2 numbers
+      if (from && from.x !== undef && from.y !== undef) {
+        from = [from.x, from.y];
+      }
+      if (to && to.x !== undef && to.y !== undef) {
+        to = [to.x, to.y];
+      }
+
       if (!game.started) {
         cb(new Error('GAME_NOT_STARTED'));
       } else if (!from || !to) {
@@ -82,6 +92,7 @@ var gameDef = {
           addPieces.push(to);
           capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to[0], to[1]);
           game.nextTurn();
+          game.markModified('board');
           cb(null, {
             addPieces      : addPieces,
             removePieces   : removePieces,

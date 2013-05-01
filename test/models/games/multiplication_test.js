@@ -103,6 +103,15 @@ describe('Games/Multiplication', function() {
           });
         });
 
+        it('also excepts {x:x,y:y} point objects as from and to', function(done) {
+          sinon.spy(game, 'nextTurn');
+          Multiplication.actions.move(game, { from: { x: 0, y: 0 }, to: { x: 1, y: 0 }, user: 'one' }, function(err) {
+            game.actualPlayer.should.eql(2);
+            game.nextTurn.calledOnce.should.eql(true);
+            done();
+          });
+        });
+
         describe('if there are some enemy pieces standing around', function() {
           beforeEach(function() {
             game.board.stones[1][0] = 2;

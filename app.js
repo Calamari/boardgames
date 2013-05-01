@@ -36,6 +36,7 @@ module.exports = function(router, mongoUrl) {
 
   socketeer.start(io);
 
+  app.socketeer = socketeer;
   app.server = server;
   app.io = io;
   return app;
