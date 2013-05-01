@@ -31,8 +31,8 @@
     on: function(key, cb) {
       this._socket.on(key, cb);
     },
-    emit: function(key, data) {
-      this._socket.emit(key, data);
+    emit: function(key, data, cb) {
+      this._socket.emit(key, data, cb);
     }
   };
 
