@@ -4,9 +4,11 @@
 
   var Socketeer = function(socket, socketeerId) {
     this.id = socketeerId;
+    this._reconnectAttempts = 0;
     this._socket = socket;
     this._onReadyHandlers = [];
-    this._initSocket(socket);
+    this._initSocket();
+    this._catchError();
   };
   Socketeer.prototype = {
     onReady: function(cb) {
@@ -16,16 +18,29 @@
         this._onReadyHandlers.push(cb);
       }
     },
-    _initSocket: function(socket) {
+    _initSocket: function() {
       var self = this;
       this._socket.emit('socketeer.register', this.id, function(data) {
         self._ready = true;
+        console.log("socket registered");
         self._onReadyHandlers.forEach(function(cb) {
           cb();
         });
       });
-      this._socket.on('actions', function(data) {
-        console.log('actions are todo in game.js!', data);
+    },
+    _catchError: function(key, cb) {
+      var self = this;
+      this._socket.on('reconnect', function() {
+        self._initSocket();
+      });
+      this._socket.on('socketeer.error', function(data) {
+        // TODO: let the game handle this error
+        alert('[' + data + '] Connection Problem. Please, try reloading this page. ');
+      });
+      this._socket.on('reconnecting', function() {
+        if (++self._reconnectAttempts === 5) {
+          alert('Connection Problems. Please, try reloading this page.');
+        }
       });
     },
     on: function(key, cb) {
