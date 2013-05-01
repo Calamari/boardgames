@@ -37,8 +37,9 @@
       socket: io.connect('http://localhost:8124'),
       socketeerId: '{{socketeerId}}',
       gameId: '{{game.id}}',
-      thisPlayerNr: 1,
-      actualPlayer: 1,
+      {{#if game.started}} gameStarted: {{game.started}},{{/if}}
+      thisPlayerNr: {{thisPlayerPosition}},
+      actualPlayer: {{game.actualPlayer}},
       logger: logger
     });
   </script>

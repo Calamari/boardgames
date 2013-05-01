@@ -5,16 +5,16 @@
   var BOARDSIZE = 8,
 
       Game = function(canvasId, config) {
+        this._canvasId = canvasId;
         this._config = config;
         this._socket = config.socket;
         this._socketeer = new Socketeer(config.socket, config.socketeerId);
         this._logger = config.logger;
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
+        this._gameStarted = config.gameStarted;
         this._initBoard();
-        this._initGame();
-        this._createCanvas(canvasId, config);
-        this._setupObservers(canvasId);
+        this._initGame(canvasId, config);
       };
 
   function getDistance(from, to) {
@@ -36,22 +36,53 @@
           this._board[y][x] = 0;
         }
       }
+      // TODO: must come from server
       this._board[0][0] = 1;
       this._board[BOARDSIZE-1][0] = 1;
       this._board[0][BOARDSIZE-1] = 2;
       this._board[BOARDSIZE-1][BOARDSIZE-1] = 2;
       this._countPieces = 4;
     },
-    _initGame: function() {
+    _initGame: function(canvasId, config) {
       var self = this;
       this._socketeer.onReady(function() {
-        if (self.actualPlayer === self.thisPlayerNr) {
-          self._logger.log('Game started. It\'s your turn.');
+        if (self._gameStarted) {
+          self._startGame();
         } else {
-          self._logger.log('Game started. The other player plays first.');
+          self._logger.log('Waiting for players');
+        }
+        self._setupSocketListeners();
+      });
+    },
+    _startGame: function() {
+      if (this.actualPlayer === this.thisPlayerNr) {
+        this._logger.log('Game started. It\'s your turn.');
+      } else {
+        this._logger.log('Game started. The other player plays first.');
+      }
+      this._createCanvas(this._canvasId, this._config);
+      this._setupObservers(this._canvasId);
+    },
+    _setupSocketListeners: function() {
+      var self = this;
+      this._socketeer.on('events', function(data) {
+        for (var eventType in data) {
+          var value = data[eventType];
+          switch (eventType) {
+            case 'userEntered':
+              self._logger.log(value + ' entered the game.');
+              break;
+            case 'playerJoined':
+              self._logger.log(value + ' joined the game.');
+              break;
+            case 'gameStarted':
+              self.actualPlayer = value;
+              self._gameStarted = true;
+              self._startGame();
+              break;
+          }
         }
       });
-      // TODO: gameStartedAction
     },
     _setupObservers: function(canvasId) {
       var self = this;
