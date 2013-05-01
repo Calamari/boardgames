@@ -139,7 +139,7 @@
       return { x: Math.floor(px/cellWidth), y: Math.floor(py/cellWidth) };
     },
     _handleClick: function(point) {
-      if (this.isTurn()) {
+      if (point && this.isTurn()) {
         if (this._selected) {
           if (this._selected != point) {
             this.move(this._selected, point);
