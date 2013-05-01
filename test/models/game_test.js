@@ -220,9 +220,27 @@ describe('Game', function() {
     it('works as expected', function() {
       game.actualPlayer.should.eql(1);
       game.nextTurn();
+      game.turns.should.eql(1);
       game.actualPlayer.should.eql(2);
       game.nextTurn();
+      game.turns.should.eql(2);
       game.actualPlayer.should.eql(1);
+    });
+  });
+
+  describe('#actualPlayerName', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
+      game.startGame();
+    });
+
+    it('works as expected', function() {
+      game.actualPlayerName().should.eql('jon');
+      game.nextTurn();
+      game.actualPlayerName().should.eql('john');
     });
   });
 

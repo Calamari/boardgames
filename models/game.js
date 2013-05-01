@@ -13,6 +13,7 @@ var gameSchema = mongoose.Schema({
     type: { 'type': String, 'required': true },
     started: { 'type': Boolean, 'default': false },
     actualPlayer: { 'type': Number },
+    turns: { 'type': Number, 'default': 0 },
     log: { 'type': [String] },
     createdAt: { 'type': Date, 'default': Date.now }
 });
@@ -52,6 +53,7 @@ gameSchema.methods.isPlayersTurn = function(player) {
 
 gameSchema.methods.nextTurn = function(player) {
   ++this.actualPlayer;
+  ++this.turns;
   if (this.actualPlayer > GameTypes.get(this.type).maxPlayers) {
     this.actualPlayer = 1;
   }
@@ -62,6 +64,10 @@ gameSchema.methods.canJoin = function(player) {
     return true;
   }
   return false;
+};
+
+gameSchema.methods.actualPlayerName = function() {
+  return this.players[this.actualPlayer-1];
 };
 
 gameSchema.methods.isPlayer = function(player) {

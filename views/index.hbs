@@ -24,7 +24,10 @@
     <h2>Your running games:</h2>
     <ul>
       {{#each runningGames}}
-        <li>Players: {{players}} - <a href="/game/{{id}}">go</a></li>
+        <li>
+          Players: {{{playersList this}}} - <a href="/game/{{id}}">go</a>
+          ({{turns}} turns played)
+        </li>
       {{/each}}
     </ul>
   {{/if}}
