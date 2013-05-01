@@ -36,6 +36,7 @@
       cellWidth: 40,
       socket: io.connect('http://localhost:8124'),
       socketeerId: '{{socketeerId}}',
+      stones: {{json game.board.stones}},
       gameId: '{{game.id}}',
       {{#if game.started}} gameStarted: {{game.started}},{{/if}}
       thisPlayerNr: {{thisPlayerPosition}},

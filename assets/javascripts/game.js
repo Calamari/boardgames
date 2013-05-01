@@ -13,7 +13,7 @@
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
         this._gameStarted = config.gameStarted;
-        this._initBoard();
+        this._initBoard(config.stones);
         this._initGame(canvasId, config);
       };
 
@@ -28,20 +28,20 @@
   }
 
   Game.prototype = {
-    _initBoard: function() {
+    _initBoard: function(stones) {
+      this._countPieces = 0;
       this._board = [];
       for (var y = BOARDSIZE; y--;) {
         this._board[y] = [];
         for (var x = BOARDSIZE; x--;) {
-          this._board[y][x] = 0;
+          if (stones[y] && stones[y][x]) {
+            this._board[y][x] = stones[y][x];
+            ++this._countPieces;
+          } else {
+            this._board[y][x] = 0;
+          }
         }
       }
-      // TODO: must come from server
-      this._board[0][0] = 1;
-      this._board[BOARDSIZE-1][0] = 1;
-      this._board[0][BOARDSIZE-1] = 2;
-      this._board[BOARDSIZE-1][BOARDSIZE-1] = 2;
-      this._countPieces = 4;
     },
     _initGame: function(canvasId, config) {
       var self = this;
