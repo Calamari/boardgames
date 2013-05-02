@@ -277,11 +277,16 @@
     _drawPiece: function(context, x, y, player) {
       var cellWidth = this._config.cellWidth,
           tileWidth = cellWidth - 4;
+      context.save();
       if (player == 1) {
         context.strokeRect(x * cellWidth + 3, y * cellWidth + 3, tileWidth-2, tileWidth-2);
+        context.fillStyle = '#f7f7f7';
+        context.fillRect(x * cellWidth + 3, y * cellWidth + 3, tileWidth-2, tileWidth-2);
+        // for circle: context.arc(x * cellWidth + tileWidth/2+2, y * cellWidth + tileWidth/2+2, tileWidth/2-1, 0, Math.PI*2, true);
       } else {
         context.fillRect(x * cellWidth + 2, y * cellWidth + 2, tileWidth, tileWidth);
       }
+      context.restore();
     },
     _createCanvas: function(canvasId, config) {
       var self          = this,
