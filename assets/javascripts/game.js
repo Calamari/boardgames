@@ -16,6 +16,7 @@
         this._gameStarted = config.gameStarted;
         this._initBoard(config.stones);
         this._initGame(canvasId, config);
+        this._counters = { 1: $('#counter-1'), 2: $('#counter-2') };
       };
 
   function getDistance(from, to) {
@@ -30,14 +31,12 @@
 
   Game.prototype = {
     _initBoard: function(stones) {
-      this._countPieces = 0;
       this._board = [];
       for (var y = BOARDSIZE; y--;) {
         this._board[y] = [];
         for (var x = BOARDSIZE; x--;) {
           if (stones[y] && stones[y][x]) {
             this._board[y][x] = stones[y][x];
-            ++this._countPieces;
           } else {
             this._board[y][x] = 0;
           }
@@ -65,6 +64,7 @@
       }
       this._createCanvas(this._canvasId, this._config);
       this._setupObservers(this._canvasId);
+      this._countPieces();
     },
     _setupSocketListeners: function() {
       var self = this;
@@ -85,7 +85,7 @@
               break;
             case 'update':
               self._updateGame(value);
-              break
+              break;
           }
         }
       });
@@ -102,6 +102,20 @@
         .on('click', function(event) {
           self._handleClick(self._hovered);
         });
+    },
+    _countPieces: function() {
+      var count = { 1: 0, 2: 0},
+          x, y;
+
+      for (y = BOARDSIZE; y--;) {
+        for (x = BOARDSIZE; x--;) {
+          if (this._board[y] && this._board[y][x]) {
+            ++count[this._board[y][x]];
+          }
+        }
+      }
+      this._counters[1].html(count[1]);
+      this._counters[2].html(count[2]);
     },
     _updateGame: function(data) {
       for (var key in data) {
@@ -133,6 +147,7 @@
             break;
         }
       }
+      this._countPieces();
     },
     _positionToCoords: function(px, py) {
       var cellWidth = this._config.cellWidth;
@@ -174,10 +189,11 @@
     _move: function(from, to) {
       this._logger.log('Moved piece');
       this._board[to.y][to.x] = this._board[from.y][from.x];
-      ++this._countPieces;
-      if (this._countPieces === BOARDSIZE * BOARDSIZE) {
-        this._gameEnded();
-      }
+      this._countPieces();
+      // ++this._countPieces;
+      // if (this._countPieces === BOARDSIZE * BOARDSIZE) {
+      //   this._gameEnded();
+      // }
     },
     _jump: function(from, to) {
       this._logger.log('Jumped piece');
