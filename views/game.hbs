@@ -37,12 +37,14 @@
       cellWidth: 40,
       socket: io.connect('http://localhost:8124'),
       socketeerId: '{{socketeerId}}',
+      {{#if game.started}}
       stones: {{json game.board.stones}},
+      gameStarted: {{game.started}},
+      actualPlayer: {{game.actualPlayer}},
+      {{/if}}
       gameId: '{{game.id}}',
-      {{#if game.started}} gameStarted: {{game.started}},{{/if}}
       thisPlayerNr: {{thisPlayerPosition}},
       isSpectator: {{bool thisSpectator}},
-      actualPlayer: {{game.actualPlayer}},
       logger: logger
     });
   </script>

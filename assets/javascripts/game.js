@@ -14,7 +14,7 @@
         this.actualPlayer = config.actualPlayer;
         this.thisPlayerNr = config.thisPlayerNr;
         this._gameStarted = config.gameStarted;
-        this._initBoard(config.stones);
+        this._initBoard(config.stones || []);
         this._initGame(canvasId, config);
         this._counters = { 1: $('#counter-1'), 2: $('#counter-2') };
       };
@@ -79,7 +79,8 @@
               self._logger.log(value + ' joined the game.');
               break;
             case 'gameStarted':
-              self.actualPlayer = value;
+              self.actualPlayer = value.actualPlayer;
+              self._initBoard(value.stones);
               self._gameStarted = true;
               self._startGame();
               break;

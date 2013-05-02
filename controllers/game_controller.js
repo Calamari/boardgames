@@ -43,7 +43,10 @@ module.exports = {
         req.game.addPlayer(req.session.username);
         if (req.game.isReady()) {
           req.game.startGame();
-          events.gameStarted = req.game.actualPlayer;
+          events.gameStarted = {
+            actualPlayer: req.game.actualPlayer,
+            stones: req.game.board.stones
+          };
         }
         req.socketeer.where({ gameId: req.game.id }).send('events', events);
         req.game.save(function(err) {
