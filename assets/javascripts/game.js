@@ -91,6 +91,9 @@
           }
         }
       });
+      this._socketeer.on('socketeer.error', function(error) {
+        self._logger.log('<strong>ERROR: Please reload the browser!</strong>');
+      });
     },
     _setupObservers: function() {
       var self   = this,

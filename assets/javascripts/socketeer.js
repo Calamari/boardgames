@@ -9,6 +9,7 @@
     this._onReadyHandlers = [];
     this._initSocket();
     this._catchError();
+    this._errorRegistered = false;
   };
   Socketeer.prototype = {
     onReady: function(cb) {
@@ -35,7 +36,9 @@
       });
       this._socket.on('socketeer.error', function(data) {
         // TODO: let the game handle this error
-        alert('[' + data + '] Connection Problem. Please, try reloading this page. ');
+        if (!self._errorRegistered) {
+          alert('[' + data + '] Connection Problem. Please, try reloading this page. ');
+        }
       });
       this._socket.on('reconnecting', function() {
         if (++self._reconnectAttempts === 5) {
@@ -45,6 +48,9 @@
     },
     on: function(key, cb) {
       this._socket.on(key, cb);
+      if (key === 'socketeer.error') {
+        this._errorRegistered = true;
+      }
     },
     emit: function(key, data, cb) {
       this._socket.emit(key, data, cb);
