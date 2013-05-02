@@ -50,3 +50,9 @@ p {
   position: absolute;
   bottom: 0;
 }
+
+.score {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
