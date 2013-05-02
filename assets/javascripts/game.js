@@ -6,6 +6,7 @@
 
       Game = function(canvasId, config) {
         this._canvasId = canvasId;
+        this._canvas = $('#' + canvasId);
         this._config = config;
         this._socket = config.socket;
         this._socketeer = new Socketeer(config.socket, config.socketeerId);
@@ -91,11 +92,12 @@
         }
       });
     },
-    _setupObservers: function(canvasId) {
-      var self = this;
-      $('#' + canvasId)
+    _setupObservers: function() {
+      var self   = this,
+          offset = this._canvas.offset();
+      this._canvas
         .on('mousemove', function(event) {
-          self._hovered = self._positionToCoords(event.offsetX, event.offsetY);
+          self._hovered = self._positionToCoords(event.pageX - offset.left, event.pageY - offset.top);
         })
         .on('mouseout', function(event) {
           self._hovered = null;
