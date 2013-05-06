@@ -41,6 +41,25 @@ function captureUnitsAround(stones, playerNumber, x, y) {
   return capturedPieces;
 }
 
+function checkForGameEnding(game) {
+  var counts = { 1: 0, 2: 0 },
+      x,y;
+  for (y=0; y<8; ++y) {
+    for (x=0; x<8; ++x) {
+      if (game.board.stones[y][x] > 0) {
+        ++counts[game.board.stones[y][x]];
+      } else {
+        return null;
+      }
+    }
+  }
+  if (counts[1] > counts[2]) {
+    return { winner: 1 };
+  } else {
+    return { winner: 2 };
+  }
+}
+
 var gameDef = {
   minPlayers: 2,
   maxPlayers: 2,
@@ -103,7 +122,8 @@ var gameDef = {
             addPieces      : addPieces,
             removePieces   : removePieces,
             capturedPieces : capturedPieces,
-            newPlayer      : game.actualPlayer
+            newPlayer      : game.actualPlayer,
+            gameEnded      : checkForGameEnding(game)
           });
         }
       }

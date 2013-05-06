@@ -183,6 +183,24 @@ describe('Games/Multiplication', function() {
             done();
           });
         });
+
+        describe('if this was the last move possible', function() {
+          beforeEach(function() {
+            for (var y=0; y<8; ++y) {
+              for (var x=0; x<8; ++x) {
+                game.board.stones[y][x] = x > 4 ? 2 : 1;
+              }
+            }
+            game.board.stones[0][1] = 0;
+          });
+
+          it('it sends update with gameEnded event', function(done) {
+            Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
+              data.gameEnded.should.eql({ winner: 1 });
+              done();
+            });
+          });
+        });
       });
     });
 

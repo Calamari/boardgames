@@ -67,6 +67,15 @@
       this._setupObservers(this._canvasId);
       this._countPieces();
     },
+    _endGame: function(winner) {
+      if (!this.thisPlayerNr) {
+        this._logger.log('Game is over!');
+      } else if (this.thisPlayerNr === winner) {
+        this._logger.log('You have won! Contrgrats.');
+      } else {
+        this._logger.log('Sorry, you\'ve lost!');
+      }
+    },
     _setupSocketListeners: function() {
       var self = this;
       this._socketeer.on('events', function(data) {
@@ -84,6 +93,9 @@
               self._initBoard(value.stones);
               self._gameStarted = true;
               self._startGame();
+              break;
+            case 'gameEnded':
+              self._endGame(value.winner);
               break;
             case 'update':
               self._updateGame(value);
@@ -218,9 +230,6 @@
     },
     nextPlayer: function() {
       this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;
-    },
-    _gameEnded: function() {
-      this._logger.log('Game ended');
     },
     _selectTile: function(point) {
       this._selected = point;

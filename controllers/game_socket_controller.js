@@ -22,6 +22,9 @@ module.exports = function(socketeer, app) {
           if (err) {
             cb({ error: err.message, actualPlayer: game.actualPlayer });
           } else {
+            if (data.gameEnded) {
+              game.endGame(data.gameEnded.winner);
+            }
             // TODO: either send not cb or not to same user that receives callback
             // TODO: better would be the move action, so player can do it by themselves (incl. smooth move animation)
             socketeer.where({ gameId: game.id }).send('events', { update: data });

@@ -103,6 +103,38 @@ describe('Game', function() {
     });
   });
 
+  describe('#endGame', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('one');
+      game.addPlayer('two');
+      game.startGame();
+    });
+
+    it('sets game to ended', function() {
+      game.endGame('one');
+      game.ended.should.eql(true);
+    });
+
+    it('sets timestamp endedAt', function() {
+      game.endGame('one');
+      game.endedAt.should.not.eql(null);
+    });
+
+    it('sets winner to this player', function() {
+      // TODO: write a test for three players, there is no winner then?
+      game.endGame('two');
+      game.winner.should.eql('two');
+    });
+
+    it('works also with player position', function() {
+      game.endGame(1);
+      game.ended.should.eql(true);
+      game.winner.should.eql('one');
+    });
+  });
+
   describe('#getPlayerPosition', function() {
     var game;
     beforeEach(function() {
@@ -214,6 +246,17 @@ describe('Game', function() {
     it('sets winner to the other player', function() {
       // TODO: write a test for three players, there is no winner then?
       game.giveUp('one');
+      game.winner.should.eql('two');
+    });
+
+    it('works also with player position', function() {
+      game.giveUp(2);
+      game.ended.should.eql(true);
+      game.winner.should.eql('one');
+    });
+
+    it('works also with player position and the other player', function() {
+      game.giveUp(1);
       game.winner.should.eql('two');
     });
   });

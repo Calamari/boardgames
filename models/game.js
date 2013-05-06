@@ -96,9 +96,16 @@ gameSchema.methods.action = function(action, data, cb) {
 };
 
 gameSchema.methods.giveUp = function(player) {
+  if (typeof player === 'number') {
+    player = this.players[player-1];
+  }
+  this.endGame(this.players[0] === player ? this.players[1] : this.players[0]);
+};
+
+gameSchema.methods.endGame = function(winner) {
   this.ended = true;
   this.endedAt = Date.now();
-  this.winner = this.players[0] === player ? this.players[1] : this.players[0];
+  this.winner = typeof winner === 'number' ? this.players[winner-1] : winner;
   // TODO: add statistics to user
 };
 
