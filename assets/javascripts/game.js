@@ -22,7 +22,6 @@
 
   function getDistance(from, to) {
     if (from === to) {
-      console.log("TOO");
       return 0;
     }
     var xDistance = Math.abs(Math.abs(from.x) - Math.abs(to.x)),
@@ -136,9 +135,20 @@
       this._counters[2].html(count[2]);
     },
     _updateGame: function(data) {
-      for (var key in data) {
-        var value = data[key],
-            self  = this;
+      var self = this,
+          key, value,
+
+          addPieces      = function(piece) {
+            self._board[piece.y][piece.x] = piece.player;
+          },
+          removePieces   = function(piece) {
+            self._board[piece.y][piece.x] = 0;
+          },
+          capturedPieces = function(piece) {
+            self._board[piece.y][piece.x] = piece.player;
+          };
+      for (key in data) {
+        value = data[key];
 
         switch(key) {
           case 'actualPlayer':
@@ -149,19 +159,13 @@
             }
             break;
           case 'addPieces':
-            value.forEach(function(piece) {
-              self._board[piece.y][piece.x] = piece.player;
-            });
+            value.forEach(addPieces);
             break;
           case 'removePieces':
-            value.forEach(function(piece) {
-              self._board[piece.y][piece.x] = 0;
-            });
+            value.forEach(removePieces);
             break;
           case 'capturedPieces':
-            value.forEach(function(piece) {
-              self._board[piece.y][piece.x] = piece.player;
-            });
+            value.forEach(capturedPieces);
             break;
         }
       }
@@ -238,20 +242,22 @@
       return this.actualPlayer === this.thisPlayerNr;
     },
     draw: function(canvas, context) {
-      var self      = this;
+      var self   = this,
+          i, cellWidth, y, x;
 
       context.beginPath();
-      for (var i = BOARDSIZE+1; i--;) {
-        context.moveTo(0, i*this._config.cellWidth);
-        context.lineTo(this._boardWidth, i*this._config.cellWidth);
-        context.moveTo(i*this._config.cellWidth, 0);
-        context.lineTo(i*this._config.cellWidth, this._boardWidth);
+      for (i = BOARDSIZE+1; i--;) {
+        cellWidth = i * this._config.cellWidth;
+        context.moveTo(0, cellWidth);
+        context.lineTo(this._boardWidth, cellWidth);
+        context.moveTo(cellWidth, 0);
+        context.lineTo(cellWidth, this._boardWidth);
       }
       context.stroke();
 
       // draw pieces
-      for (var y = BOARDSIZE; y--;) {
-        for (var x = BOARDSIZE; x--;) {
+      for (y = BOARDSIZE; y--;) {
+        for (x = BOARDSIZE; x--;) {
           if (this._board[y][x]) {
             this._drawPiece(context, x, y, this._board[y][x]);
           }
@@ -292,6 +298,7 @@
     _drawPiece: function(context, x, y, player) {
       var cellWidth = this._config.cellWidth,
           tileWidth = cellWidth - 4;
+
       context.save();
       if (player == 1) {
         context.strokeRect(x * cellWidth + 3, y * cellWidth + 3, tileWidth-2, tileWidth-2);
