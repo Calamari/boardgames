@@ -41,23 +41,54 @@ function captureUnitsAround(stones, playerNumber, x, y) {
   return capturedPieces;
 }
 
-function checkForGameEnding(game) {
+function getWinner(game) {
   var counts = { 1: 0, 2: 0 },
-      x,y;
+      x, y;
+
   for (y=0; y<8; ++y) {
     for (x=0; x<8; ++x) {
       if (game.board.stones[y][x] > 0) {
         ++counts[game.board.stones[y][x]];
-      } else {
-        return null;
       }
     }
   }
-  if (counts[1] > counts[2]) {
-    return { winner: 1 };
-  } else {
-    return { winner: 2 };
+  return counts[1] > counts[2] ? 1 : 2;
+}
+
+// TODO: this should move to an board object or somethin'
+function getStone(board, x, y) {
+  if (typeof x !== 'number') {
+    y = x.y;
+    x = x.x;
   }
+  return board[y] && board[y][x];
+}
+
+function canStoneOfPlayerMoveHere(board, x, y, playerNr) {
+  var dx, dy;
+
+  for (dy=1; dy<=2; ++dy) {
+    for (dx=1; dx<=2; ++dx) {
+      if (getStone(board, x+dx, y+dy) === playerNr) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function checkForGameEnding(game) {
+  var x,y;
+  for (y=0; y<8; ++y) {
+    for (x=0; x<8; ++x) {
+      if (!getStone(game.board.stones, x, y)) {
+        if (canStoneOfPlayerMoveHere(game.board.stones, x, y, game.actualPlayer)) {
+          return null;
+        }
+      }
+    }
+  }
+  return { winner: getWinner(game) };
 }
 
 var gameDef = {

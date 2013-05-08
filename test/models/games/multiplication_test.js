@@ -184,7 +184,14 @@ describe('Games/Multiplication', function() {
           });
         });
 
-        describe('if this was the last move possible', function() {
+        it('it does not send gameEnded event with update', function(done) {
+          Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
+            (data.gameEnded === null).should.eql(true);
+            done();
+          });
+        });
+
+        describe('if this board is full', function() {
           beforeEach(function() {
             for (var y=0; y<8; ++y) {
               for (var x=0; x<8; ++x) {
@@ -192,6 +199,27 @@ describe('Games/Multiplication', function() {
               }
             }
             game.board.stones[0][1] = 0;
+          });
+
+          it('it sends update with gameEnded event', function(done) {
+            Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
+              data.gameEnded.should.eql({ winner: 1 });
+              done();
+            });
+          });
+        });
+
+        describe('if next player can neither move nor jump', function() {
+          beforeEach(function() {
+            for (var y=0; y<7; ++y) {
+              for (var x=0; x<8; ++x) {
+                game.board.stones[y][x] = y < 4 ? 2 : 1;
+                game.board.stones[7][x] = 0;
+              }
+            }
+            game.board.stones[0][0] = 1;
+            game.board.stones[0][1] = 0;
+            game.board.stones[1][1] = 2;
           });
 
           it('it sends update with gameEnded event', function(done) {
