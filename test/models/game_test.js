@@ -335,7 +335,6 @@ describe('Game', function() {
     it('calls the action method of associated game definition', function(done) {
       var callMe,
           cb = function() {
-            console.log("ARGS", game.markModified);
             game.save.called.should.eql(true);
             game.markModified.calledWith('board').should.eql(true);
             done();
