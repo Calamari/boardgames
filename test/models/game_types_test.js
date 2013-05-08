@@ -4,14 +4,14 @@ var mongoose = require('mongoose'),
 
 describe('GameTypes', function() {
 
-  it('#count returns 1 game', function(done) {
-    GameTypes.count().should.eql(1);
+  it('#count returns 2 games', function(done) {
+    GameTypes.count().should.eql(2);
     done();
   });
 
-  it('#list returns only "Multiplication"', function(done) {
-    GameTypes.list().should.have.lengthOf(1);
-    GameTypes.list().should.eql(['Multiplication']);
+  it('#list returns "Multiplication" and "Reversi"', function(done) {
+    GameTypes.list().should.have.lengthOf(2);
+    GameTypes.list().should.eql(['Multiplication', 'Reversi']);
     done();
   });
 

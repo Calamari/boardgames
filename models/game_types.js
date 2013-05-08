@@ -2,7 +2,8 @@
 "use strict";
 
 var Games = {
-  'Multiplication': require('./games/multiplication')
+  'Multiplication': require('./games/multiplication'),
+  'Reversi'       : require('./games/reversi')
 };
 
 var GameTypes = (function() {
