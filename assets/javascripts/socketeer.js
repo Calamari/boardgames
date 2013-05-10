@@ -41,7 +41,7 @@
         }
       });
       this._socket.on('reconnecting', function() {
-        if (++self._reconnectAttempts === 5) {
+        if (!self._errorRegistered && ++self._reconnectAttempts === 5) {
           alert('Connection Problems. Please, try reloading this page.');
         }
       });
