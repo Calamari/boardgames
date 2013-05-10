@@ -59,16 +59,18 @@ module.exports = {
       }
     }, id);
   }),
+  // TODO: make a POST request out of it:
   '/:type/new': new Action([auth.redirectIfLogin], function(req, res, next, type) {
     var Game = mongoose.model('Game'),
-        game = new Game({ type: 'Multiplication'});
+        game = new Game({ type: type });
 
-    game.addPlayer(req.session.username);
     game.save(function(err) {
       if (err) {
-        req.flash('error', 'Game could not be created.');
+        req.flash('error', 'Game of type "' + type + '"" could not be created.');
         res.redirect('/');
       } else {
+        game.addPlayer(req.session.username);
+        game.save();
         res.redirect('/game/' + game.id);
       }
     });
