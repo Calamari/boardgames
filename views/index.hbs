@@ -15,7 +15,7 @@
     <h2>Your games waiting for players:</h2>
     <ul>
       {{#each waitingGames}}
-        <li>Players: {{players}} - <a href="/game/{{id}}">go</a></li>
+        <li>[{{type}}] Players: {{players}} - <a href="/game/{{id}}">go</a></li>
       {{/each}}
     </ul>
   {{/if}}
@@ -25,6 +25,7 @@
     <ul>
       {{#each runningGames}}
         <li>
+          [{{type}}]
           Players: {{{playersList this}}} - <a href="/game/{{id}}">go</a>
           ({{turns}} turns played)
         </li>
@@ -41,7 +42,7 @@
     <h2>Games waiting for players:</h2>
     <ul>
       {{#each openGames}}
-        <li>Players: {{players}} - <a href="/game/{{id}}/join">join</a></li>
+        <li>[{{type}}] Players: {{players}} - <a href="/game/{{id}}/join">join</a></li>
       {{/each}}
     </ul>
   {{/if}}
