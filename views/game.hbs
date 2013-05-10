@@ -23,6 +23,7 @@
   <script src="/javascripts/socketeer.js"></script>
   <script src="/javascripts/canvas_board.js"></script>
   <script src="/javascripts/game.js"></script>
+  <script src="/javascripts/games/cloned_game.js"></script>
   <script src="/javascripts/chat.js"></script>
   <script>
     var chat   = new Chat('#chat', io.connect('/chat'), { channel: 'game-{{game.id}}' }),
@@ -32,9 +33,12 @@
               chat.line(text, 'system');
             }
           }
-        }());
+        }()),
+        games  = {
+          Multiplication: ClonedGame
+        };
 
-    new Game('#gamefield', {
+    new games['{{game.type}}']('#gamefield', {
       boardSize: 8,
       cellWidth: 40,
       socket: io.connect('/'),
