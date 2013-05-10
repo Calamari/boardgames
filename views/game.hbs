@@ -9,7 +9,7 @@
     <p class="error-message">{{errorMessage}}</p>
   {{/if}}
 
-  <canvas id="canvas"></canvas>
+  <div id="gamefield"></div>
   <div id="chat">
     <div class="content"></div>
     <input type="text">
@@ -21,6 +21,7 @@
   <script src="/javascripts/vendor/object.extend.js"></script>
   <script src="/javascripts/canvas.js"></script>
   <script src="/javascripts/socketeer.js"></script>
+  <script src="/javascripts/canvas_board.js"></script>
   <script src="/javascripts/game.js"></script>
   <script src="/javascripts/chat.js"></script>
   <script>
@@ -33,7 +34,8 @@
           }
         }());
 
-    new Game('canvas', {
+    new Game('#gamefield', {
+      boardSize: 8,
       cellWidth: 40,
       socket: io.connect('/'),
       socketeerId: '{{socketeerId}}',
