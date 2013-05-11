@@ -3,6 +3,7 @@
 
   var Game = function(container, config) {
     this._boardSize = config.boardSize;
+    // TODO: make this game specific:
     this._boardEngine = new CanvasBoard(container, config, this._eventHandler());
     this._config = config;
     this._socket = config.socket;
