@@ -27,12 +27,12 @@ describe('Games/Reversi', function() {
     });
 
     it('there is a move action', function() {
-      Reversi.actions.move.should.not.eql(null);
+      Reversi.actions.set.should.not.eql(null);
     });
 
     describe('#move', function() {
       it('returns error on not started game', function(done) {
-        Reversi.actions.move(game, {}, function(err) {
+        Reversi.actions.set(game, {}, function(err) {
           err.message.should.eql('GAME_NOT_STARTED');
           done();
         });
@@ -44,42 +44,42 @@ describe('Games/Reversi', function() {
         });
 
         it('does not return a GAME_NOT_STARTED error', function(done) {
-          Reversi.actions.move(game, {}, function(err) {
+          Reversi.actions.set(game, {}, function(err) {
             err.message.should.not.eql('GAME_NOT_STARTED');
             done();
           });
         });
 
         it('without needed data it results in ARGUMENT_ERROR', function(done) {
-          Reversi.actions.move(game, {}, function(err) {
+          Reversi.actions.set(game, {}, function(err) {
             err.message.should.eql('ARGUMENT_ERROR');
             done();
           });
         });
 
         it('send error NOT_YOUR_TURN if user is not at turn', function(done) {
-          Reversi.actions.move(game, { to: [2,2], user: 'two' }, function(err) {
+          Reversi.actions.set(game, { to: [2,2], user: 'two' }, function(err) {
             err.message.should.eql('NOT_YOUR_TURN');
             done();
           });
         });
 
         it('send error INVALID_MOVE if no enemy stone is encapsuled', function(done) {
-          Reversi.actions.move(game, { to: [2,2], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [2,2], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('send error INVALID_MOVE if beside enemy stone but no trapped stones', function(done) {
-          Reversi.actions.move(game, { to: [2,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [2,5], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('send error INVALID_MOVE if stone is not connected with any other stone', function(done) {
-          Reversi.actions.move(game, { to: [1,6], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [1,6], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
@@ -87,28 +87,28 @@ describe('Games/Reversi', function() {
 
         it('send error INVALID_MOVE if field is already taken', function(done) {
           game.board.stones[5][3] = 1;
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('places the stone on the board', function(done) {
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             game.board.stones[5][3].should.eql(1);
             done();
           });
         });
 
         it('setting a stone turns encapsuled enemy stones', function(done) {
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             game.board.stones[4][3].should.eql(1);
             done();
           });
         });
 
         it('setting a stone does not turn not encapsuled enemy stones', function(done) {
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             game.board.stones[3][4].should.eql(2);
             done();
           });
@@ -116,7 +116,7 @@ describe('Games/Reversi', function() {
 
         it('sets next player after moving piece', function(done) {
           sinon.spy(game, 'nextTurn');
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             game.actualPlayer.should.eql(2);
             game.nextTurn.calledOnce.should.eql(true);
             done();
@@ -125,7 +125,7 @@ describe('Games/Reversi', function() {
 
         it('also excepts {x:x,y:y} point objects as from and to', function(done) {
           sinon.spy(game, 'nextTurn');
-          Reversi.actions.move(game, { to: { x: 3, y: 5 }, user: 'one' }, function(err) {
+          Reversi.actions.set(game, { to: { x: 3, y: 5 }, user: 'one' }, function(err) {
             game.actualPlayer.should.eql(2);
             game.nextTurn.calledOnce.should.eql(true);
             done();
@@ -133,7 +133,7 @@ describe('Games/Reversi', function() {
         });
 
         it('sends update information on captured and added pieces', function(done) {
-          Reversi.actions.move(game, { to: { x: 3, y: 5 }, user: 'one' }, function(err, data) {
+          Reversi.actions.set(game, { to: { x: 3, y: 5 }, user: 'one' }, function(err, data) {
             data.addPieces.should.be.instanceOf(Array);
             data.addPieces.should.have.lengthOf(1);
             data.addPieces[0].should.eql({ x: 3, y: 5, player: 1 });
@@ -146,7 +146,7 @@ describe('Games/Reversi', function() {
         });
 
         it('it does not send gameEnded event with update', function(done) {
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err, data) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err, data) {
             (data.gameEnded === null).should.eql(true);
             done();
           });
@@ -163,7 +163,7 @@ describe('Games/Reversi', function() {
           });
 
           it('it sends update with gameEnded event', function(done) {
-            Reversi.actions.move(game, { to: [1,0], user: 'one' }, function(err, data) {
+            Reversi.actions.set(game, { to: [1,0], user: 'one' }, function(err, data) {
               data.gameEnded.should.eql({ winner: 1 });
               done();
             });
@@ -176,7 +176,7 @@ describe('Games/Reversi', function() {
           });
 
           it('it sends update with gameEnded event', function(done) {
-            Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err, data) {
+            Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err, data) {
               data.gameEnded.should.eql({ winner: 1 });
               done();
             });
@@ -185,7 +185,7 @@ describe('Games/Reversi', function() {
 
         it('with valid action mard board as modified so it can be saved', function(done) {
           sinon.spy(game, 'markModified');
-          Reversi.actions.move(game, { to: [3,5], user: 'one' }, function(err, data) {
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err, data) {
             game.markModified.calledWith('board').should.eql(true);
             done();
           });

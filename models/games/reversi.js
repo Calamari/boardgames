@@ -125,7 +125,7 @@ var gameDef = {
     };
   },
   actions: {
-    move: function(game, data, cb) {
+    set: function(game, data, cb) {
       var to   = data.to,
           playerNumber = game.getPlayerPosition(data.user),
           addPieces, removePieces, capturedPieces,
