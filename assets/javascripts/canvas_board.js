@@ -1,6 +1,18 @@
 (function(win, doc, Canvas) {
   "use strict";
 
+  var Field = function(point, board) {
+    return {
+      getPlayer: function() { return board.get(point.x, point.y); },
+      x: point.x,
+      y: point.y,
+      select: function() {
+        board.select(point);
+      },
+      point: point
+    };
+  };
+
   var CanvasBoard = function(container, config, eventHandler) {
     this._container = $(container);
     this._config = config;
@@ -22,6 +34,18 @@
     },
     isTurn: function() {
       return this.actualPlayer === this.thisPlayerNr;
+    },
+    get: function(x, y) {
+      return this._board[y][x];
+    },
+    select: function(point) {
+      this._selected = point;
+    },
+    deselect: function() {
+      this._selected = null;
+    },
+    getSelected: function() {
+      return this._selected;
     },
 
     _setupObservers: function() {
@@ -45,17 +69,7 @@
     },
     _handleClick: function(point) {
       if (point && this.isTurn()) {
-        if (this._selected) {
-          if (this._selected != point) {
-            this._handler.onMove(this._selected, point);
-          }
-          this._selected = null;
-        } else {
-          if (this._board[point.y][point.x] === this.thisPlayerNr) {
-            // TODO: maybe make the game logic select this one?
-            this._selected = point;
-          }
-        }
+        this._handler.onClick(new Field(point, this));
       }
     },
 

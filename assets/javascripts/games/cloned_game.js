@@ -24,8 +24,21 @@
 
   ClonedGame.prototype._eventHandler = function() {
     return {
-      onMove: this.move.bind(this)
+      onClick: this._clickHandler.bind(this)
     };
+  };
+  // TODO: move this to game and make this behavior configurable
+  ClonedGame.prototype._clickHandler = function(field) {
+    var board    = this._boardEngine,
+        selected = board.getSelected();
+    if (selected) {
+      this.move(selected, field);
+      board.deselect();
+    } else {
+      if (field.getPlayer() === this.thisPlayerNr) {
+        field.select();
+      }
+    }
   };
   ClonedGame.prototype.move = function(from, to) {
     if (this._board[from.y][from.x] === this.thisPlayerNr && !this._board[to.y][to.x]) {
