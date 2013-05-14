@@ -27,6 +27,7 @@ module.exports = {
       req.socketeer.set('username', req.session.username);
       req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.session.username });
       res.html(templates.game({
+        username:           req.session.username,
         game:               req.game,
         thisSpectator:      !req.game.isPlayer(req.session.username),
         thisPlayerPosition: req.game.getPlayerPosition(req.session.username) || 0,

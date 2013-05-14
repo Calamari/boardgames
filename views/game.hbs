@@ -9,12 +9,19 @@
     <p class="error-message">{{errorMessage}}</p>
   {{/if}}
 
-  <div id="gamefield"></div>
-  <div id="chat">
-    <div class="content"></div>
-    <input type="text">
+  <div class="fixed-bar">
+    <ul class="nav-bar">
+      <li class="username-you">{{username}}</li>
+    </ul>
   </div>
-  <p class="score">White: <span id="counter-1">0</span> - Black: <span id="counter-2">0</span></p>
+  <div class="wrap">
+    <div id="gamefield"></div>
+    <div id="chat">
+      <div class="content"></div>
+      <input type="text">
+    </div>
+    <p class="score">White: <span id="counter-1">0</span> - Black: <span id="counter-2">0</span></p>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/vendor/moment.js"></script>
   <script src="/javascripts/vendor/jquery-1.9.1.js"></script>
