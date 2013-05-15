@@ -48,7 +48,6 @@ p {
   vertical-align: middle;
 }
 #score span {
-  color: #fff;
   display: inline-block;
   font-size: 0.9em;
   height: 1em;
@@ -56,10 +55,17 @@ p {
   vertical-align: middle;
 }
 #score .player0 {
-  background: blue;
+  background: #f7f7f7;
+  border-left: 1px solid #999;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
 }
 #score .player1 {
-  background: green;
+  background: #000;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  color: #fff;
   text-align: right;
 }
 #score .player0 span {

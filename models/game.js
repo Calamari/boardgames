@@ -13,6 +13,7 @@ var gameSchema = mongoose.Schema({
     type: { 'type': String, 'required': true },
     started: { 'type': Boolean, 'default': false },
     ended: { 'type': Boolean, 'default': false },
+    winner: { 'type': Number },
     actualPlayer: { 'type': Number },
     turns: { 'type': Number, 'default': 0 },
     log: { 'type': [String] },
