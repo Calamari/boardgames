@@ -12,6 +12,8 @@
   <div class="fixed-bar">
     <ul class="nav-bar">
       <li class="username-you">{{username}}</li>
+      <li> in a game of {{game.type}}:</li>
+      <li id="score"></li>
     </ul>
   </div>
   <div class="wrap">
@@ -20,7 +22,6 @@
       <div class="content"></div>
       <input type="text">
     </div>
-    <p class="score">White: <span id="counter-1">0</span> - Black: <span id="counter-2">0</span></p>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/vendor/moment.js"></script>
@@ -52,11 +53,15 @@
       boardSize: 8,
       cellWidth: 40,
 
+      // score element
+      score: '#score',
+      players: {{{json game.players}}},
+
       // general config
       socket: io.connect('/'),
       socketeerId: '{{socketeerId}}',
       {{#if game.started}}
-      stones: {{json game.board.stones}},
+      stones: {{{json game.board.stones}}},
       gameStarted: {{game.started}},
       actualPlayer: {{game.actualPlayer}},
       {{/if}}

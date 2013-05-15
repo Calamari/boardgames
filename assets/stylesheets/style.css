@@ -33,12 +33,45 @@ p {
 .nav-bar li {
   display: inline;
   list-style-type: none;
+  padding-right: 10px;
 }
 
 .nav-bar .username-you {
   font-weight: bold;
 }
 
+#score {
+  border: 1px solid #fcfcfc;
+  display: inline-block;
+  position: relative;
+  height: 1.3em;
+  vertical-align: middle;
+}
+#score span {
+  color: #fff;
+  display: inline-block;
+  font-size: 0.9em;
+  height: 1em;
+  padding: 2px;
+  vertical-align: middle;
+}
+#score .player0 {
+  background: blue;
+}
+#score .player1 {
+  background: green;
+  text-align: right;
+}
+#score .player0 span {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+#score .player1 span {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 
 #gamefield {
   display: inline-block;
