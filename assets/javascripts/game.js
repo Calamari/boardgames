@@ -14,12 +14,10 @@
     this._socket = config.socket;
     this._socketeer = new Socketeer(config.socket, config.socketeerId);
     this._logger = config.logger;
-    this._score = new Score(config.score, config.players);
     this.isSpectator = config.isSpectator;
     this.actualPlayer = config.actualPlayer;
     this.thisPlayerNr = config.thisPlayerNr;
     this._gameStarted = config.gameStarted;
-    this._initBoard(config.stones || []);
     this._initSocketeer();
   };
 
@@ -37,6 +35,7 @@
         }
       }
       this._boardEngine.updateBoard(this._board);
+      this._score = new Score(this._config.score, this._config.players);
       this._countPieces();
     },
     _initSocketeer: function() {
@@ -50,16 +49,16 @@
         self._setupSocketListeners();
       });
     },
-    _startGame: function() {
       if (this.isSpectator) {
+    _startGame: function(stones) {
         this._logger.log('You are just spectating.');
       } else if (this.actualPlayer === this.thisPlayerNr) {
         this._logger.log('It\'s your turn.');
       } else {
         this._logger.log('The other player plays.');
       }
+      this._initBoard(this._config.stones || stones);
       this._boardEngine.start();
-      this._countPieces();
     },
     _endGame: function(winner) {
       if (!this.thisPlayerNr) {
@@ -84,9 +83,8 @@
               break;
             case 'gameStarted':
               self.actualPlayer = value.actualPlayer;
-              self._initBoard(value.stones);
               self._gameStarted = true;
-              self._startGame();
+              self._startGame(value.stones);
               break;
             case 'gameEnded':
               self._endGame(value.winner);
@@ -102,7 +100,7 @@
       });
     },
     _countPieces: function() {
-      this._score.update(this._board, this._boardSize);
+      this._score && this._score.update(this._board, this._boardSize);
     },
     _updateGame: function(data) {
       var self = this,
