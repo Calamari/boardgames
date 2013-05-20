@@ -9,7 +9,7 @@
   var Game = function(container, config) {
     this._boardSize = config.boardSize;
     // TODO: make this game specific:
-    this._boardEngine = new SVGBoard(container, config, this._eventHandler());
+    this._board = new SVGBoard(container, config, this._eventHandler());
     this._config = config;
     this._socket = config.socket;
     this._socketeer = new Socketeer(config.socket, config.socketeerId);
@@ -23,7 +23,7 @@
 
   Game.prototype = {
     _initBoard: function(stones) {
-      this._boardEngine.updateBoard(stones);
+      this._board.updateBoard(stones);
       // score?? not counting?
       this._score = new Score(this._config.score, this._config.players);
       this._countPieces();
@@ -50,7 +50,7 @@
         this._logger.log('The other player plays.');
       }
       this._initBoard(this._config.stones || stones);
-      this._boardEngine.start();
+      this._board.start();
     },
     _endGame: function(winner) {
       if (!this.thisPlayerNr) {
@@ -92,20 +92,20 @@
       });
     },
     _countPieces: function() {
-      this._score && this._score.update(this._boardEngine, this._boardSize);
+      this._score && this._score.update(this._board, this._boardSize);
     },
     _updateGame: function(data) {
       var self = this,
           key, value,
 
           addPieces      = function(piece) {
-            self._boardEngine.addPiece(piece);
+            self._board.addPiece(piece);
           },
           removePieces   = function(piece) {
-            self._boardEngine.removePiece(piece);
+            self._board.removePiece(piece);
           },
           capturedPieces = function(piece) {
-            self._boardEngine.addPiece(piece);
+            self._board.addPiece(piece);
           };
 
       for (key in data) {
@@ -118,7 +118,7 @@
             if (this.actualPlayer == this.thisPlayerNr) {
               this._logger.log('It\'s your turn again.');
             }
-            this._boardEngine.actualPlayer = value;
+            this._board.actualPlayer = value;
             break;
           case 'addPieces':
             value.forEach(addPieces);
