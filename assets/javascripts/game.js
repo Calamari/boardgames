@@ -9,7 +9,7 @@
   var Game = function(container, config) {
     this._boardSize = config.boardSize;
     // TODO: make this game specific:
-    this._boardEngine = new CanvasBoard(container, config, this._eventHandler());
+    this._boardEngine = new SVGBoard(container, config, this._eventHandler());
     this._config = config;
     this._socket = config.socket;
     this._socketeer = new Socketeer(config.socket, config.socketeerId);
@@ -23,24 +23,16 @@
 
   Game.prototype = {
     _initBoard: function(stones) {
-      this._board = [];
-      for (var y = this._boardSize; y--;) {
-        this._board[y] = [];
-        for (var x = this._boardSize; x--;) {
-          if (stones[y] && stones[y][x]) {
-            this._board[y][x] = stones[y][x];
-          } else {
-            this._board[y][x] = 0;
-          }
-        }
-      }
-      this._boardEngine.updateBoard(this._board);
+      this._boardEngine.updateBoard(stones);
+      // score?? not counting?
       this._score = new Score(this._config.score, this._config.players);
       this._countPieces();
     },
     _initSocketeer: function() {
       var self = this;
       this._socketeer.onReady(function() {
+        if (self._socketeerStarted) { return; }
+        self._socketeerStarted = true;
         if (self._gameStarted) {
           self._startGame();
         } else {
@@ -100,20 +92,20 @@
       });
     },
     _countPieces: function() {
-      this._score && this._score.update(this._board, this._boardSize);
+      this._score && this._score.update(this._boardEngine, this._boardSize);
     },
     _updateGame: function(data) {
       var self = this,
           key, value,
 
           addPieces      = function(piece) {
-            self._board[piece.y][piece.x] = piece.player;
+            self._boardEngine.addPiece(piece);
           },
           removePieces   = function(piece) {
-            self._board[piece.y][piece.x] = 0;
+            self._boardEngine.removePiece(piece);
           },
           capturedPieces = function(piece) {
-            self._board[piece.y][piece.x] = piece.player;
+            self._boardEngine.addPiece(piece);
           };
 
       for (key in data) {

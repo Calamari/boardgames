@@ -18,17 +18,14 @@
     },
     _count: function(board, size) {
       var count = { 1: 0, 2: 0},
-          sum   = 0,
-          x, y;
+          sum   = 0;
 
-      for (y = size; y--;) {
-        for (x = size; x--;) {
-          if (board[y] && board[y][x]) {
-            ++count[board[y][x]];
-            ++sum;
-          }
+      board.forEachField(function(field) {
+        if (field.getPlayer()) {
+          ++count[field.getPlayer()];
+          ++sum;
         }
-      }
+      });
       this._counters = count;
       return sum;
     },

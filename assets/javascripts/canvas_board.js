@@ -1,3 +1,4 @@
+// DEPRECATED: Totally Deprecated because of SVGBoard
 (function(win, doc, Canvas) {
   "use strict";
 
