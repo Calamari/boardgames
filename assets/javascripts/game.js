@@ -24,7 +24,6 @@
   Game.prototype = {
     _initBoard: function(stones) {
       this._board.updateBoard(stones);
-      // score?? not counting?
       this._score = new Score(this._config.score, this._config.players);
       this._countPieces();
     },

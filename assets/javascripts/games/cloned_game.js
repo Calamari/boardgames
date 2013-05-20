@@ -18,6 +18,7 @@
   }
 
   var ClonedGame = function(container, config) {
+    Stone.type = 'rect';
     Game.call(this, container, config);
   };
   extend(ClonedGame, Game);
@@ -29,7 +30,7 @@
   };
   // TODO: move this to game and make this behavior configurable
   ClonedGame.prototype._clickHandler = function(field) {
-    var board    = this._boardEngine,
+    var board    = this._board,
         selected = board.getSelected(),
         x        = field.x,
         y        = field.y,
@@ -55,17 +56,17 @@
     }
   };
   ClonedGame.prototype.move = function(from, to) {
-    if (this._board[from.y][from.x] === this.thisPlayerNr && !this._board[to.y][to.x]) {
+    if (this._board.getField(from.x, from.y).getPlayer() === this.thisPlayerNr && !this._board.getField(to.x, to.y).getPlayer()) {
       var distance = getDistance(from, to),
           self     = this;
 
       if (distance === 1 || distance === 2) {
-        if (distance === 1) {
-          this._move(from, to);
-        } else {
-          this._jump(from, to);
-        }
-        this._captureEnemies(to.x, to.y);
+        // if (distance === 1) {
+        //   this._move(from, to);
+        // } else {
+        //   this._jump(from, to);
+        // }
+        // this._captureEnemies(to.x, to.y);
         this.nextPlayer();
         this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, function(data) {
           self._updateGame(data);
