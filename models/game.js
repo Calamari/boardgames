@@ -106,7 +106,7 @@ gameSchema.methods.giveUp = function(player) {
 gameSchema.methods.endGame = function(winner) {
   this.ended = true;
   this.endedAt = Date.now();
-  this.winner = typeof winner === 'number' ? this.players[winner-1] : winner;
+  this.winner = typeof winner === 'number' ? winner : this.players.indexOf(winner) + 1;
   // TODO: add statistics to user
 };
 

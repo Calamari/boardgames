@@ -123,15 +123,14 @@ describe('Game', function() {
     });
 
     it('sets winner to this player', function() {
-      // TODO: write a test for three players, there is no winner then?
       game.endGame('two');
-      game.winner.should.eql('two');
+      game.winner.should.eql(2);
     });
 
     it('works also with player position', function() {
       game.endGame(1);
       game.ended.should.eql(true);
-      game.winner.should.eql('one');
+      game.winner.should.eql(1);
     });
   });
 
@@ -246,18 +245,18 @@ describe('Game', function() {
     it('sets winner to the other player', function() {
       // TODO: write a test for three players, there is no winner then?
       game.giveUp('one');
-      game.winner.should.eql('two');
+      game.winner.should.eql(2);
     });
 
     it('works also with player position', function() {
       game.giveUp(2);
       game.ended.should.eql(true);
-      game.winner.should.eql('one');
+      game.winner.should.eql(1);
     });
 
     it('works also with player position and the other player', function() {
       game.giveUp(1);
-      game.winner.should.eql('two');
+      game.winner.should.eql(2);
     });
   });
 
