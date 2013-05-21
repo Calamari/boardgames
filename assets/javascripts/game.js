@@ -128,6 +128,9 @@
           case 'capturedPieces':
             value.forEach(capturedPieces);
             break;
+          case 'gameEnded':
+            this._endGame(value.winner);
+            break;
         }
       }
       this._countPieces();
