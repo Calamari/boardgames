@@ -73,6 +73,9 @@
       gameStarted: {{game.started}},
       actualPlayer: {{game.actualPlayer}},
       {{/if}}
+      {{#if game.ended}}
+        winner: {{game.winner}},
+      {{/if}}
       gameId: '{{game.id}}',
       thisPlayerNr: {{thisPlayerPosition}},
       isSpectator: {{bool thisSpectator}},

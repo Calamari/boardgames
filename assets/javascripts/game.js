@@ -8,16 +8,18 @@
 
   var Game = function(container, config) {
     this._boardSize = config.boardSize;
-    // TODO: make this game specific:
-    this._board = new SVGBoard(container, config, this._eventHandler());
     this._config = config;
     this._socket = config.socket;
-    this._socketeer = new Socketeer(config.socket, config.socketeerId);
-    this._logger = config.logger;
     this.isSpectator = config.isSpectator;
     this.actualPlayer = config.actualPlayer;
     this.thisPlayerNr = config.thisPlayerNr;
     this._gameStarted = config.gameStarted;
+    this._gameEnded = config.gameEnded;
+    this._logger = config.logger;
+
+    config.showHover = this._isTurn();
+    this._board = new SVGBoard(container, config, this._eventHandler());
+    this._socketeer = new Socketeer(config.socket, config.socketeerId);
     this._initSocketeer();
   };
 
@@ -61,10 +63,11 @@
       }
     },
     _setupSocketListeners: function() {
-      var self = this;
+      var self = this,
+          eventType, value;
       this._socketeer.on('events', function(data) {
-        for (var eventType in data) {
-          var value = data[eventType];
+        for (eventType in data) {
+          value = data[eventType];
           switch (eventType) {
             case 'userEntered':
               self._logger.log(value + ' entered the game.');
@@ -73,7 +76,7 @@
               self._logger.log(value + ' joined the game.');
               break;
             case 'gameStarted':
-              self.actualPlayer = value.actualPlayer;
+              self._setPlayer(value.actualPlayer);
               self._gameStarted = true;
               self._startGame(value.stones);
               break;
@@ -113,11 +116,7 @@
         switch(key) {
           case 'actualPlayer':
           case 'newPlayer':
-            this.actualPlayer = value;
-            if (this.actualPlayer == this.thisPlayerNr) {
-              this._logger.log('It\'s your turn again.');
-            }
-            this._board.actualPlayer = value;
+            self._setPlayer(value);
             break;
           case 'addPieces':
             value.forEach(addPieces);
@@ -134,6 +133,16 @@
         }
       }
       this._countPieces();
+    },
+    _setPlayer: function(player) {
+      this.actualPlayer = player;
+      if (this.actualPlayer == this.thisPlayerNr) {
+        this._logger.log('It\'s your turn again.');
+      }
+      this._board.showHover(this._isTurn());
+    },
+    _isTurn: function() {
+      return !this._gameEnded && this.actualPlayer === this.thisPlayerNr;
     },
     nextPlayer: function() {
       this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;

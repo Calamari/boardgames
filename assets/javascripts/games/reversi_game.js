@@ -28,7 +28,7 @@
     };
   };
   ReversiGame.prototype.setStone = function(field) {
-    if (!field.getPlayer()) {
+    if (this._isTurn() && !field.getPlayer()) {
       var self = this;
       // add placing rules here? (would also need revert mechanisms)
 //      this._placeStone(field.x, field.y);

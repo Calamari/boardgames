@@ -30,25 +30,27 @@
   };
   // TODO: move this to game and make this behavior configurable
   ClonedGame.prototype._clickHandler = function(field) {
-    var board    = this._board,
-        selected = board.getSelected(),
-        x        = field.x,
-        y        = field.y,
-        color, xi, yi, highlightField;
+    if (this._isTurn()) {
+      var board    = this._board,
+          selected = board.getSelected(),
+          x        = field.x,
+          y        = field.y,
+          color, xi, yi, highlightField;
 
-    board.unhighlightAll();
-    if (selected) {
-      this.move(selected, field);
-      board.deselect();
-    } else {
-      if (field.getPlayer() === this.thisPlayerNr) {
-        board.select(field);
-        for (xi=-2; xi<=2; ++xi) {
-          for (yi=-2; yi<=2; ++yi) {
-            highlightField = board.getField(xi+x, yi+y);
-            if (highlightField && !highlightField.getPlayer()) {
-              color = Math.abs(xi) <= 1 && Math.abs(yi) <= 1 ? 'rgba(0,155,255,.7)' : 'rgba(0,155,255,.3)';
-              highlightField.highlight(color);
+      board.unhighlightAll();
+      if (selected) {
+        this.move(selected, field);
+        board.deselect();
+      } else {
+        if (field.getPlayer() === this.thisPlayerNr) {
+          board.select(field);
+          for (xi=-2; xi<=2; ++xi) {
+            for (yi=-2; yi<=2; ++yi) {
+              highlightField = board.getField(xi+x, yi+y);
+              if (highlightField && !highlightField.getPlayer()) {
+                color = Math.abs(xi) <= 1 && Math.abs(yi) <= 1 ? 'rgba(0,155,255,.7)' : 'rgba(0,155,255,.3)';
+                highlightField.highlight(color);
+              }
             }
           }
         }

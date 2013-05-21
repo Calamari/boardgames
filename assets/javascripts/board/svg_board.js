@@ -1,15 +1,14 @@
 (function(win, doc, Raphael) {
   "use strict";
 
-  var SVGBoard = function(container, config, clickHandler) {
+  var SVGBoard = function(container, config, eventHandler) {
     this._container = $(container);
     this._config = config;
     this._boardSize = config.boardSize;
-    this._clickHandler = clickHandler;
+    this._showHover = config.showHover;
+    this._eventHandler = eventHandler;
     this._fields = [];
     this._createPaper(this._config);
-    this.actualPlayer = config.actualPlayer;
-    this.thisPlayerNr = config.thisPlayerNr;
   };
 
   SVGBoard.prototype = {
@@ -28,9 +27,8 @@
         }
       }
     },
-    isTurn: function() {
-      // This is game logic and does not belong here
-      return this.actualPlayer === this.thisPlayerNr;
+    showHover: function(value) {
+      this._showHover = value;
     },
     forEachField: function(iterator) {
       this._fields.forEach(iterator);
@@ -53,9 +51,7 @@
       });
     },
     _handleClick: function(field) {
-      if (this.isTurn()) {
-        this._clickHandler.onClick(field);
-      }
+      this._eventHandler.onClick(field);
     },
     addPiece: function(piece) {
       this.getField(piece.x, piece.y).setStone(piece.player);
@@ -87,7 +83,7 @@
       }
       this._fields.forEach(function(field) {
         field.element.hover(function() {
-          if (self.isTurn()) {
+          if (self._showHover) {
             this.hover(true);
           }
         }, function() {
