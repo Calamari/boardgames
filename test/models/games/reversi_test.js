@@ -172,11 +172,13 @@ describe('Games/Reversi', function() {
 
         describe('if after the turn the enemy has no valid move left', function() {
           beforeEach(function() {
-            game.board.stones[3][4] = 0;
+            game.board.stones = [ [ 2, 2, null, 2, 2, 2, 2, 2 ], [ 2, 2, 1, 2, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ null, 1, 2, 2, 1, 1, 1, 1 ], [ null, 1, 1, 2, 2, 1, 1, 1 ], [ null, null, 1, 2, 2, 2, 1, 1 ], [ 2, 2, 2, 1, 1, 1, 1, 1 ] ];
+            game.actualPlayer = 2;
+            game.save();
           });
 
           it('it sends update with gameEnded event', function(done) {
-            Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err, data) {
+            Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
               data.gameEnded.should.eql({ winner: 1 });
               done();
             });
