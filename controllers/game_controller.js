@@ -24,24 +24,24 @@ module.exports = {
   '/:id': new Action([auth.redirectIfLogin], function(req, res, next, id) {
     loadGameOr404(req, res, function() {
       req.socketeer.set('gameId', req.game.id);
-      req.socketeer.set('username', req.session.username);
-      req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.session.username });
+      req.socketeer.set('username', req.user.username);
+      req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.user.username });
       res.html(templates.game({
-        username:           req.session.username,
+        username:           req.user.username,
         game:               req.game,
-        thisSpectator:      !req.game.isPlayer(req.session.username),
-        thisPlayerPosition: req.game.getPlayerPosition(req.session.username) || 0,
+        thisSpectator:      !req.game.isPlayer(req.user.username),
+        thisPlayerPosition: req.game.getPlayerPosition(req.user.username) || 0,
         socketeerId:        req.socketeerId
       }));
     }, id);
   }),
   '/:id/join': new Action([auth.redirectIfLogin], function(req, res, next, id) {
     loadGameOr404(req, res, function() {
-      if (req.game.canJoin(req.session.username)) {
+      if (req.game.canJoin(req.user.username)) {
         var events = {
-          playerJoined: req.session.username
+          playerJoined: req.user.username
         };
-        req.game.addPlayer(req.session.username);
+        req.game.addPlayer(req.user.username);
         if (req.game.isReady()) {
           req.game.startGame();
           events.gameStarted = {
@@ -70,7 +70,7 @@ module.exports = {
         req.flash('error', 'Game of type "' + type + '"" could not be created.');
         res.redirect('/');
       } else {
-        game.addPlayer(req.session.username);
+        game.addPlayer(req.user.username);
         game.save();
         res.redirect('/game/' + game.id);
       }

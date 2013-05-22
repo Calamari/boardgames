@@ -114,7 +114,6 @@ gameSchema.methods.endGame = function(winner) {
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
   this.find({ players: { $ne: username }, started: false }, function(err, games) {
-    console.log("GAMES", err, games);
     if (err) {
       cb(err);
     } else {

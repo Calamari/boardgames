@@ -5,10 +5,14 @@ var connect  = require('connect'),
     quip     = require('quip'),
     http     = require('http'),
     mongoose = require('mongoose'),
-    flash    = require('connect-flash');
+    passport = require('passport'),
+    flash    = require('connect-flash'),
+    auth     = require('./filters/authentication');
 
 module.exports = function(router, mongoUrl) {
   mongoose.connect(mongoUrl);
+
+  auth.configure();
 
   var cookieParser = connect.cookieParser('multiplication-game-sess'),
       sessionStore = new (require('connect-mongo')(connect))({
@@ -21,6 +25,8 @@ module.exports = function(router, mongoUrl) {
         .use(cookieParser)
         .use(connect.session({ store: sessionStore }))
         .use(connect.bodyParser())
+        .use(passport.initialize())
+        .use(passport.session())
         .use(connect.query())
         .use(flash())
         .use(quip())

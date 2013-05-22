@@ -16,11 +16,15 @@
     "async": "0.2.x",
     "handlebars": "1.x",
     "mongoose": "3.x",
+    "passport": "0.1.x",
+    "passport-local": "0.1.x",
+    "bcrypt": "0.7.x",
     "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
+    "expect.js": "*",
     "sinon": "*"
   }
 }

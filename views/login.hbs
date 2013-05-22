@@ -7,13 +7,19 @@
 <body>
   <h1>Login</h1>
 
+  {{#if success}}
+    <p>SUCCESS: {{success}}</p>
+  {{/if}}
   {{#if error}}
     <p>ERROR: {{error}}</p>
   {{/if}}
 
   <form method="post" action="/login">
-    <input type="text" name="username">
+    <label>Username: <input type="text" name="username"></label><br>
+    <label>Password: <input type="password" name="password"></label>
     <button type="submit">login</button>
   </form>
+
+  or <a href="/register">register</a>
 </body>
 </html>

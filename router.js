@@ -3,17 +3,20 @@
 
 var dispatch   = require('dispatch'),
     mongoose   = require('mongoose'),
+    passport   = require('passport'),
 
     auth       = require('./filters/authentication'),
     templates  = require('./lib/templates'),
-    Action     = require('./helpers').Action;
+    Action     = require('./helpers').Action,
+
+    User       = require('./models/user');
 
 require('./models/game');
 
 
 function gamesOfPlayer(req, res, next) {
   var Game     = mongoose.model('Game'),
-      username = req.session.username;
+      username = req.user.username;
 
   Game.find({ 'players': username }, function(err, games) {
     if (!err) {
@@ -38,7 +41,7 @@ module.exports = dispatch({
   '/': new Action([auth.redirectIfLogin, gamesOfPlayer], function(req, res, next) {
     res.html(templates.index({
       errorMessage: req.flash('error'),
-      username: req.session.username,
+      username: req.user.username,
       openGames: req.openGames,
       runningGames: req.runningGames,
       waitingGames: req.waitingGames,
@@ -46,23 +49,52 @@ module.exports = dispatch({
     }));
   }),
   '/game': require('./controllers/game_controller'),
-  '/login': {
+  '/register': {
     GET: new Action(function(req, res, next) {
-      res.html(templates.login({}));
+      res.html(templates.register({
+      }));
     }),
     POST: new Action(function(req, res, next) {
-      var username = req.body.username.trim();
+      function showRegisterPage(error, user) {
+        res.html(templates.register({
+          error: error,
+          user: user || {}
+        }));
+      }
 
-      if (username) {
-        req.session.username = username;
-        res.redirect('/');
+      if (req.body.password !== req.body.password2) {
+        showRegisterPage('Passwords do not match');
       } else {
-        res.html(templates.login({ error: 'Enter a name!' }));
+        // make this lines nicer
+        var user = new User({
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password || ''
+        });
+
+        user.save(function(err) {
+          if (err) {
+            // TODO: make this better
+            showRegisterPage(err.message, user);
+          } else {
+            req.flash('success', 'Welcome');
+            res.redirect('/');
+          }
+        });
       }
     })
   },
+  '/login': {
+    GET: new Action(function(req, res, next) {
+      res.html(templates.login({
+        success: req.flash('success'),
+        error: req.flash('error')
+      }));
+    }),
+    POST: new Action(passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true })),
+  },
   '/logout': new Action(function(req, res, next) {
-    delete req.session.username;
+    req.logout();
     res.redirect('/login');
   })
 });
