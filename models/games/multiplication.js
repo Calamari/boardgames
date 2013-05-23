@@ -125,6 +125,8 @@ var gameDef = {
 
       if (!game.started) {
         cb(new Error('GAME_NOT_STARTED'));
+      } else if (game.ended) {
+        cb(new Error('GAME_ALREADY_ENDED'));
       } else if (!from || !to) {
         cb(new Error('ARGUMENT_ERROR'));
       } else if (!game.isPlayersTurn(playerNumber)) {

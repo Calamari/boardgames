@@ -183,6 +183,20 @@ describe('Games/Reversi', function() {
               done();
             });
           });
+
+          describe('if game is already ended', function() {
+            beforeEach(function() {
+              game.endGame(2);
+              game.save();
+            });
+
+            it('sends error back', function(done) {
+              Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
+                err.message.should.eql('GAME_ALREADY_ENDED');
+                done();
+              });
+            });
+          });
         });
 
         it('with valid action mard board as modified so it can be saved', function(done) {

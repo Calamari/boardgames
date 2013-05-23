@@ -78,6 +78,14 @@ describe('Games/Multiplication', function() {
           });
         });
 
+        it('send error GAME_ALREADY_ENDED if game is already finished', function(done) {
+          game.endGame(2);
+          Multiplication.actions.move(game, { from: [0,0], to: [3,0], user: 'one' }, function(err) {
+            err.message.should.eql('GAME_ALREADY_ENDED');
+            done();
+          });
+        });
+
         it('moving stone one field distance clones it', function(done) {
           Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err) {
             game.board.stones[0][0].should.eql(1);
