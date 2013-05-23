@@ -84,16 +84,26 @@ gameSchema.methods.isReady = function() {
 };
 
 gameSchema.methods.action = function(action, data, cb) {
-  var self = this;
-  GameTypes.get(this.type).actions[action](this, data, function(err, data) {
-    if (err) {
-      cb(err);
-    } else {
-      self.save(function(err) {
-        cb(err, data);
-      });
-    }
-  });
+  var game         = this,
+      playerNumber = game.getPlayerPosition(data.user);
+
+  if (!game.started) {
+    cb(new Error('GAME_NOT_STARTED'));
+  } else if (game.ended) {
+    cb(new Error('GAME_ALREADY_ENDED'));
+  } else if (!game.isPlayersTurn(playerNumber)) {
+    cb(new Error('NOT_YOUR_TURN'));
+  } else {
+    GameTypes.get(this.type).actions[action](this, data, function(err, data) {
+      if (err) {
+        cb(err);
+      } else {
+        game.save(function(err) {
+          cb(err, data);
+        });
+      }
+    });
+  }
 };
 
 gameSchema.methods.giveUp = function(player) {

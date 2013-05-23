@@ -136,14 +136,8 @@ var gameDef = {
         to = { x: to[0], y: to[1] };
       }
 
-      if (!game.started) {
-        cb(new Error('GAME_NOT_STARTED'));
-      } else if (game.ended) {
-        cb(new Error('GAME_ALREADY_ENDED'));
-      } else if (!to) {
+      if (!to) {
         cb(new Error('ARGUMENT_ERROR'));
-      } else if (!game.isPlayersTurn(playerNumber)) {
-        cb(new Error('NOT_YOUR_TURN'));
       } else if (getStone(game.board.stones, to) || !(capturedPieces = getCapturedPieces(game.board.stones, to, playerNumber))) {
         cb(new Error('INVALID_MOVE'));
       } else {

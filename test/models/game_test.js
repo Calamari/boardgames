@@ -342,6 +342,29 @@ describe('Game', function() {
       Multiplication.actions.move.calledWith(game, { from: [0,0], to: [0,1], user: 'one' }).should.eql(true);
     });
 
+    it('returns error on not started game', function(done) {
+      game.started = false;
+      game.action('move', { from: [0,0], to: [0,1], user: 'one' }, function(err) {
+        err.message.should.eql('GAME_NOT_STARTED');
+        done();
+      });
+    });
+
+    it('returns error if game is already finished', function(done) {
+      game.endGame(2);
+      game.action('move', { from: [0,0], to: [0,1], user: 'one' }, function(err) {
+        err.message.should.eql('GAME_ALREADY_ENDED');
+        done();
+      });
+    });
+
+    it('returns error if it is not players turn', function(done) {
+      game.action('move', { from: [0,0], to: [0,1], user: 'two' }, function(err) {
+        err.message.should.eql('NOT_YOUR_TURN');
+        done();
+      });
+    });
+
     it('has game saved after doing the action', function(done) {
       game.action('move', { from: [0,0], to: [0,1], user: 'one' }, function() {
         Game.findById(game.id, function(err, loadedGame) {

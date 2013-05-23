@@ -31,35 +31,14 @@ describe('Games/Reversi', function() {
     });
 
     describe('#move', function() {
-      it('returns error on not started game', function(done) {
-        Reversi.actions.set(game, {}, function(err) {
-          err.message.should.eql('GAME_NOT_STARTED');
-          done();
-        });
-      });
-
       describe('on started game one\'s turn', function() {
         beforeEach(function() {
           game.startGame();
         });
 
-        it('does not return a GAME_NOT_STARTED error', function(done) {
-          Reversi.actions.set(game, {}, function(err) {
-            err.message.should.not.eql('GAME_NOT_STARTED');
-            done();
-          });
-        });
-
         it('without needed data it results in ARGUMENT_ERROR', function(done) {
-          Reversi.actions.set(game, {}, function(err) {
+          Reversi.actions.set(game, { user: 'one' }, function(err) {
             err.message.should.eql('ARGUMENT_ERROR');
-            done();
-          });
-        });
-
-        it('send error NOT_YOUR_TURN if user is not at turn', function(done) {
-          Reversi.actions.set(game, { to: [2,2], user: 'two' }, function(err) {
-            err.message.should.eql('NOT_YOUR_TURN');
             done();
           });
         });
@@ -181,20 +160,6 @@ describe('Games/Reversi', function() {
             Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
               data.gameEnded.should.eql({ winner: 1 });
               done();
-            });
-          });
-
-          describe('if game is already ended', function() {
-            beforeEach(function() {
-              game.endGame(2);
-              game.save();
-            });
-
-            it('sends error back', function(done) {
-              Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
-                err.message.should.eql('GAME_ALREADY_ENDED');
-                done();
-              });
             });
           });
         });

@@ -31,35 +31,14 @@ describe('Games/Multiplication', function() {
     });
 
     describe('#move', function() {
-      it('returns error on not started game', function(done) {
-        Multiplication.actions.move(game, {}, function(err) {
-          err.message.should.eql('GAME_NOT_STARTED');
-          done();
-        });
-      });
-
       describe('on started game one\'s turn', function() {
         beforeEach(function() {
           game.startGame();
         });
 
-        it('does not return a GAME_NOT_STARTED error', function(done) {
-          Multiplication.actions.move(game, {}, function(err) {
-            err.message.should.not.eql('GAME_NOT_STARTED');
-            done();
-          });
-        });
-
         it('without needed data it results in ARGUMENT_ERROR', function(done) {
-          Multiplication.actions.move(game, {}, function(err) {
+          Multiplication.actions.move(game, { user: 'one' }, function(err) {
             err.message.should.eql('ARGUMENT_ERROR');
-            done();
-          });
-        });
-
-        it('send error NOT_YOUR_TURN if user is not at turn', function(done) {
-          Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'two' }, function(err) {
-            err.message.should.eql('NOT_YOUR_TURN');
             done();
           });
         });
@@ -74,14 +53,6 @@ describe('Games/Multiplication', function() {
         it('send error INVALID_MOVE if move is not allowed', function(done) {
           Multiplication.actions.move(game, { from: [0,0], to: [3,0], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
-            done();
-          });
-        });
-
-        it('send error GAME_ALREADY_ENDED if game is already finished', function(done) {
-          game.endGame(2);
-          Multiplication.actions.move(game, { from: [0,0], to: [3,0], user: 'one' }, function(err) {
-            err.message.should.eql('GAME_ALREADY_ENDED');
             done();
           });
         });
