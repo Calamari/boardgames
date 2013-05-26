@@ -34,6 +34,15 @@ Statistic.prototype = {
   },
   getHistory: function(key) {
     return this.user.stats[key] || {};
+  },
+  getSum: function(key) {
+    if (!this.user.stats[key]) { return 0; }
+    var sum   = 0,
+        stats = this.user.stats[key];
+    Object.keys(stats).forEach(function(dayKey) {
+      sum += stats[dayKey];
+    });
+    return sum;
   }
 };
 module.exports = Statistic;

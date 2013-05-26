@@ -113,4 +113,29 @@ describe('Statistic', function() {
       expect(barHistory[yesterdayKey]).to.eql(1);
     });
   });
+
+  describe('getting the sum of a key', function() {
+    it('will not mark user as modified', function() {
+      stats.getSum('foo');
+      expect(user.isModified()).to.be(false);
+      expect(user.isModified('stats')).to.be(false);
+    });
+
+    it('returns 0 of undefined key', function() {
+      expect(stats.getSum('foo')).to.be(0);
+    });
+
+    it('returns the correct number', function() {
+      stats.set('foo', 100);
+      expect(stats.getSum('foo')).to.be(100);
+      stats.set('foo', 23, yesterday);
+      expect(stats.getSum('foo')).to.be(123);
+      stats.increment('foo', yesterday);
+      expect(stats.getSum('foo')).to.be(124);
+      stats.set('bar', 1, yesterday);
+      expect(stats.getSum('foo')).to.be(124);
+      stats.decrement('foo');
+      expect(stats.getSum('foo')).to.be(123);
+    });
+  });
 });
