@@ -4,9 +4,9 @@
 var mongoose = require('mongoose'),
     bcrypt   = require('bcrypt'),
 
+    Statistics = require('./statistic'),
 
     SALT_WORK_FACTOR = 10;
-    //saltChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHOIJKLMNOPQRSTUVWXYZ0123456789#+*-_!"§$%&/()=';
 
 var userSchema = mongoose.Schema({
     username: { 'type': String, 'required': true, min: 3, index: { unique: true } },
@@ -14,9 +14,8 @@ var userSchema = mongoose.Schema({
     email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true } },
     createdAt: { 'type': Date, 'default': Date.now },
     lastLoginAt: { 'type': Date, 'default': Date.now },
-    statistics: { 'type': Object, 'default': {} }
+    stats: { 'type': Object, 'default': {} }
 });
-
 
 userSchema.path('username').validate(function(value) {
   return value && value.length >= 3;
@@ -32,6 +31,10 @@ userSchema.methods.validatePassword = function(testPassword, cb) {
     cb(null, isMatch);
   });
 };
+
+userSchema.virtual('statistics').get(function () {
+  return this._statistics || new Statistics(this);
+});
 
 userSchema.pre('save', function(next) {
   var user = this;
