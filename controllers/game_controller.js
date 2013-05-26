@@ -52,7 +52,10 @@ module.exports = {
         req.socketeer.where({ gameId: req.game.id }).send('events', events);
         req.game.save(function(err) {
           if (err) { req.flash('error', 'You can not join this game.'); }
-          res.redirect('/game/' + req.game.id);
+          req.user.statistics.increment('gamesJoined');
+          req.user.save(function() {
+            res.redirect('/game/' + req.game.id);
+          });
         });
       } else {
         req.flash('error', 'You can not join this game.');
@@ -71,8 +74,12 @@ module.exports = {
         res.redirect('/');
       } else {
         game.addPlayer(req.user.username);
-        game.save();
-        res.redirect('/game/' + game.id);
+        game.save(function() {
+          req.user.statistics.increment('gamesStarted');
+          req.user.save(function() {
+            res.redirect('/game/' + game.id);
+          });
+        });
       }
     });
   })
