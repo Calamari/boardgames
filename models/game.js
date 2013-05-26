@@ -26,6 +26,21 @@ gameSchema.path('type').validate(function(value) {
   return GameTypes.containsType(value);
 });
 
+gameSchema.virtual('winnerName').get(function () {
+  if (this.ended) {
+    return this.players[this.winner-1];
+  }
+  return null;
+});
+
+gameSchema.virtual('looserNames').get(function () {
+  if (this.ended) {
+    var winner = this.winnerName;
+    return this.players.filter(function(name) { return name !== winner; });
+  }
+  return null;
+});
+
 gameSchema.methods.addPlayer = function(playerName) {
   if (this.players.length < GameTypes.get(this.type).maxPlayers && this.players.indexOf(playerName) === -1) {
     this.players.push(playerName);

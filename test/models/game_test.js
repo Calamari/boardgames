@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     sinon    = require('sinon'),
+    expect   = require('expect.js'),
 
     Game      = require('../../models/game'),
     GameTypes = require('../../models/game_types');
@@ -417,6 +418,39 @@ describe('Game', function() {
       game.addPlayer('bob').should.equal(false);
       game.addPlayer('berta').should.equal(true);
       game.addPlayer('tim').should.equal(false);
+    });
+  });
+
+  describe('#winnerName and #looserNames', function() {
+    var game;
+    beforeEach(function(done) {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('bob');
+      game.addPlayer('john');
+      game.startGame();
+      done();
+    });
+
+    describe('on not ended game', function() {
+      it('both return null', function() {
+        expect(game.winnerName).to.be(null);
+        expect(game.looserNames).to.be(null);
+      });
+    });
+
+    describe('on ended game', function() {
+      beforeEach(function(done) {
+        game.endGame('john');
+        done();
+      });
+
+      it('winnerName returns the winner', function() {
+        expect(game.winnerName).to.be('john');
+      });
+
+      it('looserName returns array with the loosers', function() {
+        expect(game.looserNames).to.eql(['bob']);
+      });
     });
   });
 });
