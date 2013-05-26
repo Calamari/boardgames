@@ -90,6 +90,11 @@ describe('User', function() {
     });
   });
 
+  it('email will be trimmed', function() {
+    var user = new User({ email: ' blub@test.de    '});
+    expect(user.email).to.eql('blub@test.de');
+  });
+
   describe('#validatePassword', function() {
     var user;
     beforeEach(function(done) {
@@ -112,11 +117,23 @@ describe('User', function() {
     });
   });
 
-  describe('statistics', function() {
+  describe('#statistics', function() {
     it('is a Statistic object', function(done) {
       var user = new User({});
       var Statistic = require('../../models/statistic');
       expect(user.statistics).to.be.a(Statistic);
+      done();
+    });
+  });
+
+  describe('#avatarUrl', function() {
+    var crypto = require('crypto'),
+        hash = crypto.createHash('md5');
+    hash.update('meis@cool.com');
+
+    it('works for a given user', function(done) {
+      var user = new User({ email: 'MeIs@cool.com ' });
+      expect(user.avatarUrl).to.be('http://www.gravatar.com/avatar/' + hash.digest('hex'));
       done();
     });
   });

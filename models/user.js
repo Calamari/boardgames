@@ -6,12 +6,19 @@ var mongoose = require('mongoose'),
 
     Statistics = require('./statistic'),
 
+    crypto = require('crypto'),
+    hash = crypto.createHash('md5'),
+
     SALT_WORK_FACTOR = 10;
+
+function trim(value) {
+  return value.trim();
+}
 
 var userSchema = mongoose.Schema({
     username: { 'type': String, 'required': true, min: 3, index: { unique: true } },
     password: { 'type': String, 'required': true, min: 6 },
-    email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true } },
+    email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true }, set: trim },
     createdAt: { 'type': Date, 'default': Date.now },
     lastLoginAt: { 'type': Date, 'default': Date.now },
     stats: { 'type': Object, 'default': {} }
@@ -34,6 +41,11 @@ userSchema.methods.validatePassword = function(testPassword, cb) {
 
 userSchema.virtual('statistics').get(function () {
   return this._statistics || new Statistics(this);
+});
+
+userSchema.virtual('avatarUrl').get(function () {
+  hash.update(this.email.toLowerCase());
+  return 'http://www.gravatar.com/avatar/' + hash.digest('hex');
 });
 
 userSchema.pre('save', function(next) {
