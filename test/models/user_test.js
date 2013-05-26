@@ -133,7 +133,7 @@ describe('User', function() {
 
     it('works for a given user', function(done) {
       var user = new User({ email: 'MeIs@cool.com ' });
-      expect(user.avatarUrl).to.be('http://www.gravatar.com/avatar/' + hash.digest('hex'));
+      expect(user.avatarUrl).to.be('http://www.gravatar.com/avatar/' + hash.digest('hex') + '?d=retro');
       done();
     });
   });

@@ -7,7 +7,6 @@ var mongoose = require('mongoose'),
     Statistics = require('./statistic'),
 
     crypto = require('crypto'),
-    hash = crypto.createHash('md5'),
 
     SALT_WORK_FACTOR = 10;
 
@@ -44,8 +43,9 @@ userSchema.virtual('statistics').get(function () {
 });
 
 userSchema.virtual('avatarUrl').get(function () {
+  var hash = crypto.createHash('md5');
   hash.update(this.email.toLowerCase());
-  return 'http://www.gravatar.com/avatar/' + hash.digest('hex');
+  return 'http://www.gravatar.com/avatar/' + hash.digest('hex') + '?d=retro';
 });
 
 userSchema.pre('save', function(next) {
