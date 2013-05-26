@@ -1,11 +1,6 @@
 (function(win, doc, CanvasBoard, Score) {
   "use strict";
 
-
-      }
-  };
-
-
   var Game = function(container, config) {
     this._boardSize = config.boardSize;
     this._config = config;
@@ -42,8 +37,10 @@
         self._setupSocketListeners();
       });
     },
-      if (this.isSpectator) {
     _startGame: function(stones) {
+      if (this._gameEnded) {
+        this._endGame(this._gameEnded);
+      } else if (this.isSpectator) {
         this._logger.log('You are just spectating.');
       } else if (this.actualPlayer === this.thisPlayerNr) {
         this._logger.log('It\'s your turn.');
@@ -59,8 +56,14 @@
       } else if (this.thisPlayerNr === winner) {
         this._logger.log('You have won! Contrgrats.');
       } else {
-        this._logger.log('Sorry, you\'ve lost!');
+        if (this.thisPlayerNr === winner) {
+          this._logger.log('You have won! Contrgrats.');
+        } else {
+          this._logger.log('Sorry, you\'ve lost!');
+        }
       }
+      this._gameEnded = true;
+      this._board.showHover(false);
     },
     _setupSocketListeners: function() {
       var self = this,
