@@ -1,0 +1,16 @@
+<html>
+<head>
+  <title>Profile of {{user.username}}</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+<body>
+  <h1>User: {{user.username}}</h1>
+  <ul>
+    <li><strong>registered:</strong> {{user.createdAt}}</li>
+    <li><strong>E-Mail:</strong> {{user.email}}</li>
+    <li><strong>gamesStarted:</strong> {{user.statistics.gamesStarted}}</li>
+    <li><strong>gamesJoined:</strong> {{user.statistics.gamesJoined}}</li>
+  </ul>
+</body>
+</html>

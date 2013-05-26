@@ -96,5 +96,13 @@ module.exports = dispatch({
   '/logout': new Action(function(req, res, next) {
     req.logout();
     res.redirect('/login');
+  }),
+  '/profile/:profileName': new Action([auth.redirectIfLogin], function(req, res, next, profileName) {
+    User.findOne({ username: profileName}, function(err, user) {
+      if (err || !user) { return next(); }
+      res.html(templates.profile({
+        user: user
+      }));
+    });
   })
 });
