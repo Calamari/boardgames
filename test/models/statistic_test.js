@@ -145,7 +145,7 @@ describe('Statistic', function() {
       expect(stats.gamesStarted).to.be(123);
 
       stats.set('foo', 42);
-      expect(stats.foo).to.be(0);
+      expect(stats.foo).to.be(undefined);
     });
 
   });
