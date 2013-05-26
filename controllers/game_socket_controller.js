@@ -15,6 +15,8 @@ module.exports = function(socketeer, app) {
         if (err) {
           cb({ error: err.message });
         } else if (game.actualPlayer != game.getPlayerPosition(socket.username)) {
+        } else if (!game) {
+          cb({ error: 'GAME_NOT_FOUND' });
           cb({ error: "NOT_YOUR_TURN", actualPlayer: game.actualPlayer });
         } else {
           var action = data.action;
