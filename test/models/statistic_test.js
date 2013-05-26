@@ -137,5 +137,16 @@ describe('Statistic', function() {
       stats.decrement('foo');
       expect(stats.getSum('foo')).to.be(123);
     });
+
+    it('is also available as getter for given metrics', function() {
+      stats.set('gamesStarted', 100);
+      expect(stats.gamesStarted).to.be(100);
+      stats.set('gamesStarted', 23, yesterday);
+      expect(stats.gamesStarted).to.be(123);
+
+      stats.set('foo', 42);
+      expect(stats.foo).to.be(0);
+    });
+
   });
 });

@@ -3,9 +3,22 @@
 
 var moment = require('moment');
 
+function defineGetters(obj) {
+  Statistic.METRICS.forEach(function(metric) {
+    obj.__defineGetter__(metric, function() {
+      console.log("self it", metric, this);
+      return this.getSum(metric);
+    });
+  });
+}
+
 function Statistic(user) {
   this.user = user;
+
+  defineGetters(this);
 }
+
+Statistic.METRICS = ['gamesStarted', 'gamesJoined', 'gamesWon', 'gamesLost'];
 
 Statistic.prototype = {
   get: function(key, date) {
@@ -45,4 +58,5 @@ Statistic.prototype = {
     return sum;
   }
 };
+
 module.exports = Statistic;
