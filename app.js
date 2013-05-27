@@ -31,11 +31,6 @@ module.exports = function(router, mongoUrl) {
         .use(flash())
         .use(quip())
         .use(socketeer.connect)
-        .use(function(req, res, next) {
-          // remove things on every request
-          req.socketeer.remove('gameId');
-          next();
-        })
         .use(router),
       server       = http.createServer(app),
       io           = require('socket.io').listen(server);

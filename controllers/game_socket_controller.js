@@ -8,19 +8,19 @@ module.exports = function(socketeer, app) {
 
   socketeer.on('action', function(data, cb) {
     try {
-      var socket = socketeer.getSocket(this.socketeerId),
-          gameId = socket.gameId;
+      var socket = socketeer.getInstance(this.socketeerId),
+          gameId = socket.get('gameId');
 
       Game.findById(gameId, function(err, game) {
         if (err) {
           cb({ error: err.message });
         } else if (!game) {
           cb({ error: 'GAME_NOT_FOUND' });
-        } else if (game.actualPlayer != game.getPlayerPosition(socket.username)) {
+        } else if (game.actualPlayer != game.getPlayerPosition(socket.get('username'))) {
           cb({ error: "NOT_YOUR_TURN", actualPlayer: game.actualPlayer });
         } else {
           var action = data.action;
-          data.user = socket.username;
+          data.user = socket.get('username');
           game.action(action, data, function(err, data) {
             console.log("HERE", arguments);
             if (err) {

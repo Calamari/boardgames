@@ -31,7 +31,7 @@ module.exports = {
         game:               req.game,
         thisSpectator:      !req.game.isPlayer(req.user.username),
         thisPlayerPosition: req.game.getPlayerPosition(req.user.username) || 0,
-        socketeerId:        req.socketeerId
+        socketeerId:        req.socketeer.id
       }));
     }, id);
   }),
