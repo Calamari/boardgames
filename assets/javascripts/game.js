@@ -66,31 +66,9 @@
       this._board.showHover(false);
     },
     _setupSocketListeners: function() {
-      var self = this,
-          eventType, value;
-      this._socketeer.on('events', function(data) {
-        for (eventType in data) {
-          value = data[eventType];
-          switch (eventType) {
-            case 'userEntered':
-              self._logger.log(value + ' entered the game.');
-              break;
-            case 'playerJoined':
-              self._logger.log(value + ' joined the game.');
-              break;
-            case 'gameStarted':
-              self._setPlayer(value.actualPlayer);
-              self._gameStarted = true;
-              self._startGame(value.stones);
-              break;
-            case 'gameEnded':
-              self._endGame(value.winner);
-              break;
-            case 'update':
-              self._updateGame(value);
-              break;
-          }
-        }
+      var self = this;
+      this._socketeer.on('events.' + this._config.gameId, function(data) {
+        self._updateGame(data);
       });
       this._socketeer.on('socketeer.error', function(error) {
         self._logger.log('<strong>ERROR: Please reload the browser!</strong>');
@@ -115,8 +93,20 @@
 
       for (key in data) {
         value = data[key];
+        if (!value) { continue; }
 
         switch(key) {
+          case 'userEntered':
+            self._logger.log(value + ' entered the game.');
+            break;
+          case 'playerJoined':
+            self._logger.log(value + ' joined the game.');
+            break;
+          case 'gameStarted':
+            self._setPlayer(value.actualPlayer);
+            self._gameStarted = true;
+            self._startGame(value.stones);
+            break;
           case 'actualPlayer':
           case 'newPlayer':
             self._setPlayer(value);

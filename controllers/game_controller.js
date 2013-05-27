@@ -25,7 +25,7 @@ module.exports = {
     loadGameOr404(req, res, function() {
       req.socketeer.set('gameId', req.game.id);
       req.socketeer.set('username', req.user.username);
-      req.socketeer.where({ gameId: req.game.id }).send('events', { userEntered: req.user.username });
+      req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
       res.html(templates.game({
         username:           req.user.username,
         game:               req.game,
@@ -49,7 +49,7 @@ module.exports = {
             stones: req.game.board.stones
           };
         }
-        req.socketeer.where({ gameId: req.game.id }).send('events', events);
+        req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, events);
         req.game.save(function(err) {
           if (err) { req.flash('error', 'You can not join this game.'); }
           req.user.statistics.increment('gamesJoined');
