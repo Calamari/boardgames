@@ -53,7 +53,11 @@ p {
   height: 1em;
   padding: 2px;
   vertical-align: middle;
+
+  transition: width 1s;
+  -webkit-transition: width 1s;
 }
+
 #score .player0 {
   background: #f7f7f7;
   border-left: 1px solid #999;
@@ -121,10 +125,4 @@ p {
   width: 100%;
   position: absolute;
   bottom: 0;
-}
-
-.score {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
 }
