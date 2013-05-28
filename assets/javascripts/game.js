@@ -24,7 +24,7 @@
   Game.prototype = {
     _initBoard: function(stones) {
       this._board.updateBoard(stones);
-      this._score = new Score(this._config.score, this._config.players);
+      this._score = new Score(this._config.score, this._config.players, this._config.username);
       this._countPieces();
     },
     _initSocketeer: function() {

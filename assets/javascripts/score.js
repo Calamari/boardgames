@@ -1,9 +1,10 @@
 (function(win, doc, CanvasBoard) {
   'use strict';
 
-  var Score = function(element, names) {
+  var Score = function(element, names, username) {
     this._element = $(element);
     this._names = names;
+    this._username = username;
     this.width = 200;
     this._counters = { 1: 0, 2: 0 };
     this._createHTML();
@@ -13,7 +14,8 @@
     _createHTML: function() {
       var self = this;
       this._names.forEach(function(name, index) {
-        self._element.append((index === 0 ? name + ' ' : '') + '<span class="' + name + ' player' + index + '"></span>' + (index === 1 ? ' ' + name : ''));
+        var displayName = name === self._username ? 'You' : name;
+        self._element.append((index === 0 ? displayName + ' ' : '') + '<span class="' + name + ' player' + index + '"></span>' + (index === 1 ? ' ' + displayName : ''));
       });
     },
     _count: function(board, size) {
