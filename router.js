@@ -101,6 +101,9 @@ module.exports = dispatch({
     req.logout();
     res.redirect('/login');
   }),
+  '/profile': new Action([auth.redirectIfLogin], function(req, res, next, profileName) {
+    res.redirect('/profile/' + req.user.username);
+  }),
   '/profile/:profileName': new Action([auth.redirectIfLogin], function(req, res, next, profileName) {
     User.findOne({ username: profileName}, function(err, user) {
       if (err || !user) { return next(); }
