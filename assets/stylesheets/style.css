@@ -87,33 +87,38 @@ p {
   display: inline-block;
 }
 
-#chat {
+.chat {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUCAIAAADDbMD2AAAAH0lEQVQImWN4++U7EyMDAwIzYmczQPF/ZPwfjc/AAAB//gwBtMlL7wAAAABJRU5ErkJggg==);
+  border-left: 1px solid #999;
   display: inline-block;
+  font-family: monospace;
   margin-left: 20px;
-  padding-bottom: 20px;
-  position: relative;
+  padding: 20px 6px;
+  position: fixed;
+  right: 0;
+  top: 31px;
+  bottom: 0;
   vertical-align: top;
-  height: 95%;
   width: 400px;
 }
 
-#chat .system {
+.chat .system {
   color: #999;
 }
 
-#chat .you {
+.chat .you {
   color: #090;
 }
 
-#chat .player {
+.chat .player {
   color: #900;
 }
 
-#chat .spectator {
+.chat .spectator {
   color: #333;
 }
 
-#chat .content {
+.chat .content {
   position: absolute;
   top: 0;
   bottom: 22px;
@@ -121,8 +126,12 @@ p {
   width: 100%;
 }
 
-#chat input {
+.chat input {
   width: 100%;
   position: absolute;
   bottom: 0;
+}
+
+.chat p {
+  font-size: 14px;
 }
