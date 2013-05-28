@@ -12,6 +12,9 @@
     this._gameEnded = config.gameEnded;
     this._logger = config.logger;
 
+    // TODO: change this to an EventEmitter trait thingy
+    this.onChange = function() {};
+
     config.showHover = this._isTurn();
     this._board = new SVGBoard(container, config, this._eventHandler());
     this._socketeer = new Socketeer(config.socket, config.socketeerId);
@@ -49,6 +52,7 @@
       }
       this._initBoard(this._config.stones || stones);
       this._board.start();
+      this.onChange();
     },
     _endGame: function(winner) {
       if (!this.thisPlayerNr) {
@@ -64,6 +68,7 @@
       }
       this._gameEnded = true;
       this._board.showHover(false);
+      this.onChange();
     },
     _setupSocketListeners: function() {
       var self = this;
@@ -126,6 +131,7 @@
         }
       }
       this._countPieces();
+      this.onChange();
     },
     _setPlayer: function(player) {
       this.actualPlayer = player;
@@ -133,6 +139,7 @@
         this._logger.log('It\'s your turn again.');
       }
       this._board.showHover(this._isTurn());
+      this.onChange();
     },
     _isTurn: function() {
       return !this._gameEnded && this.actualPlayer === this.thisPlayerNr;
@@ -142,6 +149,14 @@
     },
     isPlayer: function(name) {
       return this._config.players.indexOf(name) !== -1;
+    },
+    getActualPlayer: function() {
+      return this._config.players[this.actualPlayer-1];
+    },
+    getGameState: function() {
+      if (this._gameEnded) { return 'ended'; }
+      if (this._gameStarted) { return 'started'; }
+      return 'waiting';
     }
   };
 
