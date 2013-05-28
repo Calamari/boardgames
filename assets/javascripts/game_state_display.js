@@ -8,7 +8,6 @@
 
         check = function() {
           var state = game.getGameState();
-          console.log(state, game);
           if (state === 'ended') {
             $container.html(game.getWinner() + "'s turn");
           } else if (state === 'waiting') {

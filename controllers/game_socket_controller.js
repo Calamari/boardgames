@@ -48,11 +48,11 @@ module.exports = function(socketeer, app) {
                   });
 
                 }
+                // TODO: either send not cb or not to same user that receives callback
+                // TODO: better would be the move action, so player can do it by themselves (incl. smooth move animation)
+                socketeer.where({ gameId: game.id }).send('events.' + gameId, data );
+                cb(data);
               });
-              // TODO: either send not cb or not to same user that receives callback
-              // TODO: better would be the move action, so player can do it by themselves (incl. smooth move animation)
-              socketeer.where({ gameId: game.id }).send('events.' + gameId, data );
-              cb(data);
             }
           });
         }
