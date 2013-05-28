@@ -43,11 +43,14 @@
   <script src="/javascripts/games/reversi_game.js"></script>
   <script src="/javascripts/chat.js"></script>
   <script>
-    var chat   = new Chat('#chat', io.connect('/chat'), { channel: 'game-{{game.id}}' }),
+    var chat   = new Chat('#chat', io.connect('/chat'), {
+          channel: 'game-{{game.id}}',
+          username: '{{username}}'
+        }),
         logger = (function() {
           return {
             log: function(text) {
-              chat.line(text, 'system');
+              chat.line(text);
             }
           }
         }()),
@@ -56,7 +59,7 @@
           Reversi: ReversiGame
         };
 
-    new games['{{game.type}}']('#gamefield', {
+    var game = new games['{{game.type}}']('#gamefield', {
       // game specific config
       boardSize: 8,
       cellWidth: 40,
@@ -81,6 +84,7 @@
       isSpectator: {{bool thisSpectator}},
       logger: logger
     });
+    chat.isPlayerHandler = function(who) { return game.isPlayer(who); };
   </script>
 </body>
 </html>

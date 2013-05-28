@@ -139,6 +139,9 @@
     },
     nextPlayer: function() {
       this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;
+    },
+    isPlayer: function(name) {
+      return this._config.players.indexOf(name) !== -1;
     }
   };
 
