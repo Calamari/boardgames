@@ -48,6 +48,15 @@
     </ul>
   {{/if}}
 
+  {{#if endedGames}}
+    <h2>Finished Games:</h2>
+    <ul>
+      {{#each endedGames}}
+        <li>[{{type}}] Players: {{players}} - Winner: <strong>{{winnerName}}</strong></li>
+      {{/each}}
+    </ul>
+  {{/if}}
+
 
   <div id="chat">
     <div class="content"></div>

@@ -20,8 +20,11 @@ function gamesOfPlayer(req, res, next) {
 
   Game.find({ 'players': username }, function(err, games) {
     if (!err) {
+      req.endedGames = games.filter(function(game) {
+        return game.ended;
+      });
       req.runningGames = games.filter(function(game) {
-        return game.started;
+        return game.started && !game.ended;
       });
       req.waitingGames = games.filter(function(game) {
         return !game.started;
@@ -45,6 +48,7 @@ module.exports = dispatch({
       openGames: req.openGames,
       runningGames: req.runningGames,
       waitingGames: req.waitingGames,
+      endedGames: req.endedGames,
       channel: '_free'
     }));
   }),
