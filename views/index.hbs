@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
-  <div>Hallo: {{username}}</div>
+  <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
   {{#if errorMessage}}
     <p class="error-message">{{errorMessage}}</p>

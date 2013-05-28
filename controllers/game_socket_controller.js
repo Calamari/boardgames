@@ -4,7 +4,8 @@
 var mongoose = require('mongoose');
 
 module.exports = function(socketeer, app) {
-  var Game = mongoose.model('Game');
+  var Game = mongoose.model('Game'),
+      User = mongoose.model('User');
 
   socketeer.on('action', function(data, cb) {
     try {
@@ -22,14 +23,32 @@ module.exports = function(socketeer, app) {
           var action = data.action;
           data.user = socket.get('username');
           game.action(action, data, function(err, data) {
-            console.log("HERE", arguments);
             if (err) {
               cb({ error: err.message, actualPlayer: game.actualPlayer });
             } else {
               if (data.gameEnded) {
                 game.endGame(data.gameEnded.winner);
-                game.save();
               }
+              game.save(function(err) {
+                if (!err && data.gameEnded) {
+                  User.find({ username: game.winnerName }, function(err, user) {
+                    if (!err && user) {
+                      user.statistics.increment('gamesWon');
+                      user.save();
+                    }
+                  });
+
+                  User.find({ username: { $in: game.looserNames } }, function(err, users) {
+                    if (!err && users) {
+                      users.forEach(function(user) {
+                        user.statistics.increment('gamesWon');
+                        user.save();
+                      });
+                    }
+                  });
+
+                }
+              });
               // TODO: either send not cb or not to same user that receives callback
               // TODO: better would be the move action, so player can do it by themselves (incl. smooth move animation)
               socketeer.where({ gameId: game.id }).send('events.' + gameId, data );

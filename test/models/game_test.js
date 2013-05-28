@@ -153,6 +153,25 @@ describe('Game', function() {
     });
   });
 
+  describe('#getPlayerName', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
+    });
+
+    it('returns name of player for correct positions', function() {
+      expect(game.getPlayerName(1)).eql('jon');
+      expect(game.getPlayerName(2)).eql('john');
+    });
+
+    it('returns null if not found', function() {
+      expect(game.getPlayerName(0)).to.eql(null);
+      expect(game.getPlayerName(3)).to.eql(null);
+    });
+  });
+
   describe('#isPlayersTurn', function() {
     var game;
     beforeEach(function() {

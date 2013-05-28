@@ -65,6 +65,10 @@ gameSchema.methods.getPlayerPosition = function(playerName) {
   return index === -1 ? false : index+1;
 };
 
+gameSchema.methods.getPlayerName = function(playerPos) {
+  return (playerPos >= 1 && playerPos <= this.players.length) ? this.players[playerPos-1] : null;
+};
+
 gameSchema.methods.isPlayersTurn = function(player) {
   var index = typeof player === 'string' ? this.players.indexOf(player)+1 : player;
   return index === this.actualPlayer ? true : false;
