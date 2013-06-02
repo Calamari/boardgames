@@ -41,7 +41,7 @@ module.exports = function(socketeer, app) {
                   User.find({ username: { $in: game.looserNames } }, function(err, users) {
                     if (!err && users) {
                       users.forEach(function(user) {
-                        user.statistics.increment('gamesWon');
+                        user.statistics.increment('gamesLost');
                         user.save();
                       });
                     }
