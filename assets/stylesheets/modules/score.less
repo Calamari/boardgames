@@ -1,0 +1,46 @@
+.score {
+  border: 1px solid #fcfcfc;
+  display: inline-block;
+  position: relative;
+  height: 1.3em;
+  vertical-align: middle;
+
+  & > span {
+    display: inline-block;
+    font-size: 0.85em;
+    height: 1.2em;
+    line-height: 1.2em;
+    padding: 2px;
+    vertical-align: middle;
+
+    transition: width 1s;
+    -webkit-transition: width 1s;
+  }
+
+  .player0 {
+    background: #f7f7f7;
+    border-left: 1px solid #999;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+
+    span {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+  .player1 {
+    background: #000;
+    border-right: 1px solid #999;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    color: #fff;
+    text-align: right;
+
+    span {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+}

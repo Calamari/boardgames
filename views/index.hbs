@@ -2,7 +2,7 @@
 <head>
   <title>Games, games, games, …</title>
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+  {{{css 'application'}}}
 </head>
 <body>
   <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
@@ -62,12 +62,9 @@
     <div class="content"></div>
     <input type="text">
   </div>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/javascripts/vendor/moment.js"></script>
-  <script src="/javascripts/vendor/jquery-1.9.1.js"></script>
-  <script src="/javascripts/vendor/object.extend.js"></script>
-  <script src="/javascripts/chat.js"></script>
+  {{{js 'webpage'}}}
   <script>
+    // TODO: make the chat work
     var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
   </script>
 </body>

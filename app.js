@@ -20,8 +20,8 @@ module.exports = function(router, mongoUrl) {
       }),
       socketeer    = require('./lib/socketeer'),
       app          = connect()
-        .use(connect.static(__dirname + '/assets'))
         .use(connect.static(__dirname + '/public'))
+        .use(require('connect-assets')())
         .use(cookieParser)
         .use(connect.session({ store: sessionStore }))
         .use(connect.bodyParser())
@@ -34,6 +34,10 @@ module.exports = function(router, mongoUrl) {
         .use(router),
       server       = http.createServer(app),
       io           = require('socket.io').listen(server);
+
+  // TODO: use helperContext on connect-assets to get rid of this globals:
+  css.root = '/stylesheets';
+  js.root  = '/javascripts';
 
   socketeer.start(io);
 
