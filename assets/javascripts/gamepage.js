@@ -1,11 +1,9 @@
 // LIBS
-//= require vendor/socket.io-0.9.11.js
-//= require vendor/moment.js
-//= require vendor/jquery-1.9.1.js
-//= require vendor/object.extend.js
 //= require vendor/raphael-2.1.0.js
 
 // MY LIBS
+//= require traits/traits.js
+//= require traits/event_emitter.js
 //= require canvas.js
 //= require socketeer.js
 //= require canvas_board.js
@@ -21,6 +19,3 @@
 //= require game.js
 //= require games/cloned_game.js
 //= require games/reversi_game.js
-
-// CHAT
-//= require chat.js

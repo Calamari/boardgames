@@ -21,7 +21,7 @@
             }
           }
         };
-    game.onChange = check;
+    game.on('change', check);
     check();
   };
 
