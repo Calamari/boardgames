@@ -472,4 +472,22 @@ describe('Game', function() {
       });
     });
   });
+
+  describe('#getOpponents', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('bob');
+      game.addPlayer('john');
+      game.startGame();
+    });
+
+    it('returns the other player as array', function() {
+      expect(game.getOpponents('john')).to.eql(['bob']);
+    });
+
+    it('returns all if player is not playing', function() {
+      expect(game.getOpponents('johnny')).to.eql(['bob', 'john']);
+    });
+  });
 });

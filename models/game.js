@@ -89,6 +89,12 @@ gameSchema.methods.canJoin = function(player) {
   return false;
 };
 
+gameSchema.methods.getOpponents = function(playerName) {
+  return this.players.filter(function(name) {
+    return name !== playerName;
+  });
+};
+
 gameSchema.methods.actualPlayerName = function() {
   return this.players[this.actualPlayer-1];
 };
