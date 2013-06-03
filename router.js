@@ -91,11 +91,25 @@ module.exports = dispatch({
   '/login': {
     GET: new Action(function(req, res, next) {
       res.html(templates.login({
+        action: '/login' + (req.query.redir ? '?redir=' + encodeURIComponent(req.query.redir) : ''),
         success: req.flash('success'),
         error: req.flash('error')
       }));
     }),
-    POST: new Action(passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true })),
+    POST: new Action(function(req, res, next) {
+      passport.authenticate('local', function(err, user, info) {
+        if (info) {
+          // means problem
+          req.flash('error', 'Please enter valid username and password.');
+        }
+        if (err) { return next(err); }
+        if (!user) { return res.redirect(req.originalUrl); }
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+          return res.redirect(req.query.redir || '/');
+        });
+      })(req, res, next);
+    }),
   },
   '/logout': new Action(function(req, res, next) {
     req.logout();

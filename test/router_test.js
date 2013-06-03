@@ -6,7 +6,7 @@ describe('GET /', function() {
   describe('if not logged in', function() {
     it('redirects to /login', function(done) {
       app.request().get('/').end(function(res) {
-        res.headers.location.should.eql('/login');
+        res.headers.location.should.eql('/login?redir=' + encodeURIComponent('/'));
         res.statusCode.should.eql(302);
         done();
       });
