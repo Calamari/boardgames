@@ -90,7 +90,7 @@ module.exports = dispatch({
   },
   '/login': {
     GET: new Action(function(req, res, next) {
-      res.html(templates.login({
+      res.html(templates.login_show({
         action: '/login' + (req.query.redir ? '?redir=' + encodeURIComponent(req.query.redir) : ''),
         success: req.flash('success'),
         error: req.flash('error')
