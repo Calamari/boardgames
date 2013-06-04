@@ -13,21 +13,32 @@
 
   {{#if waitingGames}}
     <h2>Your games waiting for players:</h2>
-    <ul>
+    <ul class="games-list">
       {{#each waitingGames}}
-        <li>[{{type}}] Players: {{players}} - <a href="/game/{{id}}">go</a></li>
+        <li>
+          <span class="type">{{type}}</span>
+          <ul class="players">{{{playersList this ../users}}}</ul>
+          <ul class="links">
+            <li><a href="/game/{{id}}">go</a></li>
+          </ul>
+        </li>
       {{/each}}
     </ul>
   {{/if}}
 
   {{#if runningGames}}
     <h2>Your running games:</h2>
-    <ul>
+    <ul class="games-list">
       {{#each runningGames}}
         <li>
-          [{{type}}]
-          Players: {{{playersList this}}} - <a href="/game/{{id}}">go</a>
-          ({{turns}} turns played)
+          <span class="type">{{type}}</span>
+          <ul class="players">{{{playersList this ../users}}}</ul>
+          <ul class="links">
+            <li><a href="/game/{{id}}">go</a></li>
+          </ul>
+          <ul class="stats">
+            <li>turns played: {{turns}}</li>
+          </ul>
         </li>
       {{/each}}
     </ul>
@@ -41,18 +52,33 @@
 
   {{#if openGames}}
     <h2>Games waiting for players:</h2>
-    <ul>
+    <ul class="games-list">
       {{#each openGames}}
-        <li>[{{type}}] Players: {{players}} - <a href="/game/{{id}}/join">join</a></li>
+        <li>
+          <span class="type">{{type}}</span>
+          <ul class="players">{{{playersList this ../users}}}</ul>
+          <ul class="links">
+            <li><a href="/game/{{id}}/join">join</a></li>
+          </ul>
+        </li>
       {{/each}}
     </ul>
   {{/if}}
 
   {{#if endedGames}}
     <h2>Finished Games:</h2>
-    <ul>
+    <ul class="games-list">
       {{#each endedGames}}
-        <li>[{{type}}] Players: {{players}} - Winner: <strong>{{winnerName}}</strong></li>
+        <li class="{{winningClass this username}}">
+          <span class="type">{{type}}</span>
+          <ul class="players">{{{playersList this ../users}}}</ul>
+          <ul class="links">
+            <li><a href="/game/{{id}}">look</a></li>
+          </ul>
+          <ul class="stats">
+            <li>turns played: {{turns}}</li>
+          </ul>
+        </li>
       {{/each}}
     </ul>
   {{/if}}

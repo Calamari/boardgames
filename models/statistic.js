@@ -6,7 +6,6 @@ var moment = require('moment');
 function defineGetters(obj) {
   Statistic.METRICS.forEach(function(metric) {
     obj.__defineGetter__(metric, function() {
-      console.log("self it", metric, this);
       return this.getSum(metric);
     });
   });
