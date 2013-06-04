@@ -139,10 +139,34 @@ gameSchema.methods.giveUp = function(player) {
 };
 
 gameSchema.methods.endGame = function(winner) {
+  var game = this,
+      User = require('./user'),
+      called = false;
   this.ended = true;
   this.endedAt = Date.now();
   this.winner = typeof winner === 'number' ? winner : this.players.indexOf(winner) + 1;
-  // TODO: add statistics to user
+  this.pre('save', function(done) {
+    if (called) { return done(); }
+    called = true;
+    User.findOne({ username: game.winnerName }, function(err, user) {
+      if (!err && user) {
+        user.statistics.increment('gamesWon');
+        user.save();
+      }
+
+      User.find({ username: { $in: game.looserNames } }, function(err, users) {
+        if (!err && users) {
+          users.forEach(function(user) {
+            user.statistics.increment('gamesLost');
+            user.save();
+          });
+        }
+        done();
+      });
+
+    });
+
+  });
 };
 
 

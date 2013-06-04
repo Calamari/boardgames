@@ -30,24 +30,6 @@ module.exports = function(socketeer, app) {
                 game.endGame(data.gameEnded.winner);
               }
               game.save(function(err) {
-                if (!err && data.gameEnded) {
-                  User.find({ username: game.winnerName }, function(err, user) {
-                    if (!err && user) {
-                      user.statistics.increment('gamesWon');
-                      user.save();
-                    }
-                  });
-
-                  User.find({ username: { $in: game.looserNames } }, function(err, users) {
-                    if (!err && users) {
-                      users.forEach(function(user) {
-                        user.statistics.increment('gamesLost');
-                        user.save();
-                      });
-                    }
-                  });
-
-                }
                 // TODO: either send not cb or not to same user that receives callback
                 // TODO: better would be the move action, so player can do it by themselves (incl. smooth move animation)
                 socketeer.where({ gameId: game.id }).send('events.' + gameId, data );

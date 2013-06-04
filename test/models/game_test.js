@@ -3,10 +3,10 @@ var mongoose = require('mongoose'),
     expect   = require('expect.js'),
 
     Game      = require('../../models/game'),
+    User      = require('../../models/user'),
     GameTypes = require('../../models/game_types');
 
 describe('Game', function() {
-
   // afterEach(function(done) {
   //   console.log(Game);
   //   Game.remove(function() {
@@ -105,12 +105,23 @@ describe('Game', function() {
   });
 
   describe('#endGame', function() {
-    var game;
-    beforeEach(function() {
-      game = new Game({ type: 'Multiplication' });
-      game.addPlayer('one');
-      game.addPlayer('two');
-      game.startGame();
+    var game, winningUser, loosingUser;
+    beforeEach(function(done) {
+      winningUser = new User({ username: 'one', password: 'qwertz', email: 'one@gmail.com' });
+      loosingUser = new User({ username: 'two', password: 'qwertz', email: 'two@gmail.com' });
+      winningUser.save(function() {
+        loosingUser.save(function() {
+          game = new Game({ type: 'Multiplication' });
+          game.addPlayer('one');
+          game.addPlayer('two');
+          game.startGame();
+          done();
+        });
+      });
+    });
+
+    afterEach(function(done) {
+      User.remove(done);
     });
 
     it('sets game to ended', function() {
@@ -132,6 +143,24 @@ describe('Game', function() {
       game.endGame(1);
       game.ended.should.eql(true);
       game.winner.should.eql(1);
+    });
+
+    it('adds gamesLost and gamesWon to appropriate user statistics on save', function(done) {
+      game.endGame(1);
+      game.save(function() {
+        game.save(function() {
+          // Calling twice again should only add 1 :)
+          User.findOne({ username: 'one' }, function(err, winningUser) {
+            expect(winningUser.statistics.gamesWon).to.eql(1);
+            expect(winningUser.statistics.gamesLost).to.eql(0);
+            User.findOne({ username: 'two' }, function(err, loosingUser) {
+              expect(loosingUser.statistics.gamesWon).to.eql(0);
+              expect(loosingUser.statistics.gamesLost).to.eql(1);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 
