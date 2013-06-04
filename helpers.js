@@ -14,7 +14,7 @@ function Action(filters, cb) {
 
   return function(req, res, next) {
     var args = arguments;
-    async.applyEach(filters, req, res, function() {
+    async.applyEachSeries(filters, req, res, function() {
       cb.apply(this, args);
     });
   };
