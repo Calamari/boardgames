@@ -9,7 +9,8 @@ var dispatch   = require('dispatch'),
     templates  = require('./lib/templates'),
     Action     = require('./helpers').Action,
 
-    User       = require('./models/user');
+    User       = require('./models/user'),
+    jaz        = require('jaz-toolkit');
 
 require('./models/game');
 
@@ -40,15 +41,39 @@ function gamesOfPlayer(req, res, next) {
 }
 
 
+// Could also be the other way arround, that gamesOfPlayer will push them in a to-load list
+// and don't be pulled afterwards like this
+function loadPlayersOfGames(req, res, next) {
+  var username = req.user.username,
+      names    = [],
+      games    = [req.endedGames, req.runningGames, req.waitingGames, req.openGames];
+
+  games = jaz.Array.flatten(games);
+  names = games.map(function(game) { return game.getOpponents(username); });
+  names = jaz.Array.uniq(jaz.Array.flatten(names));
+
+  User.find({ username: { $in: names } }, function(err, users) {
+    req.users = {};
+    req.users[username] = req.user;
+    users.forEach(function(user) {
+      req.users[user.username] = user;
+    });
+    next();
+  });
+}
+
+
 module.exports = dispatch({
-  '/': new Action([auth.redirectIfLogin, gamesOfPlayer], function(req, res, next) {
+  '/': new Action([auth.redirectIfLogin, gamesOfPlayer, loadPlayersOfGames], function(req, res, next) {
     res.html(templates.index({
       errorMessage: req.flash('error'),
+      successMessage: req.flash('success'),
       username: req.user.username,
       openGames: req.openGames,
       runningGames: req.runningGames,
       waitingGames: req.waitingGames,
       endedGames: req.endedGames,
+      users: req.users,
       channel: '_free'
     }));
   }),

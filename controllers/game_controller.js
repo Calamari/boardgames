@@ -27,6 +27,10 @@ module.exports = {
       req.socketeer.set('username', req.user.username);
       req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
       res.html(templates.game({
+        // That's also bit to much duplication here...
+        errorMessage: req.flash('error'),
+        successMessage: req.flash('success'),
+        canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
         username:           req.user.username,
         game:               req.game,
         thisSpectator:      !req.game.isPlayer(req.user.username),
@@ -61,6 +65,30 @@ module.exports = {
         req.flash('error', 'You can not join this game.');
         res.redirect('/game/' + req.game.id);
       }
+    }, id);
+  }),
+  '/:id/give_up': new Action([auth.redirectIfLogin], function(req, res, next, id) {
+    loadGameOr404(req, res, function() {
+      var game = req.game;
+      // TODO: this implementation works for TWO PLAYERS ONLY
+      if (game.ended) {
+        req.flash('error', 'Game already ended');
+        res.redirect('/game/' + game.id);
+      } else {
+        var winner = game.getOpponents(req.user.username)[0];
+        game.endGame(winner);
+        game.save(function(err) {
+          if (err) {
+            req.flash('error', 'Something bad happened, sorry.');
+          } else {
+            // THIS CAN BE DONE BETTER, it's basically a copy of actions in game def
+            req.flash('success', 'You gave up the game.');
+            req.socketeer.where({ gameId: game.id }).send('events.' + game.id, { gameEnded: { winner: winner } } );
+          }
+          res.redirect('/game/' + game.id);
+        });
+      }
+
     }, id);
   }),
   // TODO: make a POST request out of it:

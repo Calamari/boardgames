@@ -15,6 +15,9 @@
       <li> in a game of {{game.type}}:</li>
       <li id="score" class="score"></li>
       <li id="game-state"></li>
+      {{#if canGiveUp}}
+        <li><a href="/game/{{game.id}}/give_up">give up</a></li>
+      {{/if}}
     </ul>
   </div>
   <div class="wrap">
