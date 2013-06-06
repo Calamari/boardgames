@@ -30,5 +30,8 @@
     "should": "*",
     "expect.js": "*",
     "sinon": "*"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
