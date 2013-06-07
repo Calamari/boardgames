@@ -1,21 +1,12 @@
-<html>
-<head>
-  <title>Login into games, games, games, …</title>
-  <meta charset="utf-8">
-  {{{css 'application'}}}
-</head>
-<body>
-  <h1>Login</h1>
+<h1>Login</h1>
 
-  {{#if success}}
-    <p>SUCCESS: {{success}}</p>
-  {{/if}}
-  {{#if error}}
-    <p>ERROR: {{error}}</p>
-  {{/if}}
+{{#if success}}
+  <p>SUCCESS: {{success}}</p>
+{{/if}}
+{{#if error}}
+  <p>ERROR: {{error}}</p>
+{{/if}}
 
-  {{> login/_form}}
+{{> login/_form}}
 
-  or <a href="/register">register</a>
-</body>
-</html>
+or <a href="/register">register</a>

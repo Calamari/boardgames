@@ -1,19 +1,10 @@
-<html>
-<head>
-  <title>Profile of {{user.username}}</title>
-  <meta charset="utf-8">
-  {{{css 'application'}}}
-</head>
-<body>
-  <h1>User: {{user.username}}</h1>
-  <img src="{{user.avatarUrl}}">
-  <ul>
-    <li><strong>registered:</strong> {{user.createdAt}}</li>
-    <li><strong>E-Mail:</strong> {{user.email}}</li>
-    <li><strong>gamesStarted:</strong> {{user.statistics.gamesStarted}}</li>
-    <li><strong>gamesJoined:</strong> {{user.statistics.gamesJoined}}</li>
-    <li><strong>gamesWon:</strong> {{user.statistics.gamesWon}}</li>
-    <li><strong>gamesLost:</strong> {{user.statistics.gamesLost}}</li>
-  </ul>
-</body>
-</html>
+<h1>User: {{user.username}}</h1>
+<img src="{{user.avatarUrl}}">
+<ul>
+  <li><strong>registered:</strong> {{user.createdAt}}</li>
+  <li><strong>E-Mail:</strong> {{user.email}}</li>
+  <li><strong>gamesStarted:</strong> {{user.statistics.gamesStarted}}</li>
+  <li><strong>gamesJoined:</strong> {{user.statistics.gamesJoined}}</li>
+  <li><strong>gamesWon:</strong> {{user.statistics.gamesWon}}</li>
+  <li><strong>gamesLost:</strong> {{user.statistics.gamesLost}}</li>
+</ul>

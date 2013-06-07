@@ -1,84 +1,84 @@
-  <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
+<div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
-  {{#if waitingGames}}
-    <h2>Your games waiting for players:</h2>
-    <ul class="games-list">
-      {{#each waitingGames}}
-        <li>
-          <span class="type">{{type}}</span>
-          <ul class="players">{{{playersList this ../users}}}</ul>
-          <ul class="links">
-            <li><a href="/game/{{id}}">go</a></li>
-          </ul>
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
-
-  {{#if runningGames}}
-    <h2>Your running games:</h2>
-    <ul class="games-list">
-      {{#each runningGames}}
-        <li>
-          <span class="type">{{type}}</span>
-          <ul class="players">{{{playersList this ../users}}}</ul>
-          <ul class="links">
-            <li><a href="/game/{{id}}">go</a></li>
-          </ul>
-          <ul class="stats">
-            <li>turns played: {{turns}}</li>
-          </ul>
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
-
-  <h2>Start a new game:</h2>
-  <ul>
-    <li><a href="/game/Multiplication/new">of <strong>cloned</strong></a></li>
-    <li><a href="/game/Reversi/new">of <strong>reversi</strong></a></li>
+{{#if waitingGames}}
+  <h2>Your games waiting for players:</h2>
+  <ul class="games-list">
+    {{#each waitingGames}}
+      <li>
+        <span class="type">{{type}}</span>
+        <ul class="players">{{{playersList this ../users}}}</ul>
+        <ul class="links">
+          <li><a href="/game/{{id}}">go</a></li>
+        </ul>
+      </li>
+    {{/each}}
   </ul>
+{{/if}}
 
-  {{#if openGames}}
-    <h2>Games waiting for players:</h2>
-    <ul class="games-list">
-      {{#each openGames}}
-        <li>
-          <span class="type">{{type}}</span>
-          <ul class="players">{{{playersList this ../users}}}</ul>
-          <ul class="links">
-            <li><a href="/game/{{id}}/join">join</a></li>
-          </ul>
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
+{{#if runningGames}}
+  <h2>Your running games:</h2>
+  <ul class="games-list">
+    {{#each runningGames}}
+      <li>
+        <span class="type">{{type}}</span>
+        <ul class="players">{{{playersList this ../users}}}</ul>
+        <ul class="links">
+          <li><a href="/game/{{id}}">go</a></li>
+        </ul>
+        <ul class="stats">
+          <li>turns played: {{turns}}</li>
+        </ul>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
 
-  {{#if endedGames}}
-    <h2>Finished Games:</h2>
-    <ul class="games-list">
-      {{#each endedGames}}
-        <li class="{{winningClass this username}}">
-          <span class="type">{{type}}</span>
-          <ul class="players">{{{playersList this ../users}}}</ul>
-          <ul class="links">
-            <li><a href="/game/{{id}}">look</a></li>
-          </ul>
-          <ul class="stats">
-            <li>turns played: {{turns}}</li>
-          </ul>
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
+<h2>Start a new game:</h2>
+<ul>
+  <li><a href="/game/Multiplication/new">of <strong>cloned</strong></a></li>
+  <li><a href="/game/Reversi/new">of <strong>reversi</strong></a></li>
+</ul>
+
+{{#if openGames}}
+  <h2>Games waiting for players:</h2>
+  <ul class="games-list">
+    {{#each openGames}}
+      <li>
+        <span class="type">{{type}}</span>
+        <ul class="players">{{{playersList this ../users}}}</ul>
+        <ul class="links">
+          <li><a href="/game/{{id}}/join">join</a></li>
+        </ul>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if endedGames}}
+  <h2>Finished Games:</h2>
+  <ul class="games-list">
+    {{#each endedGames}}
+      <li class="{{winningClass this username}}">
+        <span class="type">{{type}}</span>
+        <ul class="players">{{{playersList this ../users}}}</ul>
+        <ul class="links">
+          <li><a href="/game/{{id}}">look</a></li>
+        </ul>
+        <ul class="stats">
+          <li>turns played: {{turns}}</li>
+        </ul>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
 
 
-  <div id="chat">
-    <div class="content"></div>
-    <input type="text">
-  </div>
-  {{{js 'webpage'}}}
-  <script>
-    // TODO: make the chat work
-    var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
-  </script>
+<div id="chat">
+  <div class="content"></div>
+  <input type="text">
+</div>
+{{{js 'webpage'}}}
+<script>
+  // TODO: make the chat work
+  var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
+</script>

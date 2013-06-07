@@ -1,85 +1,76 @@
-<html>
-<head>
-  <title>Multiplication</title>
-  <meta charset="utf-8">
-  {{{css 'application'}}}
-</head>
-<body>
-  {{#if errorMessage}}
-    <p class="error-message">{{errorMessage}}</p>
-  {{/if}}
+{{#if errorMessage}}
+  <p class="error-message">{{errorMessage}}</p>
+{{/if}}
 
-  <div class="fixed-bar">
-    <ul class="nav-bar">
-      <li class="username-you">{{username}}</li>
-      <li> in a game of {{game.type}}:</li>
-      <li id="score" class="score"></li>
-      <li id="game-state"></li>
-      {{#if canGiveUp}}
-        <li><a href="/game/{{game.id}}/give_up">give up</a></li>
-      {{/if}}
-    </ul>
+<div class="fixed-bar">
+  <ul class="nav-bar">
+    <li class="username-you">{{username}}</li>
+    <li> in a game of {{game.type}}:</li>
+    <li id="score" class="score"></li>
+    <li id="game-state"></li>
+    {{#if canGiveUp}}
+      <li><a href="/game/{{game.id}}/give_up">give up</a></li>
+    {{/if}}
+  </ul>
+</div>
+<div class="wrap">
+  <div id="gamefield"></div>
+  <div id="chat" class="chat">
+    <div class="content"></div>
+    <input type="text">
   </div>
-  <div class="wrap">
-    <div id="gamefield"></div>
-    <div id="chat" class="chat">
-      <div class="content"></div>
-      <input type="text">
-    </div>
-  </div>
+</div>
 
-  {{{js 'webpage'}}}
-  {{{js 'gamepage'}}}
-  <script>
-  (function() {
-    var chat   = new Chat('#chat', io.connect('/chat'), {
-          channel: 'game-{{game.id}}',
-          username: '{{username}}'
-        }),
-        logger = (function() {
-          return {
-            log: function(text) {
-              chat.line(text);
-            }
+{{{js 'webpage'}}}
+{{{js 'gamepage'}}}
+<script>
+(function() {
+  var chat   = new Chat('#chat', io.connect('/chat'), {
+        channel: 'game-{{game.id}}',
+        username: '{{username}}'
+      }),
+      logger = (function() {
+        return {
+          log: function(text) {
+            chat.line(text);
           }
-        }()),
-        games  = {
-          Multiplication: ClonedGame,
-          Reversi: ReversiGame
-        };
+        }
+      }()),
+      games  = {
+        Multiplication: ClonedGame,
+        Reversi: ReversiGame
+      };
 
-    var game = new games['{{game.type}}']('#gamefield', {
-      username: '{{username}}',
+  var game = new games['{{game.type}}']('#gamefield', {
+    username: '{{username}}',
 
-      // game specific config
-      boardSize: 8,
-      cellWidth: 40,
+    // game specific config
+    boardSize: 8,
+    cellWidth: 40,
 
-      // score element
-      score: '#score',
-      players: {{{json game.players}}},
+    // score element
+    score: '#score',
+    players: {{{json game.players}}},
 
-      // general config
-      socket: io.connect('/'),
-      socketeerId: '{{socketeerId}}',
-      {{#if game.started}}
-      stones: {{{json game.board.stones}}},
-      gameStarted: {{game.started}},
-      actualPlayer: {{game.actualPlayer}},
-      {{/if}}
-      {{#if game.ended}}
-        winner: {{game.winner}},
-      {{/if}}
-      gameId: '{{game.id}}',
-      thisPlayerNr: {{thisPlayerPosition}},
-      isSpectator: {{bool thisSpectator}},
-      logger: logger
-    });
-    chat.isPlayerHandler = function(who) { return game.isPlayer(who); };
-    new GameStateDisplay('#game-state', game, {
-      username: '{{username}}'
-    });
-  }());
-  </script>
-</body>
-</html>
+    // general config
+    socket: io.connect('/'),
+    socketeerId: '{{socketeerId}}',
+    {{#if game.started}}
+    stones: {{{json game.board.stones}}},
+    gameStarted: {{game.started}},
+    actualPlayer: {{game.actualPlayer}},
+    {{/if}}
+    {{#if game.ended}}
+      winner: {{game.winner}},
+    {{/if}}
+    gameId: '{{game.id}}',
+    thisPlayerNr: {{thisPlayerPosition}},
+    isSpectator: {{bool thisSpectator}},
+    logger: logger
+  });
+  chat.isPlayerHandler = function(who) { return game.isPlayer(who); };
+  new GameStateDisplay('#game-state', game, {
+    username: '{{username}}'
+  });
+}());
+</script>
