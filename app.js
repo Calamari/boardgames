@@ -1,8 +1,9 @@
 /*jslint node: true */
 "use strict";
 
-var connect  = require('connect'),
-    quip     = require('quip'),
+var express  = require('express'),
+    connect  = require('connect'),
+    hbs      = require('express-hbs'),
     http     = require('http'),
     mongoose = require('mongoose'),
     passport = require('passport'),
@@ -19,25 +20,38 @@ module.exports = function(router, mongoUrl) {
         db: 'boardgames_session_dev'
       }),
       socketeer    = require('./lib/socketeer'),
-      app          = connect()
-        .use(connect.static(__dirname + '/public'))
+      app          = express()
+        //.use(express.compess())
+        .use(express.static(__dirname + '/public'))
         .use(require('connect-assets')())
         .use(cookieParser)
-        .use(connect.session({ store: sessionStore }))
-        .use(connect.bodyParser())
+        .use(express.session({ store: sessionStore }))
+        .use(express.bodyParser())
         .use(passport.initialize())
         .use(passport.session())
+        //.use(express.csrf())
         .use(connect.query())
         .use(flash())
-        .use(quip())
-        .use(socketeer.connect)
-        .use(router),
+        .use(socketeer.connect),
       server       = http.createServer(app),
       io           = require('socket.io').listen(server);
 
   // TODO: use helperContext on connect-assets to get rid of this globals:
   css.root = '/stylesheets';
   js.root  = '/javascripts';
+
+  app.engine('hbs', hbs.express3({
+    partialsDir: __dirname + '/views',
+    defaultLayout: __dirname + '/views/layouts/website',
+    layoutsDir: __dirname + '/views/layouts'
+  }));
+  app.set('view engine', 'hbs');
+  app.set('views', __dirname + '/views');
+
+  // load handlebars helpers
+  require('./views/helpers');
+
+  router(app);
 
   socketeer.start(io);
 

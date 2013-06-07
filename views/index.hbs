@@ -1,18 +1,4 @@
-<html>
-<head>
-  <title>Games, games, games, …</title>
-  <meta charset="utf-8">
-  {{{css 'application'}}}
-</head>
-<body>
   <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
-
-  {{#if errorMessage}}
-    <p class="error-message">{{errorMessage}}</p>
-  {{/if}}
-  {{#if successMessage}}
-    <p class="success-message">{{successMessage}}</p>
-  {{/if}}
 
   {{#if waitingGames}}
     <h2>Your games waiting for players:</h2>
@@ -96,5 +82,3 @@
     // TODO: make the chat work
     var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
   </script>
-</body>
-</html>

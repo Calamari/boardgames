@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>Games, games, games, …</title>
+  <meta charset="utf-8">
+  {{{css 'application'}}}
+</head>
+<body>
+  {{#if errorMessage}}
+    <p class="error-message">{{errorMessage}}</p>
+  {{/if}}
+  {{#if successMessage}}
+    <p class="success-message">{{successMessage}}</p>
+  {{/if}}
+
+  {{{body}}}
+</body>
+</html>
