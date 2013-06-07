@@ -29,7 +29,7 @@ module.exports = function(router, mongoUrl) {
         .use(express.bodyParser())
         .use(passport.initialize())
         .use(passport.session())
-        //.use(express.csrf())
+        .use(express.csrf())
         .use(connect.query())
         .use(flash())
         .use(socketeer.connect),

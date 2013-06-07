@@ -80,7 +80,8 @@ module.exports = function(app) {
     res.render('login/show', {
       action: '/login' + (req.query.redir ? '?redir=' + encodeURIComponent(req.query.redir) : ''),
       success: req.flash('success'),
-      error: req.flash('error')
+      error: req.flash('error'),
+      csrfToken: req.session._csrf
     });
   });
   app.post('/login', function(req, res, next) {
