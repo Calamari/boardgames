@@ -51,6 +51,10 @@ module.exports = function(router, mongoUrl) {
   // load handlebars helpers
   require('./views/helpers');
 
+  // load all models so they can be used via mongoose.model()
+  require('./models/game');
+  require('./models/user');
+
   router(app);
 
   socketeer.start(io);
