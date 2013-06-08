@@ -5,6 +5,7 @@ var express  = require('express'),
     connect  = require('connect'),
     hbs      = require('express-hbs'),
     http     = require('http'),
+    fs       = require('fs'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     flash    = require('connect-flash'),
@@ -30,16 +31,17 @@ module.exports = function(router, mongoUrl) {
         .use(express.methodOverride())
         .use(passport.initialize())
         .use(passport.session())
-        .use(express.csrf())
-        .use(function(req, res, next) {
-          res.locals.csrfToken = req.session._csrf;
-          next();
-        })
         .use(connect.query())
         .use(flash())
         .use(socketeer.connect),
       server       = http.createServer(app),
-      io           = require('socket.io').listen(server);
+      io           = require('socket.io').listen(server),
+
+      initializers = fs.readdirSync(__dirname + '/config/initializers');
+
+  initializers.forEach(function(filename) {
+    require(__dirname + '/config/initializers/' + filename)(app);
+  });
 
   // TODO: use helperContext on connect-assets to get rid of this globals:
   css.root = '/stylesheets';
