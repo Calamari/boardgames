@@ -27,9 +27,14 @@ module.exports = function(router, mongoUrl) {
         .use(cookieParser)
         .use(express.session({ store: sessionStore }))
         .use(express.bodyParser())
+        .use(express.methodOverride())
         .use(passport.initialize())
         .use(passport.session())
         .use(express.csrf())
+        .use(function(req, res, next) {
+          res.locals.csrfToken = req.session._csrf;
+          next();
+        })
         .use(connect.query())
         .use(flash())
         .use(socketeer.connect),

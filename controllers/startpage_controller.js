@@ -55,7 +55,6 @@ module.exports = function(app) {
     });
   }
 
-
   app.get('/', auth.redirectIfLogin, gamesOfPlayer, loadPlayersOfGames, function(req, res, next) {
     res.render('index', {
       errorMessage: req.flash('error'),
