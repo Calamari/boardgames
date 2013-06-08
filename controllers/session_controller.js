@@ -26,8 +26,6 @@ module.exports = function(app) {
   app.get('/login', function(req, res, next) {
     res.render('login/show', {
       action: '/login' + (req.query.redir ? '?redir=' + encodeURIComponent(req.query.redir) : ''),
-      success: req.flash('success'),
-      error: req.flash('error'),
       csrfToken: req.session._csrf
     });
   });

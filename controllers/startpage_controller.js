@@ -57,8 +57,6 @@ module.exports = function(app) {
 
   app.get('/', auth.redirectIfLogin, gamesOfPlayer, loadPlayersOfGames, function(req, res, next) {
     res.render('index', {
-      errorMessage: req.flash('error'),
-      successMessage: req.flash('success'),
       username: req.user.username,
       openGames: req.openGames,
       runningGames: req.runningGames,

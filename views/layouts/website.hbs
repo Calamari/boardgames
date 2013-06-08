@@ -7,11 +7,14 @@
   {{{css 'application'}}}
 </head>
 <body>
-  {{#if errorMessage}}
-    <p class="error-message">{{errorMessage}}</p>
+  {{#if flash.info}}
+    <p class="info-message">{{flash.info}}</p>
   {{/if}}
-  {{#if successMessage}}
-    <p class="success-message">{{successMessage}}</p>
+  {{#if flash.error}}
+    <p class="error-message">{{flash.error}}</p>
+  {{/if}}
+  {{#if flash.success}}
+    <p class="success-message">{{flash.success}}</p>
   {{/if}}
 
   {{{body}}}

@@ -8,7 +8,6 @@ var express  = require('express'),
     fs       = require('fs'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    flash    = require('connect-flash'),
     auth     = require('./filters/authentication');
 
 module.exports = function(router, mongoUrl) {
@@ -32,7 +31,6 @@ module.exports = function(router, mongoUrl) {
         .use(passport.initialize())
         .use(passport.session())
         .use(connect.query())
-        .use(flash())
         .use(socketeer.connect),
       server       = http.createServer(app),
       io           = require('socket.io').listen(server),
