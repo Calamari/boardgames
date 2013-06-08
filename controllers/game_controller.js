@@ -37,7 +37,7 @@ module.exports = function(app) {
       socketeerId:        req.socketeer.id
     });
   });
-  app.get('/game/:id/join', auth.redirectIfLogin, function(req, res, next) {
+  app.get('/game/:id/join', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var id = req.params.id,
         events;
 
@@ -67,7 +67,7 @@ module.exports = function(app) {
     }
   });
   // TODO: make a PUT request out of it:
-  app.get('/game/:id/give_up', auth.redirectIfLogin, function(req, res, next) {
+  app.get('/game/:id/give_up', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var game = req.game,
         id   = req.params.id;
 
@@ -91,7 +91,7 @@ module.exports = function(app) {
     }
   });
   // TODO: make a POST request out of it:
-  app.get('/game/:type/new', auth.redirectIfLogin, function(req, res, next) {
+  app.get('/game/:type/new', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var Game = mongoose.model('Game'),
         type = req.params.type,
         game = new Game({ type: type });
