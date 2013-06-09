@@ -79,7 +79,7 @@ function getStone(board, x, y) {
   return board[y] && board[y][x];
 }
 
-function getWinner(game) {
+function countStones(game) {
   var counts = { 1: 0, 2: 0 },
       x, y;
 
@@ -90,6 +90,11 @@ function getWinner(game) {
       }
     }
   }
+  return counts;
+}
+
+function getWinner(game) {
+  var counts = countStones(game);
   return counts[1] > counts[2] ? 1 : 2;
 }
 
@@ -124,6 +129,7 @@ var gameDef = {
       stones: stones
     };
   },
+  calcScore: countStones,
   actions: {
     set: function(game, data, cb) {
       var to   = data.to,

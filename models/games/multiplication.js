@@ -64,6 +64,22 @@ function getStone(board, x, y) {
   return board[y] && board[y][x];
 }
 
+// COPY FROM reversi.js (could be done in something like Regular Board object?)
+function countStones(game) {
+  var counts = { 1: 0, 2: 0 },
+      x, y;
+
+  for (y=0; y<8; ++y) {
+    for (x=0; x<8; ++x) {
+      if (game.board.stones[y][x] > 0) {
+        ++counts[game.board.stones[y][x]];
+      }
+    }
+  }
+
+  return counts;
+}
+
 function canStoneOfPlayerMoveHere(board, x, y, playerNr) {
   var dx, dy;
 
@@ -107,6 +123,7 @@ var gameDef = {
       stones: stones
     };
   },
+  calcScore: countStones,
   actions: {
     move: function(game, data, cb) {
       var from = data.from,

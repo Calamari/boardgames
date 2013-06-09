@@ -8,9 +8,11 @@ var Handlebars = require('handlebars');
 Handlebars.registerHelper('playersList', function(game, users) {
   var actualPlayer = game.actualPlayerName(),
       newList      = game.players.map(function(player) {
-        var cls = player === actualPlayer ? 'you' : '';
+        var cls = player === actualPlayer ? 'you' : '',
+            score = game.scoreOf(player),
+            scoreString = score !== undefined ? '(' + score + ')' : '';
         cls += game.winnerName === player ? ' winner' : '';
-        return '<li class="' + cls + '"><img src="' + users[player].avatarUrl + '&s=40" width="40" height="40">' + player + '</li>';
+        return '<li class="' + cls + '"><img src="' + users[player].avatarUrl + '&s=40" width="40" height="40">' + player + ' ' + scoreString + '</li>';
       });
   return newList.join('');
 });

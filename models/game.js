@@ -9,6 +9,7 @@ var mongoose  = require('mongoose'),
 
 var gameSchema = mongoose.Schema({
     players: { 'type': [String] },
+    score: { 'type': [Number] },
     board: { 'type': Mixed, 'default': {} },
     type: { 'type': String, 'required': true },
     started: { 'type': Boolean, 'default': false },
@@ -20,6 +21,14 @@ var gameSchema = mongoose.Schema({
     createdAt: { 'type': Date, 'default': Date.now },
     startedAt: { 'type': Date },
     endedAt: { 'type': Date }
+});
+
+gameSchema.pre('save', function(next) {
+  if (this.started) {
+    var score = GameTypes.get(this.type).calcScore(this);
+    this.score = [score['1'], score['2']];
+  }
+  next();
 });
 
 gameSchema.path('type').validate(function(value) {
@@ -58,6 +67,10 @@ gameSchema.methods.startGame = function() {
   this.board = definition.newBoard(this);
   this.started = true;
   this.actualPlayer = 1;
+};
+
+gameSchema.methods.scoreOf = function(playerName) {
+  return this.score[this.getPlayerPosition(playerName)-1];
 };
 
 gameSchema.methods.getPlayerPosition = function(playerName) {

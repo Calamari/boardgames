@@ -164,6 +164,26 @@ describe('Game', function() {
     });
   });
 
+  describe('#scoreOf', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('john');
+      game.score = [0,3];
+    });
+
+    it('returns the right score', function() {
+      expect(game.scoreOf('jon')).to.eql(0);
+      expect(game.scoreOf('john')).to.eql(3);
+    });
+
+    it('returns undefined for not playing people', function() {
+      expect(game.scoreOf('jo')).to.eql(undefined);
+      expect(game.scoreOf()).to.eql(undefined);
+    });
+  });
+
   describe('#getPlayerPosition', function() {
     var game;
     beforeEach(function() {
