@@ -26,9 +26,6 @@ module.exports = function(app) {
     req.socketeer.set('username', req.user.username);
     req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
     res.render('game', {
-      // That's also bit to much duplication here...
-      errorMessage: req.flash('error'),
-      successMessage: req.flash('success'),
       canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
       canJoin:            !req.game.started && !req.game.isPlayer(req.user.username),
       username:           req.user.username,
@@ -38,6 +35,7 @@ module.exports = function(app) {
       socketeerId:        req.socketeer.id
     });
   });
+
   app.put('/game/:id/join', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var id = req.params.id,
         events;
@@ -67,7 +65,7 @@ module.exports = function(app) {
       res.redirect('/game/' + req.game.id);
     }
   });
-  // TODO: make a PUT request out of it:
+
   app.put('/game/:id/give_up', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var game = req.game,
         id   = req.params.id;
@@ -91,7 +89,7 @@ module.exports = function(app) {
       });
     }
   });
-  // TODO: make a POST request out of it:
+
   app.post('/game/:type/new', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var Game = mongoose.model('Game'),
         type = req.params.type,
