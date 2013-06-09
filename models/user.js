@@ -15,7 +15,7 @@ function trim(value) {
 }
 
 var userSchema = mongoose.Schema({
-    username: { 'type': String, 'required': true, min: 3, index: { unique: true } },
+    username: { 'type': String, 'required': true, match: /^[a-zA-Z0-9_-]{3,}$/, index: { unique: true } },
     password: { 'type': String, 'required': true, min: 6 },
     email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true }, set: trim },
     createdAt: { 'type': Date, 'default': Date.now },

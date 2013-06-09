@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     sinon    = require('sinon'),
+    async    = require('async'),
     expect   = require('expect.js'),
 
     User     = require('../../models/user');
@@ -33,6 +34,18 @@ describe('User', function() {
         expect(err.errors).to.not.have.key('username');
         done();
       });
+    });
+
+    it('does not allow strange chars in the username', function(done) {
+      var wrongNames = ['äpfel', '<script>', 'feta cheese'];
+      async.each(wrongNames, function(name, next) {
+        console.log(arguments);
+        new User({ username: name }).save(function(err) {
+          console.log(err);
+          expect(err.errors).to.have.key('username');
+          next();
+        });
+      }, function() { done(); });
     });
 
     it('needs a email', function(done) {
