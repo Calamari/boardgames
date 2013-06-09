@@ -10,6 +10,7 @@
     this.thisPlayerNr = config.thisPlayerNr;
     this._gameStarted = config.gameStarted;
     this._gameEnded = config.gameEnded;
+    this._winner = config.winner;
     this._logger = config.logger;
 
     config.showHover = this._isTurn();
@@ -39,7 +40,7 @@
     },
     _startGame: function(stones) {
       if (this._gameEnded) {
-        this._endGame(this._gameEnded);
+        this._endGame(this._winner);
       } else if (this.isSpectator) {
         this._logger.log('You are just spectating.');
       } else if (this.actualPlayer === this.thisPlayerNr) {
@@ -64,6 +65,7 @@
         }
       }
       this._gameEnded = true;
+      this._winner = winner;
       this._board.showHover(false);
       this.fire('change');
     },
@@ -147,6 +149,9 @@
     },
     isPlayer: function(name) {
       return this._config.players.indexOf(name) !== -1;
+    },
+    getWinner: function() {
+      return this._config.players[this._winner-1];
     },
     getActualPlayer: function() {
       return this._config.players[this.actualPlayer-1];

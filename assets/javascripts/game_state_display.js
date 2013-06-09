@@ -9,7 +9,7 @@
         check = function() {
           var state = game.getGameState();
           if (state === 'ended') {
-            $container.html(game.getWinner() + "'s turn");
+            $container.html("<strong>" + game.getWinner() + " has won!</strong>");
           } else if (state === 'waiting') {
             $container.html("waiting for players");
           } else {
