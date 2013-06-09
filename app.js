@@ -54,7 +54,9 @@ module.exports = function(router, mongoUrl) {
   app.set('views', __dirname + '/views');
 
   // load handlebars helpers
-  require('./views/helpers');
+  fs.readdirSync(__dirname + '/views/helpers/').forEach(function(filename) {
+    require(__dirname + '/views/helpers/' + filename);
+  });
 
   // load all models so they can be used via mongoose.model()
   require('./models/game');
