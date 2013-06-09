@@ -11,6 +11,9 @@
     {{#if canGiveUp}}
       <li><a href="/game/{{game.id}}/give_up" data-method="put">give up</a></li>
     {{/if}}
+    {{#if canJoin}}
+      <li><a href="/game/{{game.id}}/join" data-method="put">join</a></li>
+    {{/if}}
   </ul>
 </div>
 <div class="wrap">

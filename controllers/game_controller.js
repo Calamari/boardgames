@@ -30,6 +30,7 @@ module.exports = function(app) {
       errorMessage: req.flash('error'),
       successMessage: req.flash('success'),
       canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
+      canJoin:            !req.game.started && !req.game.isPlayer(req.user.username),
       username:           req.user.username,
       game:               req.game,
       thisSpectator:      !req.game.isPlayer(req.user.username),
@@ -37,7 +38,7 @@ module.exports = function(app) {
       socketeerId:        req.socketeer.id
     });
   });
-  app.get('/game/:id/join', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
+  app.put('/game/:id/join', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var id = req.params.id,
         events;
 
