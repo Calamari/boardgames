@@ -3,16 +3,16 @@
 
   var Score = function(element, names, username) {
     this._element = $(element);
-    this._names = names;
     this._username = username;
     this.width = 200;
     this._counters = { 1: 0, 2: 0 };
-    this._createHTML();
+    this.setNames(names);
   };
 
   Score.prototype = {
     _createHTML: function() {
       var self = this;
+      self._element.html('');
       this._names.forEach(function(name, index) {
         var displayName = name === self._username ? 'You' : name;
         self._element.append((index === 0 ? displayName + ' ' : '') + '<span class="' + name + ' player' + index + '"></span>' + (index === 1 ? ' ' + displayName : ''));
@@ -30,6 +30,10 @@
       });
       this._counters = count;
       return sum;
+    },
+    setNames: function(names) {
+      this._names = names;
+      this._createHTML();
     },
     update: function(board, size) {
       var sum  = this._count(board, size),

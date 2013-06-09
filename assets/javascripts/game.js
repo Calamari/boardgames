@@ -77,7 +77,7 @@
       });
     },
     _countPieces: function() {
-      this._score && this._score.update(this._board, this._boardSize);
+      if (this._score) { this._score.update(this._board, this._boardSize); }
     },
     _updateGame: function(data) {
       var self = this,
@@ -103,6 +103,7 @@
             break;
           case 'playerJoined':
             self._logger.log(value + ' joined the game.');
+            self._config.players.push(value);
             break;
           case 'gameStarted':
             self._setPlayer(value.actualPlayer);
