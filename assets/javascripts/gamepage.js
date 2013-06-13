@@ -2,6 +2,7 @@
 //= require vendor/raphael-2.1.0.js
 
 // MY LIBS
+//= require utils/extend.js
 //= require traits/traits.js
 //= require traits/event_emitter.js
 //= require canvas.js

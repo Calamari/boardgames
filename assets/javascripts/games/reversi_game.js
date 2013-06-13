@@ -1,4 +1,4 @@
-(function(win, doc, Game) {
+(function(win, doc, Game, extend) {
   "use strict";
 
 
@@ -49,15 +49,7 @@
     return Math.max(xDistance, yDistance);
   }
 
-  function extend(subClass, superClass) {
-    var F = function() {};
-    F.prototype = superClass.prototype;
-    subClass.prototype = new F();
-    subClass.prototype.constructor = subClass;
-  }
-
   var ReversiGame = function(container, config) {
-    var self = this;
     Game.call(this, container, config);
     this._setupPossibleMoves();
   };
@@ -133,4 +125,4 @@
   };
 
   win.ReversiGame = ReversiGame;
-}(window, document, Game));
+}(window, document, Game, extend));

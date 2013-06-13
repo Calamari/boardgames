@@ -1,4 +1,4 @@
-(function(win, doc, Game) {
+(function(win, doc, Game, extend) {
   "use strict";
 
   function getDistance(from, to) {
@@ -8,13 +8,6 @@
     var xDistance = Math.abs(Math.abs(from.x) - Math.abs(to.x)),
         yDistance = Math.abs(Math.abs(from.y) - Math.abs(to.y));
     return Math.max(xDistance, yDistance);
-  }
-
-  function extend(subClass, superClass) {
-    var F = function() {};
-    F.prototype = superClass.prototype;
-    subClass.prototype = new F();
-    subClass.prototype.constructor = subClass;
   }
 
   var ClonedGame = function(container, config) {
@@ -98,4 +91,4 @@
   };
 
   win.ClonedGame = ClonedGame;
-}(window, document, Game));
+}(window, document, Game, extend));
