@@ -9,8 +9,8 @@
 //= require canvas_board.js
 
 // BOARD RELATED
-//= require board/field.js
 //= require board/stone.js
+//= require board/field.js
 //= require board/svg_board.js
 
 // GAME RELATED
