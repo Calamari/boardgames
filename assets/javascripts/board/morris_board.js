@@ -3,6 +3,15 @@
 
 
   var Boards = {
+    3: {
+      size: 3,
+      cellWidth: 60,
+      layout: [
+        '┏┬┓',
+        '├╋┤',
+        '┗┴┛'
+      ]
+    },
     6: {
       size: 9,
       cellWidth: 40,

@@ -34,19 +34,35 @@
         fieldType   = this._fieldType,
         lines       = [];
 
-    if (['┌','┬','├','┼','└','┴', '─'].indexOf(fieldType) !== -1) {
+    // horizonal & vertical
+    if (['┏','┌','┬','├','┼','╋','└','┗','┴', '─'].indexOf(fieldType) !== -1) {
       lines.push(paper.line(middleX, middleY, canvasX + size+1, middleY));
     }
-    if (['┬','┐','┼','┤','┴','┘', '─'].indexOf(fieldType) !== -1) {
+    if (['┓','┬','┐','┼','╋','┤','┴','┘','┛', '─'].indexOf(fieldType) !== -1) {
       lines.push(paper.line(canvasX, middleY, middleX, middleY));
     }
-    if (['├','┼','┤','└','┴','┘', '│'].indexOf(fieldType) !== -1) {
+    if (['├','┼','╋','┤','└','┗','┴','┘','┛', '│'].indexOf(fieldType) !== -1) {
       lines.push(paper.line(middleX, canvasY, middleX, middleY));
     }
-    if (['┌','┬','┐','├','┼','┤', '│'].indexOf(fieldType) !== -1) {
+    if (['┓','┏','┌','┬','┐','├','┼','╋','┤', '│'].indexOf(fieldType) !== -1) {
       lines.push(paper.line(middleX, middleY, middleX, canvasY + size+1));
     }
-    if (['┌','┬','┐', '├','┼','┤', '└','┴','┘'].indexOf(fieldType) !== -1) {
+
+    // diagonal
+    if (['┏','╋'].indexOf(fieldType) !== -1) {
+      lines.push(paper.line(middleX, middleY, middleX + size+1, middleY + size+1));
+    }
+    if (['┓','╋'].indexOf(fieldType) !== -1) {
+      lines.push(paper.line(middleX, middleY, middleX - size, middleY + size+1));
+    }
+    if (['┗','╋'].indexOf(fieldType) !== -1) {
+      lines.push(paper.line(middleX, middleY, middleX + size+1, middleY - size));
+    }
+    if (['┛','╋'].indexOf(fieldType) !== -1) {
+      lines.push(paper.line(middleX, middleY, middleX - size, middleY - size));
+    }
+
+    if (['┓','┏','┌','┬','┐', '├','┼','╋','┤', '└','┗','┴','┘','┛'].indexOf(fieldType) !== -1) {
       this._point = paper.circle(middleX, middleY, this._pointSize).attr('fill', '#000').attr('stroke', 'transparent');
     }
     lines.forEach(function(line) {
