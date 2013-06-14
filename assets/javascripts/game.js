@@ -14,12 +14,15 @@
     this._logger = config.logger;
 
     config.showHover = this._isTurn();
-    this._board = new SVGBoard(container, config, this._eventHandler());
+    this._createBoard(container);
     this._socketeer = new Socketeer(config.socket, config.socketeerId);
     this._initSocketeer();
   };
 
   Game.prototype = {
+    _createBoard: function(container) {
+      this._board = new SVGBoard(container, this._config, this._eventHandler());
+    },
     _initBoard: function(stones) {
       this._board.updateBoard(stones);
       this._score = new Score(this._config.score, this._config.players, this._config.username);

@@ -5,6 +5,7 @@
     this._container = $(container);
     this._config = config;
     this._boardSize = config.boardSize;
+    this._cellWidth = config.cellWidth;
     this._showHover = config.showHover;
     this._eventHandler = eventHandler;
     this._fields = [];
@@ -61,9 +62,8 @@
     },
 
     _createPaper: function(config) {
-      var boardWidth = config.cellWidth * this._boardSize + 1;
+      var boardWidth = this._cellWidth * this._boardSize + 1;
       this._paper = new Raphael(this._container[0], boardWidth, boardWidth);
-
       this._createBoard();
     },
     _createBoard: function() {
@@ -76,7 +76,7 @@
       for (y = this._boardSize; y--;) {
         this._boardFields[y] = [];
         for (x = this._boardSize; x--;) {
-          field = new Field(x, y, this, this._config.cellWidth, this._paper).draw();
+          field = new Field(x, y, this, this._cellWidth, this._paper).draw();
           this._fields.push(field);
           this._boardFields[y][x] = field;
         }
