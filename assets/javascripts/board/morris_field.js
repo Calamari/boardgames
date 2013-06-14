@@ -49,17 +49,17 @@
     }
 
     // diagonal
-    if (['┏','╋'].indexOf(fieldType) !== -1) {
-      lines.push(paper.line(middleX, middleY, middleX + size+1, middleY + size+1));
+    if (fieldType === '┏') {
+      lines.push(paper.line(middleX, middleY, middleX + size*2+1, middleY + size*2+1));
     }
-    if (['┓','╋'].indexOf(fieldType) !== -1) {
-      lines.push(paper.line(middleX, middleY, middleX - size, middleY + size+1));
+    if (fieldType === '┓') {
+      lines.push(paper.line(middleX, middleY, middleX - size*2, middleY + size*2+1));
     }
-    if (['┗','╋'].indexOf(fieldType) !== -1) {
-      lines.push(paper.line(middleX, middleY, middleX + size+1, middleY - size));
+    if (fieldType === '┗') {
+      lines.push(paper.line(middleX, middleY, middleX + size*2+1, middleY - size*2));
     }
-    if (['┛','╋'].indexOf(fieldType) !== -1) {
-      lines.push(paper.line(middleX, middleY, middleX - size, middleY - size));
+    if (fieldType === '┛') {
+      lines.push(paper.line(middleX, middleY, middleX - size*2, middleY - size*2));
     }
 
     if (['┓','┏','┌','┬','┐', '├','┼','╋','┤', '└','┗','┴','┘','┛'].indexOf(fieldType) !== -1) {
