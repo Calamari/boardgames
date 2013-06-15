@@ -95,7 +95,7 @@
       for (y = boardDef.size; y--;) {
         this._boardFields[y] = [];
         for (x = boardDef.size; x--;) {
-          field = new MorrisField(x, y, boardDef.layout[y][x], this, this._cellWidth, this._paper).draw();
+          field = new MorrisField(x, y, boardDef.layout[y][x], this, this._cellWidth, this._paper);
           this._fields.push(field);
           this._boardFields[y][x] = field;
         }

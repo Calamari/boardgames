@@ -2,31 +2,15 @@
   "use strict";
 
   var MorrisField = function(x, y, fieldType, board, size, paper) {
-//    Field.call(this, x, y, board, size, paper);
-    var canvasX = x * size+0.5,
-        canvasY = y * size+0.5;
-
-    this._board = board;
-    this._paper = paper;
-    this._interactionRect    = paper.rect(canvasX, canvasY, size, size).attr('stroke', 'transparent').attr('fill', 'transparent');
-
-
     this._fieldType = fieldType;
-    this.size    = size;
-    this.point   = { x: x, y: y };
-    this.x       = x;
-    this.y       = y;
-    this.element = this._interactionRect;
-
     this._pointSize = size/5;
-    this._drawGrid(paper);
-
-    this._interactionRect.attr('fill', 'red').toFront();
+    Field.call(this, x, y, board, size, paper);
   };
   extend(MorrisField, Field);
 
-  MorrisField.prototype._drawGrid = function(paper) {
+  MorrisField.prototype.draw = function() {
     var size        = this.size,
+        paper       = this._paper,
         canvasX     = this.x * size+0.5,
         canvasY     = this.y * size+0.5,
         middleX     = canvasX + size/2,
@@ -69,9 +53,10 @@
       line.attr('stroke', '#000')
           .attr('stroke-width', Math.max(1, size/12));
     });
-  };
 
-  MorrisField.prototype.draw = function() {
+    this._interactionRect = paper.rect(canvasX, canvasY, size, size)
+                                 .attr('fill', 'transparent')
+                                 .attr('stroke', 'transparent').toFront();
     return this;
   };
 

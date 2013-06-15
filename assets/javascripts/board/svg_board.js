@@ -76,7 +76,7 @@
       for (y = this._boardSize; y--;) {
         this._boardFields[y] = [];
         for (x = this._boardSize; x--;) {
-          field = new Field(x, y, this, this._cellWidth, this._paper).draw();
+          field = new Field(x, y, this, this._cellWidth, this._paper);
           this._fields.push(field);
           this._boardFields[y][x] = field;
         }
