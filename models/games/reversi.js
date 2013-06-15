@@ -114,6 +114,8 @@ function checkForGameEnding(game) {
 }
 
 var gameDef = {
+  getDefinition: function() { return this; },
+  onStart: function() {},
   minPlayers: 2,
   maxPlayers: 2,
   newBoard: function() {
@@ -134,8 +136,7 @@ var gameDef = {
     set: function(game, data, cb) {
       var to   = data.to,
           playerNumber = game.getPlayerPosition(data.user),
-          addPieces, removePieces, capturedPieces,
-          distance;
+          addPieces, removePieces, capturedPieces;
 
       // from and to can be point objects or arrays with 2 numbers
       if (Array.isArray(to)) {

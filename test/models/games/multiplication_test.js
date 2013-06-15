@@ -1,6 +1,6 @@
 var sinon    = require('sinon'),
 
-    Multiplication = require('../../../models/games/multiplication');
+    Multiplication = require('../../../models/games/multiplication').getDefinition();
     Game           = require('../../../models/game');
 
 describe('Games/Multiplication', function() {

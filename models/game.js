@@ -8,24 +8,26 @@ var mongoose  = require('mongoose'),
     jaz       = require('jaz-toolkit');
 
 var gameSchema = mongoose.Schema({
-    players: { 'type': [String] },
-    score: { 'type': [Number] },
-    board: { 'type': Mixed, 'default': {} },
-    type: { 'type': String, 'required': true },
-    started: { 'type': Boolean, 'default': false },
-    ended: { 'type': Boolean, 'default': false },
-    winner: { 'type': Number },
-    actualPlayer: { 'type': Number },
-    turns: { 'type': Number, 'default': 0 },
-    log: { 'type': [String] },
-    createdAt: { 'type': Date, 'default': Date.now },
-    startedAt: { 'type': Date },
-    endedAt: { 'type': Date }
+    players: { 'type': [String] },                   // name IDs of players
+    score: { 'type': [Number] },                     // the actual score of each player
+    board: { 'type': Mixed, 'default': {} },         // data about the current board
+    type: { 'type': String, 'required': true },      // which type of game it is
+    config: { 'type': Mixed, 'default': {} },        // contains game options like which kind of morris game
+    data: { 'type': Mixed, 'default': {} },          // contains additional data about the game
+    started: { 'type': Boolean, 'default': false },  // is game started?
+    ended: { 'type': Boolean, 'default': false },    // is game ended?
+    winner: { 'type': Number },                      // indiciates who one (in not zero player number)
+    actualPlayer: { 'type': Number },                // who's turn is it (in not zero player number)
+    turns: { 'type': Number, 'default': 0 },         // how many turns have been played
+    log: { 'type': [String] },                       // some log messages
+    createdAt: { 'type': Date, 'default': Date.now },// when was the game created
+    startedAt: { 'type': Date },                     // when did the game start
+    endedAt: { 'type': Date }                        // when did the game end
 });
 
 gameSchema.pre('save', function(next) {
   if (this.started) {
-    var score = GameTypes.get(this.type).calcScore(this);
+    var score = this.definition.calcScore(this);
     this.score = [score['1'], score['2']];
   }
   next();
@@ -50,8 +52,13 @@ gameSchema.virtual('looserNames').get(function () {
   return null;
 });
 
+gameSchema.virtual('definition').get(function () {
+  // TODO: maybe cache gametype on instance
+  return GameTypes.get(this.type, this.config);
+});
+
 gameSchema.methods.addPlayer = function(playerName) {
-  if (this.players.length < GameTypes.get(this.type).maxPlayers && this.players.indexOf(playerName) === -1) {
+  if (this.players.length < this.definition.maxPlayers && this.players.indexOf(playerName) === -1) {
     this.players.push(playerName);
     return true;
   } else {
@@ -60,11 +67,12 @@ gameSchema.methods.addPlayer = function(playerName) {
 };
 
 gameSchema.methods.startGame = function() {
-  var definition = GameTypes.get(this.type);
+  var definition = this.definition;
   if (this.players.length < definition.minPlayers) {
     return new Error('NOT_ENOUGH_PLAYERS');
   }
   this.board = definition.newBoard(this);
+  definition.onStart(this);
   this.started = true;
   this.actualPlayer = 1;
 };
@@ -90,13 +98,13 @@ gameSchema.methods.isPlayersTurn = function(player) {
 gameSchema.methods.nextTurn = function(player) {
   ++this.actualPlayer;
   ++this.turns;
-  if (this.actualPlayer > GameTypes.get(this.type).maxPlayers) {
+  if (this.actualPlayer > this.definition.maxPlayers) {
     this.actualPlayer = 1;
   }
 };
 
 gameSchema.methods.canJoin = function(player) {
-  if (!this.started && this.players.length < GameTypes.get(this.type).maxPlayers && !this.isPlayer(player)) {
+  if (!this.started && this.players.length < this.definition.maxPlayers && !this.isPlayer(player)) {
     return true;
   }
   return false;
@@ -117,8 +125,8 @@ gameSchema.methods.isPlayer = function(player) {
 };
 
 gameSchema.methods.isReady = function() {
-  return this.started || (this.players.length >= GameTypes.get(this.type).minPlayers &&
-                          this.players.length <= GameTypes.get(this.type).maxPlayers);
+  return this.started || (this.players.length >= this.definition.minPlayers &&
+                          this.players.length <= this.definition.maxPlayers);
 };
 
 gameSchema.methods.action = function(action, data, cb) {
@@ -132,7 +140,7 @@ gameSchema.methods.action = function(action, data, cb) {
   } else if (!game.isPlayersTurn(playerNumber)) {
     cb(new Error('NOT_YOUR_TURN'));
   } else {
-    GameTypes.get(this.type).actions[action](this, data, function(err, data) {
+    this.definition.actions[action](this, data, function(err, data) {
       if (err) {
         cb(err);
       } else {

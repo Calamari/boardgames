@@ -1,6 +1,6 @@
 var sinon    = require('sinon'),
 
-    Reversi = require('../../../models/games/reversi');
+    Reversi = require('../../../models/games/reversi').getDefinition();
     Game    = require('../../../models/game');
 
 describe('Games/Reversi', function() {
@@ -26,11 +26,11 @@ describe('Games/Reversi', function() {
       game.addPlayer('two');
     });
 
-    it('there is a move action', function() {
+    it('there is a set action', function() {
       Reversi.actions.set.should.not.eql(null);
     });
 
-    describe('#move', function() {
+    describe('#set', function() {
       describe('on started game one\'s turn', function() {
         beforeEach(function() {
           game.startGame();

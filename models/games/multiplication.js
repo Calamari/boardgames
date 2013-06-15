@@ -108,6 +108,8 @@ function checkForGameEnding(game) {
 }
 
 var gameDef = {
+  getDefinition: function() { return this; },
+  onStart: function() {},
   minPlayers: 2,
   maxPlayers: 2,
   newBoard: function() {

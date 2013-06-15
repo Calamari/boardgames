@@ -56,12 +56,14 @@ describe('Game', function() {
           maxPlayers: 2,
           newBoard: function() {
             return { foo: 42 };
-          }
+          },
+          onStart: function() {}
         },
         orig;
     beforeEach(function() {
       orig = GameTypes.get;
       sinon.spy(testGameDef, 'newBoard');
+      sinon.spy(testGameDef, 'onStart');
       GameTypes.get = function() { return testGameDef; };
       game = new Game({ type: 'TestGame' });
     });
@@ -69,6 +71,7 @@ describe('Game', function() {
     afterEach(function() {
       GameTypes.get = orig;
       testGameDef.newBoard.restore();
+      testGameDef.onStart.restore();
     });
 
     it('returns error if not enough players', function() {
@@ -77,11 +80,16 @@ describe('Game', function() {
       game.started.should.eql(false);
     });
 
-
     describe('when having enough players', function() {
       beforeEach(function() {
         game.addPlayer('alf');
         game.addPlayer('ralf');
+      });
+
+      it('calls onStart of game Definition', function() {
+        game.startGame();
+        expect(testGameDef.onStart.calledOnce).to.be(true);
+        expect(testGameDef.onStart.calledWith(game)).to.be(true);
       });
 
       it('calls GameTypes.newBoard to get the initial board', function() {

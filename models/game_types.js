@@ -3,7 +3,8 @@
 
 var Games = {
   'Multiplication': require('./games/multiplication'),
-  'Reversi'       : require('./games/reversi')
+  'Reversi'       : require('./games/reversi'),
+  'Morris'        : require('./games/morris')
 };
 
 var GameTypes = (function() {
@@ -17,8 +18,8 @@ var GameTypes = (function() {
     containsType: function(type) {
       return !!Games[type];
     },
-    get: function(type) {
-      return Games[type];
+    get: function(type, config) {
+      return Games[type].getDefinition(config);
     }
   };
 }());
