@@ -27,16 +27,6 @@ function countStones(game) {
   return counts;
 }
 
-function getWinner(game) {
-  var counts = countStones(game);
-  return counts[1] > counts[2] ? 1 : 2;
-}
-
-function checkForGameEnding(game) {
-  return null;
-//  return { winner: getWinner(game) };
-}
-
 function isValidPoint(def, pos) {
   return def.allowedPoints[pos.y] && def.allowedPoints[pos.y][pos.x];
 }
@@ -55,11 +45,15 @@ function areConnected(def, from, to) {
   return isReachable;
 }
 
-function hasLineClosed(def, board, playerNumber) {
+function hasJustClosedLine(def, board, pos, playerNumber) {
   return def.lines.some(function(line) {
+    var positionIncluded = false;
     return line.every(function(point) {
+      if (pos.x === point[0] && pos.y === point[1]) {
+        positionIncluded = true;
+      }
       return getStone(board, point[0], point[1]) === playerNumber;
-    });
+    }) && positionIncluded;
   });
 }
 
@@ -115,11 +109,60 @@ var gameDef = {
     },
     onStart: function(game) {
       game.data.phases = ['set', 'set'];
-      game.data.stoneCount = [0,0];
+      game.data.stoneCounts = [0,0];
       game.markModified('data');
     },
     calcScore: countStones,
     actions: {
+      take: function(game, data, cb) {
+        var from              = data.from,
+            playerNumber      = game.getPlayerPosition(data.user),
+            otherPlayerNumber = playerNumber === 1 ? 2 : 1,
+            gameEnded         = null,
+            stone, removePieces, otherStoneCount;
+
+        if (Array.isArray(from)) {
+          from = { x: from[0], y: from[1] };
+        }
+
+        if (!from) {
+          cb(new Error('ARGUMENT_ERROR'));
+        } else if (game.data.takeMode !== playerNumber) {
+          cb(new Error('ACTION_NOT_ALLOWED'));
+        } else {
+          stone = getStone(game.board.stones, from);
+          if (!stone || stone === playerNumber) {
+            cb(new Error('INVALID_MOVE'));
+          } else {
+            removePieces = [];
+            game.board.stones[from.y][from.x] = 0;
+            removePieces.push(from);
+
+            game.nextTurn();
+
+            otherStoneCount = countStones(game)[otherPlayerNumber];
+
+            if (game.data.phases[otherPlayerNumber-1] === 'move') {
+              if (otherStoneCount === 2) {
+                gameEnded = { winner: playerNumber };
+              } else if (otherStoneCount === 3) {
+                game.data.phases[otherPlayerNumber-1] = 'fly';
+              }
+            }
+
+            game.data.takeMode = false;
+            game.markModified('data');
+
+            cb(null, {
+              removePieces: removePieces,
+              newPlayer   : game.actualPlayer,
+              gameEnded   : gameEnded,
+              takeMode    : false,
+              phases      : game.data.phases
+            });
+          }
+        }
+      },
       move: function(game, data, cb) {
         var from         = data.from,
             to           = data.to,
@@ -149,8 +192,11 @@ var gameDef = {
           game.board.stones[from.y][from.x] = 0;
           removePieces.push(from);
 
-          closedALine = hasLineClosed(game.definition, game.board.stones, playerNumber);
-          if (!closedALine) {
+          closedALine = hasJustClosedLine(game.definition, game.board.stones, to, playerNumber);
+          if (closedALine) {
+            game.data.takeMode = playerNumber;
+            game.markModified('data');
+          } else {
             game.nextTurn();
           }
 
@@ -158,8 +204,8 @@ var gameDef = {
             addPieces   : addPieces,
             removePieces: removePieces,
             newPlayer   : game.actualPlayer,
-            gameEnded   : checkForGameEnding(game),
-            removeMode: closedALine,
+            gameEnded   : null,
+            takeMode    : closedALine,
             phase       : game.data.phases[playerNumber-1]
           });
         }
@@ -185,15 +231,18 @@ var gameDef = {
           to.player = playerNumber;
           addPieces.push(to);
           game.markModified('board');
-          ++game.data.stoneCount[playerNumber-1];
+          ++game.data.stoneCounts[playerNumber-1];
           game.markModified('data');
 
-          closedALine = hasLineClosed(game.definition, game.board.stones, playerNumber);
-          if (!closedALine) {
+          closedALine = hasJustClosedLine(game.definition, game.board.stones, to, playerNumber);
+          if (closedALine) {
+            game.data.takeMode = playerNumber;
+            game.markModified('data');
+          } else {
             game.nextTurn();
           }
 
-          if (countStones(game)[playerNumber] === 9) {
+          if (game.data.stoneCounts[playerNumber-1] === 9) {
             game.data.phases[playerNumber-1] = 'move';
             game.markModified('data');
           }
@@ -201,8 +250,8 @@ var gameDef = {
           cb(null, {
             addPieces : addPieces,
             newPlayer : game.actualPlayer,
-            gameEnded : checkForGameEnding(game),
-            removeMode: closedALine,
+            gameEnded : null,
+            takeMode  : closedALine,
             phase     : game.data.phases[playerNumber-1]
           });
         }

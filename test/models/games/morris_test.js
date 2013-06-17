@@ -52,6 +52,10 @@ describe.only('Games/Morris', function() {
         NineMorris.actions.move.should.not.eql(null);
       });
 
+      it('there is a take action', function() {
+        NineMorris.actions.take.should.not.eql(null);
+      });
+
       describe('on started game one\'s turn', function() {
         beforeEach(function() {
           game.startGame();
@@ -116,8 +120,8 @@ describe.only('Games/Morris', function() {
           it('increments the stone counter', function(done) {
             sinon.spy(game, 'markModified');
             NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err) {
-              expect(game.data.stoneCount[0]).to.be(1);
-              expect(game.data.stoneCount[1]).to.be(0);
+              expect(game.data.stoneCounts[0]).to.be(1);
+              expect(game.data.stoneCounts[1]).to.be(0);
               game.markModified.calledWith('data').should.eql(true);
               done();
             });
@@ -146,7 +150,7 @@ describe.only('Games/Morris', function() {
               data.addPieces.should.be.instanceOf(Array);
               data.addPieces.should.have.lengthOf(1);
               data.addPieces[0].should.eql({ x: 0, y: 0, player: 1 });
-              data.removeMode.should.eql(false);
+              data.takeMode.should.eql(false);
               data.newPlayer.should.eql(2);
               done();
             });
@@ -168,21 +172,30 @@ describe.only('Games/Morris', function() {
           });
 
           describe('if having a line', function() {
-            beforeEach(function() {
+            var sendData;
+            beforeEach(function(done) {
               game.board.stones[0][6] = 1;
               game.board.stones[0][12] = 1;
               game.board.stones[12][6] = 2;
               game.board.stones[12][12] = 2;
 
               game.data.stoneCounts = [8,8];
-            });
-
-            it('player enters remove mode and it is still his turn', function(done) {
+              sinon.spy(game, 'markModified');
               NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err, data) {
-                expect(data.removeMode).to.be(true);
-                expect(data.newPlayer).to.be(1);
+                expect(err).to.be(null);
+                sendData = data;
                 done();
               });
+            });
+
+            it('player enters take mode and it is still his turn', function() {
+              expect(sendData.takeMode).to.be(true);
+              expect(sendData.newPlayer).to.be(1);
+            });
+
+            it('game is in take mode', function() {
+              expect(game.data.takeMode).to.be(1);
+              game.markModified.calledWith('data').should.eql(true);
             });
           });
 
@@ -303,6 +316,7 @@ describe.only('Games/Morris', function() {
             describe('if closing a line', function() {
               var sendData;
               beforeEach(function(done) {
+                sinon.spy(game, 'markModified');
                 NineMorris.actions.move(game, { from: [6,2], to: [6,4], user: 'one' }, function(err, data) {
                   expect(err).to.be(null);
                   sendData = data;
@@ -310,9 +324,210 @@ describe.only('Games/Morris', function() {
                 });
               });
 
-              it('player enters remove mode and it is still his turn', function() {
-                expect(sendData.removeMode).to.be(true);
+              it('game is in take mode', function() {
+                expect(game.data.takeMode).to.be(1);
+                game.markModified.calledWith('data').should.eql(true);
+              });
+
+              it('player enters take mode and it is still his turn', function() {
+                expect(sendData.takeMode).to.be(true);
                 expect(sendData.newPlayer).to.be(1);
+              });
+            });
+
+            describe('if there is already a closed line', function() {
+              var sendData;
+              beforeEach(function(done) {
+                game.board.stones[2][10] = 1; // closed line
+                sinon.spy(game, 'markModified');
+                NineMorris.actions.move(game, { from: [6,0], to: [0,0], user: 'one' }, function(err, data) {
+                  expect(err).to.be(null);
+                  sendData = data;
+                  done();
+                });
+              });
+
+              it('game does not get into take mode', function() {
+                expect(game.data.takeMode).to.be(undefined);
+                game.markModified.calledWith('data').should.eql(false);
+              });
+
+              it('player does not enter take mode again and his turn ends', function() {
+                expect(sendData.takeMode).to.be(false);
+                expect(sendData.newPlayer).to.be(2);
+              });
+            });
+          });
+        });
+
+        describe('#take', function() {
+          it('without needed data it results in ARGUMENT_ERROR', function(done) {
+            NineMorris.actions.take(game, { user: 'one' }, function(err) {
+              err.message.should.eql('ARGUMENT_ERROR');
+              done();
+            });
+          });
+
+          describe('if user is not in take mode', function() {
+            it('send error ACTION_NOT_ALLOWED', function(done) {
+              NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err) {
+                err.message.should.eql('ACTION_NOT_ALLOWED');
+                done();
+              });
+            });
+          });
+
+          describe('if user is in take mode', function() {
+            beforeEach(function() {
+              game.data.takeMode = 1;
+            });
+
+            it('send error INVALID_MOVE if users own stone', function(done) {
+              NineMorris.actions.take(game, { from: [6,0], user: 'one' }, function(err) {
+                err.message.should.eql('INVALID_MOVE');
+                done();
+              });
+            });
+
+            it('send error INVALID_MOVE if there is no stone', function(done) {
+              NineMorris.actions.take(game, { from: [0,0], user: 'one' }, function(err) {
+                err.message.should.eql('INVALID_MOVE');
+                done();
+              });
+            });
+
+            describe('on correct taking', function() {
+              var sendData;
+              beforeEach(function(done) {
+                preset8Stones(game);
+                sinon.spy(game, 'markModified');
+                NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                  expect(err).to.be(null);
+                  sendData = data;
+                  done();
+                });
+              });
+
+              it('game is not in take mode anymore', function() {
+                expect(game.data.takeMode).to.be(false);
+                game.markModified.calledWith('data').should.eql(true);
+              });
+
+              it('player leaves take mode and his turn ends', function() {
+                expect(sendData.takeMode).to.be(false);
+                expect(sendData.newPlayer).to.be(2);
+              });
+
+              it('sends update information on removed piec', function() {
+                expect(sendData.removePieces).to.be.a(Array);
+                expect(sendData.removePieces.length).to.be(1);
+                expect(sendData.removePieces[0]).to.eql({ x: 6, y: 12});
+              });
+            });
+
+            describe('and if the enemy has only three stones left after taking', function() {
+              var sendData;
+              beforeEach(function() {
+                sinon.spy(game, 'markModified');
+
+                game.board.stones[0][6] = 1;
+                game.board.stones[2][2] = 1;
+                game.board.stones[2][6] = 1;
+                game.board.stones[2][10] = 1;
+
+                game.board.stones[12][6] = 2;
+                game.board.stones[10][6] = 2;
+                game.board.stones[10][10] = 2;
+                game.board.stones[6][10] = 2;
+
+                game.data.stoneCounts = [8,8];
+              });
+
+              describe('and was in move phase before', function() {
+                beforeEach(function(done) {
+                  game.data.phases = ['move', 'move'];
+
+                  NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                    expect(err).to.be(null);
+                    sendData = data;
+                    done();
+                  });
+                });
+
+                it('enemy enters fly phase', function() {
+                  game.markModified.calledWith('data').should.eql(true);
+                  expect(sendData.phases).to.eql(['move', 'fly']);
+                });
+              });
+
+              describe('and was in set phase before', function() {
+                beforeEach(function(done) {
+                  game.data.phases = ['set', 'set'];
+
+                  NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                    expect(err).to.be(null);
+                    sendData = data;
+                    done();
+                  });
+                });
+
+                it('enemy does not enter fly phase', function() {
+                  game.markModified.calledWith('data').should.eql(true);
+                  expect(sendData.phases).to.eql(['set', 'set']);
+                });
+              });
+            });
+
+            describe('and if the enemy has only two stones left after taking', function() {
+              var sendData;
+              beforeEach(function() {
+                sinon.spy(game, 'markModified');
+
+                game.board.stones[0][6] = 1;
+                game.board.stones[2][2] = 1;
+                game.board.stones[2][6] = 1;
+                game.board.stones[2][10] = 1;
+
+                game.board.stones[12][6] = 2;
+                game.board.stones[10][10] = 2;
+                game.board.stones[6][10] = 2;
+
+                game.data.stoneCounts = [8,8];
+              });
+
+              describe('and was in move phase before', function() {
+                beforeEach(function(done) {
+                  game.data.phases = ['move', 'move'];
+
+                  NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                    expect(err).to.be(null);
+                    sendData = data;
+                    done();
+                  });
+                });
+
+                it('player has now won', function() {
+                  game.markModified.calledWith('data').should.eql(true);
+                  expect(sendData.gameEnded.winner).to.eql(1);
+                });
+              });
+
+              describe('and was in set phase before', function() {
+                beforeEach(function(done) {
+                  game.data.phases = ['set', 'set'];
+
+                  NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                    expect(err).to.be(null);
+                    sendData = data;
+                    done();
+                  });
+                });
+
+                it('game is not over yet', function() {
+                  game.markModified.calledWith('data').should.eql(true);
+                  expect(sendData.phases).to.eql(['set', 'set']);
+                  expect(sendData.gameEnded).to.eql(null);
+                });
               });
             });
           });
