@@ -177,11 +177,15 @@ var gameDef = {
           to = { x: to[0], y: to[1] };
         }
 
-        if (!from || !to) {
+        if (game.data.phases[playerNumber-1] === 'set') {
+          cb(new Error('ACTION_NOT_ALLOWED'));
+        } else if (!from || !to) {
           cb(new Error('ARGUMENT_ERROR'));
         } else if (getStone(game.board.stones, from) !== playerNumber || getStone(game.board.stones, to)) {
           cb(new Error('INVALID_MOVE'));
-        } else if (!areConnected(game.definition, from, to)) {
+        } else if (game.data.phases[playerNumber-1] === 'move' && !areConnected(game.definition, from, to)) {
+          cb(new Error('INVALID_MOVE'));
+        } else if (!isValidPoint(game.definition, to)) {
           cb(new Error('INVALID_MOVE'));
         } else {
           addPieces = [];
@@ -219,7 +223,9 @@ var gameDef = {
           to = { x: to[0], y: to[1] };
         }
 
-        if (!to) {
+        if (game.data.phases[playerNumber-1] !== 'set') {
+          cb(new Error('ACTION_NOT_ALLOWED'));
+        } else if (!to) {
           cb(new Error('ARGUMENT_ERROR'));
         } else if (!isValidPoint(game.definition, to)) {
           cb(new Error('INVALID_MOVE'));

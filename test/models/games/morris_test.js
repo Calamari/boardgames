@@ -62,6 +62,14 @@ describe.only('Games/Morris', function() {
         });
 
         describe('#set', function() {
+          it('send error ACTION_NOT_ALLOWED if not in set phase', function(done) {
+            game.data.phases = ['move', 'move'];
+            NineMorris.actions.set(game, { to: [6,12], user: 'one' }, function(err) {
+              err.message.should.eql('ACTION_NOT_ALLOWED');
+              done();
+            });
+          });
+
           it('both player are in set phase', function() {
             expect(game.data.phases).to.eql(['set', 'set']);
           });
@@ -93,6 +101,7 @@ describe.only('Games/Morris', function() {
             }
 
             async.eachSeries(allFields, function(field, next) {
+              game.data.phases = ['set', 'set'];
               NineMorris.actions.set(game, { to: field, user: 'one' }, function(err) {
                 if (!allowedPoints[field.y] || !allowedPoints[field.y][field.x]) {
                   err.message.should.eql('INVALID_MOVE');
@@ -217,9 +226,9 @@ describe.only('Games/Morris', function() {
         });
 
         describe('#move', function() {
-          it('send error INVALID_MOVE because user is still in set phase', function(done) {
+          it('send error ACTION_NOT_ALLOWED because user is still in set phase', function(done) {
             NineMorris.actions.move(game, { from: [0,0], to: [7,0], user: 'one' }, function(err) {
-              err.message.should.eql('INVALID_MOVE');
+              err.message.should.eql('ACTION_NOT_ALLOWED');
               done();
             });
           });
@@ -358,6 +367,51 @@ describe.only('Games/Morris', function() {
               });
             });
           });
+
+          describe('if player is in fly phase', function() {
+            beforeEach(function() {
+              game.board.stones[0][6] = 1;
+              game.board.stones[2][2] = 1;
+              game.board.stones[2][6] = 1;
+
+              game.board.stones[6][10] = 2;
+              game.board.stones[6][12] = 2;
+              game.board.stones[8][6] = 2;
+              game.board.stones[6][8] = 2;
+              game.board.stones[6][2] = 2;
+
+              game.data.stoneCounts = [8,8];
+              game.data.phases = ['fly', 'move'];
+            });
+
+            describe('player can go everywhere', function() {
+              var sendData;
+              beforeEach(function(done) {
+                sinon.spy(game, 'markModified');
+                sinon.spy(game, 'nextTurn');
+                NineMorris.actions.move(game, { from: [6,0], to: [12,12], user: 'one' }, function(err, data) {
+                  expect(err).to.be(null);
+                  sendData = data;
+                  done();
+                });
+              });
+
+              it('sends update information on moved pieces', function() {
+                sendData.addPieces.should.be.instanceOf(Array);
+                sendData.addPieces.should.have.lengthOf(1);
+                sendData.addPieces[0].should.eql({ x: 12, y: 12, player: 1 });
+                sendData.removePieces.should.be.instanceOf(Array);
+                sendData.removePieces.should.have.lengthOf(1);
+                sendData.removePieces[0].should.eql({ x: 6, y: 0});
+                sendData.newPlayer.should.eql(2);
+              });
+
+              it('sets next player after moving piece', function() {
+                game.actualPlayer.should.eql(2);
+                game.nextTurn.calledOnce.should.eql(true);
+              });
+            });
+          });
         });
 
         describe('#take', function() {
@@ -440,7 +494,7 @@ describe.only('Games/Morris', function() {
                 game.board.stones[10][10] = 2;
                 game.board.stones[6][10] = 2;
 
-                game.data.stoneCounts = [8,8];
+                game.data.stoneCounts = [4,4];
               });
 
               describe('and was in move phase before', function() {
@@ -492,7 +546,7 @@ describe.only('Games/Morris', function() {
                 game.board.stones[10][10] = 2;
                 game.board.stones[6][10] = 2;
 
-                game.data.stoneCounts = [8,8];
+                game.data.stoneCounts = [4,3];
               });
 
               describe('and was in move phase before', function() {
