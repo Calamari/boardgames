@@ -198,7 +198,7 @@ gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
       cb(err);
     } else {
       cb(null, games.filter(function(game) {
-        return game.players.length < GameTypes.get(game.type).maxPlayers;
+        return game.players.length < game.definition.maxPlayers;
       }));
     }
   });

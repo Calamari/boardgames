@@ -93,7 +93,14 @@ module.exports = function(app) {
   app.post('/game/:type/new', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var Game = mongoose.model('Game'),
         type = req.params.type,
-        game = new Game({ type: type });
+        game;
+
+    if (type === 'Morris') {
+      // TODO: That is a mock right now and has to be replaced with better game start process
+      game = new Game({ type: type, config: { type: 9 } });
+    } else {
+      game = new Game({ type: type });
+    }
 
     game.save(function(err) {
       if (err) {
