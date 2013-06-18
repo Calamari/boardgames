@@ -97,7 +97,7 @@ module.exports = function(app) {
 
     game.save(function(err) {
       if (err) {
-        req.flash('error', 'Game of type "' + type + '"" could not be created.');
+        req.flash('error', 'Game of type "' + type + '" could not be created.');
         res.redirect('/');
       } else {
         game.addPlayer(req.user.username);
