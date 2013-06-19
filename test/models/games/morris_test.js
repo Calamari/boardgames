@@ -102,6 +102,7 @@ describe.only('Games/Morris', function() {
 
             async.eachSeries(allFields, function(field, next) {
               game.data.phases = ['set', 'set'];
+              game.data.takeMode = 0;
               NineMorris.actions.set(game, { to: field, user: 'one' }, function(err) {
                 if (!allowedPoints[field.y] || !allowedPoints[field.y][field.x]) {
                   err.message.should.eql('INVALID_MOVE');
@@ -198,7 +199,7 @@ describe.only('Games/Morris', function() {
             });
 
             it('player enters take mode and it is still his turn', function() {
-              expect(sendData.takeMode).to.be(true);
+              expect(sendData.takeMode).to.be(1);
               expect(sendData.newPlayer).to.be(1);
             });
 
@@ -218,7 +219,7 @@ describe.only('Games/Morris', function() {
               NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err, data) {
                 expect(game.data.phases).to.eql(['move', 'set']);
                 game.markModified.calledWith('data').should.eql(true);
-                data.phase.should.eql('move');
+                data.phases.should.eql(['move', 'set']);
                 done();
               });
             });
@@ -297,6 +298,7 @@ describe.only('Games/Morris', function() {
               it('moves the stone on the board', function() {
                 game.board.stones[0][0].should.eql(1);
                 game.board.stones[0][6].should.eql(0);
+                game.markModified.calledWith('board').should.eql(true);
               });
 
               it('does not change the stone counter', function() {
@@ -308,7 +310,7 @@ describe.only('Games/Morris', function() {
               it('all stay in move phase', function() {
                 expect(game.data.phases).to.eql(['move', 'move']);
                 game.markModified.calledWith('data').should.eql(false);
-                sendData.phase.should.eql('move');
+                sendData.phases.should.eql(['move', 'move']);
               });
 
               it('sends update information on moved pieces', function() {
@@ -339,7 +341,7 @@ describe.only('Games/Morris', function() {
               });
 
               it('player enters take mode and it is still his turn', function() {
-                expect(sendData.takeMode).to.be(true);
+                expect(sendData.takeMode).to.be(1);
                 expect(sendData.newPlayer).to.be(1);
               });
             });
@@ -436,6 +438,22 @@ describe.only('Games/Morris', function() {
               game.data.takeMode = 1;
             });
 
+            it('send error ACTION_NOT_ALLOWED if trying to move', function(done) {
+              game.data.phases = ['move', 'move'];
+              NineMorris.actions.move(game, { from: [6,0], to: [0,0], user: 'one' }, function(err) {
+                err.message.should.eql('ACTION_NOT_ALLOWED');
+                done();
+              });
+            });
+
+            it('send error ACTION_NOT_ALLOWED if trying to set', function(done) {
+              game.data.phases = ['set', 'set'];
+              NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err) {
+                err.message.should.eql('ACTION_NOT_ALLOWED');
+                done();
+              });
+            });
+
             it('send error INVALID_MOVE if users own stone', function(done) {
               NineMorris.actions.take(game, { from: [6,0], user: 'one' }, function(err) {
                 err.message.should.eql('INVALID_MOVE');
@@ -472,10 +490,15 @@ describe.only('Games/Morris', function() {
                 expect(sendData.newPlayer).to.be(2);
               });
 
-              it('sends update information on removed piec', function() {
+              it('sends update information on removed piece', function() {
                 expect(sendData.removePieces).to.be.a(Array);
                 expect(sendData.removePieces.length).to.be(1);
-                expect(sendData.removePieces[0]).to.eql({ x: 6, y: 12});
+                expect(sendData.removePieces[0]).to.eql({ x: 6, y: 12 });
+              });
+
+              it('removes the stone from the board persistently', function() {
+                game.markModified.calledWith('board').should.eql(true);
+                game.board.stones[12][6].should.eql(0);
               });
             });
 
@@ -549,9 +572,9 @@ describe.only('Games/Morris', function() {
                 game.data.stoneCounts = [4,3];
               });
 
-              describe('and was in move phase before', function() {
+              describe('and was in fly phase before', function() {
                 beforeEach(function(done) {
-                  game.data.phases = ['move', 'move'];
+                  game.data.phases = ['fly', 'fly'];
 
                   NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
                     expect(err).to.be(null);
@@ -563,6 +586,24 @@ describe.only('Games/Morris', function() {
                 it('player has now won', function() {
                   game.markModified.calledWith('data').should.eql(true);
                   expect(sendData.gameEnded.winner).to.eql(1);
+                });
+              });
+
+              describe('and was in move phase before', function() {
+                beforeEach(function(done) {
+                  game.data.phases = ['move', 'move'];
+
+                  NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                    expect(err).to.be(null);
+                    sendData = data;
+                    done();
+                  });
+                });
+
+                it('game is not over yet', function() {
+                  game.markModified.calledWith('data').should.eql(true);
+                  expect(sendData.phases).to.eql(['move', 'move']);
+                  expect(sendData.gameEnded).to.eql(null);
                 });
               });
 

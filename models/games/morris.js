@@ -136,6 +136,7 @@ var gameDef = {
           } else {
             removePieces = [];
             game.board.stones[from.y][from.x] = 0;
+            game.markModified('board');
             removePieces.push(from);
 
             game.nextTurn();
@@ -143,10 +144,12 @@ var gameDef = {
             otherStoneCount = countStones(game)[otherPlayerNumber];
 
             if (game.data.phases[otherPlayerNumber-1] === 'move') {
+              if (otherStoneCount === 3) {
+                game.data.phases[otherPlayerNumber-1] = 'fly';
+              }
+            } else if (game.data.phases[otherPlayerNumber-1] === 'fly') {
               if (otherStoneCount === 2) {
                 gameEnded = { winner: playerNumber };
-              } else if (otherStoneCount === 3) {
-                game.data.phases[otherPlayerNumber-1] = 'fly';
               }
             }
 
@@ -177,7 +180,7 @@ var gameDef = {
           to = { x: to[0], y: to[1] };
         }
 
-        if (game.data.phases[playerNumber-1] === 'set') {
+        if (game.data.takeMode || game.data.phases[playerNumber-1] === 'set') {
           cb(new Error('ACTION_NOT_ALLOWED'));
         } else if (!from || !to) {
           cb(new Error('ARGUMENT_ERROR'));
@@ -194,6 +197,7 @@ var gameDef = {
           to.player = playerNumber;
           addPieces.push(to);
           game.board.stones[from.y][from.x] = 0;
+          game.markModified('board');
           removePieces.push(from);
 
           closedALine = hasJustClosedLine(game.definition, game.board.stones, to, playerNumber);
@@ -209,8 +213,8 @@ var gameDef = {
             removePieces: removePieces,
             newPlayer   : game.actualPlayer,
             gameEnded   : null,
-            takeMode    : closedALine,
-            phase       : game.data.phases[playerNumber-1]
+            takeMode    : closedALine ? game.actualPlayer : false,
+            phases      : game.data.phases
           });
         }
       },
@@ -223,7 +227,7 @@ var gameDef = {
           to = { x: to[0], y: to[1] };
         }
 
-        if (game.data.phases[playerNumber-1] !== 'set') {
+        if (game.data.takeMode || game.data.phases[playerNumber-1] !== 'set') {
           cb(new Error('ACTION_NOT_ALLOWED'));
         } else if (!to) {
           cb(new Error('ARGUMENT_ERROR'));
@@ -257,8 +261,8 @@ var gameDef = {
             addPieces : addPieces,
             newPlayer : game.actualPlayer,
             gameEnded : null,
-            takeMode  : closedALine,
-            phase     : game.data.phases[playerNumber-1]
+            takeMode  : closedALine ? game.actualPlayer : false,
+            phases    : game.data.phases
           });
         }
       }

@@ -72,5 +72,16 @@
     }
   };
 
+  MorrisField.prototype.highlight = function(color) {
+    this._origStoneRadius = this._stone.element.attr('r');
+    this._stone.element.animate({ r: this._origStoneRadius*1.5 }, 250, 'ease-out');
+  };
+
+  MorrisField.prototype.unhighlight = function() {
+    if (this._origStoneRadius && this._stone) {
+      this._stone.element.animate({ r: this._origStoneRadius }, 250, 'ease-out');
+    }
+  };
+
   win.MorrisField = MorrisField;
 }(window, Field, extend));
