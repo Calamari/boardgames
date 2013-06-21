@@ -4,9 +4,11 @@
   box-sizing: border-box;
   border: 1px solid @line-color;
   cursor: pointer;
-  margin: 10px;
+  display: inline-block;
+  margin: 5px;
   padding: @padding;
   position: relative;
+  width: 350px;
   .gradient(#fff, #f9f9f9);
   .box-shadow(inset 0 4px 1px -3px #fff, inset 0 -3px 4px -3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0, 0, 0, 0.1));
 
@@ -15,22 +17,26 @@
   }
 
   img {
+    margin-right: 3px;
     vertical-align: middle;
   }
 
   .actions {
+    list-style-type: none;
     position: absolute;
     right: @padding;
     top: @padding;
 
-    > a {
+    a {
       font-size: 1em;
     }
   }
 
   .stats {
     > li {
+      color: @dark-grey;
       display: inline-block;
+      margin: 5px;
     }
 
     .number {

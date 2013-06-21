@@ -1,36 +1,53 @@
 <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
 {{#if waitingGames}}
-  <h2>Your games waiting for players:</h2>
-  <ul class="games-list">
+  <section class="games-list">
+    <h2>Your games waiting for players</h2>
     {{#each waitingGames}}
-      <li>
-        <span class="type">{{type}}</span>
-        <ul class="players">{{{playersList this ../users}}}</ul>
-        <ul class="links">
-          <li><a href="/game/{{id}}">go</a></li>
+      <div class="game-vcard game-{{lowercase type}}">
+        <img src="???" width="40" height="40" class="user-icon">
+
+        <ul class="actions">
+          <li><a href="/game/{{id}}">View the game</a></li>
         </ul>
-      </li>
+        <ul class="stats">
+          <li>Waiting for players</li>
+        </ul>
+      </div>
     {{/each}}
-  </ul>
+  </section>
 {{/if}}
 
 {{#if runningGames}}
-  <h2>Your running games:</h2>
-  <ul class="games-list">
+  <section class="games-list">
+    <h2>Games you are involved in:</h2>
     {{#each runningGames}}
-      <li>
-        <span class="type">{{type}}</span>
-        <ul class="players">{{{playersList this ../users}}}</ul>
-        <ul class="links">
-          <li><a href="/game/{{id}}">go</a></li>
+      <div class="game-vcard game-{{lowercase type}}">
+        {{#with opponent}}
+          <a href="#" class="user-icon">
+            <img src="{{avatarUrl}}" width="40" height="40">
+          </a>
+          <a href="{{profileUrl}}" class="name">{{name}}</a>
+        {{/with}}
+
+        <ul class="actions">
+          {{#if isTurn}}
+            <li><a href="/game/{{id}}">Make your turn</a></li>
+          {{else}}
+            <li><a href="/game/{{id}}">View the game</a></li>
+          {{/if}}
         </ul>
         <ul class="stats">
-          <li>turns played: {{turns}}</li>
+          <li><span class="number">{{turns}}</span> Turns</li>
+          {{#if isTurn}}
+            <li>It's your turn</li>
+          {{else}}
+            <li>It's <a href="{{opponent.profileUrl}}">{{opponent.name}}</a>'s turn</li>
+          {{/if}}
         </ul>
-      </li>
+      </div>
     {{/each}}
-  </ul>
+  </section>
 {{/if}}
 
 <h2>Start a new game:</h2>
@@ -41,36 +58,59 @@
 </ul>
 
 {{#if openGames}}
-  <h2>Games waiting for players:</h2>
-  <ul class="games-list">
+  <section class="games-list">
+    <h2>Games you could join:</h2>
     {{#each openGames}}
-      <li>
-        <span class="type">{{type}}</span>
-        <ul class="players">{{{playersList this ../users}}}</ul>
-        <ul class="links">
-          <li><a href="/game/{{id}}/join" data-method="put">join</a></li>
+      <div class="game-vcard game-{{lowercase type}}">
+        {{#with opponent}}
+          <a href="#" class="user-icon">
+            <img src="{{avatarUrl}}" width="40" height="40">
+          </a>
+          <a href="{{profileUrl}}" class="name">{{name}}</a>
+        {{/with}}
+
+        <ul class="actions">
+          <li><a href="/game/{{id}}/join" data-method="put">Join this game</a></li>
         </ul>
-      </li>
+        <ul class="stats">
+          <li>Waiting for players</li>
+        </ul>
+      </div>
     {{/each}}
-  </ul>
+  </section>
 {{/if}}
 
 {{#if endedGames}}
-  <h2>Finished Games:</h2>
-  <ul class="games-list">
+  <section class="games-list">
+    <h2>Your finished Games:</h2>
     {{#each endedGames}}
-      <li class="{{winningClass this username}}">
-        <span class="type">{{type}}</span>
-        <ul class="players">{{{playersList this ../users}}}</ul>
-        <ul class="links">
-          <li><a href="/game/{{id}}">look</a></li>
+
+      <div class="game-vcard game-{{lowercase type}} {{#if hasWon}}won{{else}}lost{{/if}}">
+        {{#with opponent}}
+          <a href="#" class="user-icon">
+            <img src="{{avatarUrl}}" width="40" height="40">
+          </a>
+          <a href="{{profileUrl}}" class="name">{{name}}</a>
+        {{/with}}
+
+        <ul class="actions">
+          {{#if hasWon}}
+            <li><a href="/game/{{id}}">View your victory</a></li>
+          {{else}}
+            <li><a href="/game/{{id}}">Look at that defeat</a></li>
+          {{/if}}
         </ul>
         <ul class="stats">
-          <li>turns played: {{turns}}</li>
+          {{#if hasWon}}
+            <li><a href="/game/{{id}}">You won the game</a></li>
+          {{else}}
+            <li><a href="/game/{{id}}">You lost the game</a></li>
+          {{/if}}
+          <li><span class="number">{{turns}}</span> Turns</li>
         </ul>
-      </li>
+      </div>
     {{/each}}
-  </ul>
+  </section>
 {{/if}}
 
 

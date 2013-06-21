@@ -3,7 +3,9 @@
 
 var auth      = require('../filters/authentication'),
     mongoose  = require('mongoose'),
-    jaz       = require('jaz-toolkit');
+    jaz       = require('jaz-toolkit'),
+
+    GameDecorator = require('../decorators/game_decorator');
 
 
 module.exports = function(app) {
@@ -58,10 +60,10 @@ module.exports = function(app) {
   app.get('/', auth.redirectIfLogin, gamesOfPlayer, loadPlayersOfGames, function(req, res, next) {
     res.render('index', {
       username: req.user.username,
-      openGames: req.openGames,
-      runningGames: req.runningGames,
-      waitingGames: req.waitingGames,
-      endedGames: req.endedGames,
+      openGames: new GameDecorator(req.openGames, req.user.username, req.users),
+      runningGames: new GameDecorator(req.runningGames, req.user.username, req.users),
+      waitingGames: new GameDecorator(req.waitingGames, req.user.username, req.users),
+      endedGames: new GameDecorator(req.endedGames, req.user.username, req.users),
       users: req.users,
       channel: '_free'
     });

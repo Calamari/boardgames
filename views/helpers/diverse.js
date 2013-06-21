@@ -10,3 +10,11 @@ Handlebars.registerHelper('json', function(obj) {
 Handlebars.registerHelper('bool', function(obj) {
   return obj ? 'true' : 'false';
 });
+
+Handlebars.registerHelper('lowercase', function(str) {
+  return (str || '').toLowerCase();
+});
+
+Handlebars.registerHelper('uppercase', function(str) {
+  return (str || '').toUpperCase();
+});
