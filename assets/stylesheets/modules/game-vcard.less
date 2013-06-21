@@ -7,11 +7,11 @@
   margin: 10px;
   padding: @padding;
   position: relative;
-  .gradient(#f9f9f9, #fff);
+  .gradient(#fff, #f9f9f9);
   .box-shadow(inset 0 4px 1px -3px #fff, inset 0 -3px 4px -3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0, 0, 0, 0.1));
 
   &:hover {
-    .gradient(#f9f9f9, #fbfbfb);
+    .gradient(#fbfbfb, #f9f9f9);
   }
 
   img {
@@ -31,6 +31,11 @@
   .stats {
     > li {
       display: inline-block;
+    }
+
+    .number {
+      font-size: 1.15em;
+      font-weight: bold;
     }
   }
 
@@ -53,5 +58,13 @@
   &.game-cloned:after {
     content: "Cloned";
     .after-filter;
+  }
+
+  &.lost {
+    .gradient(#fff9f9, #fff0f0);
+  }
+
+  &.won {
+    .gradient(#f9fff9, #f0fff0);
   }
 }
