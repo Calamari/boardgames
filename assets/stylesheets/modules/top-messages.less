@@ -1,0 +1,39 @@
+#top-messages {
+  width: 400px;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  margin-left: -200px;
+  top: 0;
+  .box-shadow(0 1px 4px rgba(0, 0, 0, 0.25));
+
+  > .message {
+    height: 1.5em;
+    padding: 8px 12px;
+    overflow: hidden;
+    .transition(all 800ms linear);
+
+    &:last-child {
+      .border-radius(0 0 3px 3px);
+    }
+
+    &.is-deleted {
+      height: 0;
+      opacity: 0;
+      padding: 0;
+    }
+  }
+
+  > .error {
+    background: #c00;
+    color: #fff;
+  }
+
+  > .success {
+    background: #0c0;
+  }
+
+  > .info {
+    background: #ccc;
+  }
+}

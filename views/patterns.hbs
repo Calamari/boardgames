@@ -1,8 +1,22 @@
+{{{js 'webpage'}}}
 <style type="text/css">
   .games-list {
     width: 350px;
   }
 </style>
+
+<ul class="no-liststyle" id="top-messages">
+  <li class="info message">I am an information for your satisfaction.</li>
+  <li class="error message">You probably did something wrong.</li>
+  <li class="success message">I like you, really, I do!</li>
+</ul>
+<script type="text/javascript">
+  $(function() {
+    $('#top-messages').on('click', 'li', function(event) {
+      $(event.currentTarget).addClass('is-deleted');
+    });
+  });
+</script>
 
 <p>Here is some text that describe nothing. And in between there is <a href="#">a link leading nowhere</a> as I can tell.</p>
 
