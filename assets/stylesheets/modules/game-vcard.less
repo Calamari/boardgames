@@ -1,0 +1,57 @@
+@padding: 4px;
+
+.game-vcard {
+  box-sizing: border-box;
+  border: 1px solid @line-color;
+  cursor: pointer;
+  margin: 10px;
+  padding: @padding;
+  position: relative;
+  .gradient(#f9f9f9, #fff);
+  .box-shadow(inset 0 4px 1px -3px #fff, inset 0 -3px 4px -3px rgba(0,0,0,0.2), 1px 1px 4px rgba(0, 0, 0, 0.1));
+
+  &:hover {
+    .gradient(#f9f9f9, #fbfbfb);
+  }
+
+  img {
+    vertical-align: middle;
+  }
+
+  .actions {
+    position: absolute;
+    right: @padding;
+    top: @padding;
+
+    > a {
+      font-size: 1em;
+    }
+  }
+
+  .stats {
+    > li {
+      display: inline-block;
+    }
+  }
+
+  .after-filter() {
+    position: absolute;
+    right: @padding;
+    bottom: 0;
+  }
+
+  &.game-morris:after {
+    content: "Morris";
+    .after-filter;
+  }
+
+  &.game-reversi:after {
+    content: "Reversi";
+    .after-filter;
+  }
+
+  &.game-cloned:after {
+    content: "Cloned";
+    .after-filter;
+  }
+}

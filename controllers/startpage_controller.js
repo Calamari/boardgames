@@ -66,4 +66,8 @@ module.exports = function(app) {
       channel: '_free'
     });
   });
+
+  app.get('/patterns', auth.redirectIfLogin, function(req, res, next) {
+    res.render('patterns');
+  });
 };
