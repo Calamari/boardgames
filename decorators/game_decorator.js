@@ -19,6 +19,7 @@ function decorator(game, currentUser, users) {
 
   var decoratedGame = {
     opponent : opponent,
+    id       : game.id,
     isTurn   : game.isPlayersTurn(currentUser),
     type     : game.type === 'Multiplication' ? 'cloned' : game.type,
     turns    : game.turns,
