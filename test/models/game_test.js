@@ -172,6 +172,23 @@ describe('Game', function() {
     });
   });
 
+  describe('#owner', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+    });
+
+    it('returns the first name', function() {
+      game.addPlayer('jon');
+      game.addPlayer('john');
+      expect(game.owner).to.eql('jon');
+    });
+
+    it('returns undefined for unowned games', function() {
+      expect(game.owner).to.eql(undefined);
+    });
+  });
+
   describe('#scoreOf', function() {
     var game;
     beforeEach(function() {

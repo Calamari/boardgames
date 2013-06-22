@@ -12,7 +12,7 @@ var sinon  = require('sinon'),
 // TODO: three in row means remove enemy piece
 // TODO: won when fly phase and 2 stones
 
-describe.only('Games/Morris', function() {
+describe('Games/Morris', function() {
   describe('Nine Mens Morris', function() {
     it('needs 2 players', function() {
       NineMorris.minPlayers.should.eql(2);

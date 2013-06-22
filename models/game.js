@@ -37,6 +37,10 @@ gameSchema.path('type').validate(function(value) {
   return GameTypes.containsType(value);
 });
 
+gameSchema.virtual('owner').get(function () {
+  return this.players[0];
+});
+
 gameSchema.virtual('winnerName').get(function () {
   if (this.ended) {
     return this.players[this.winner-1];
