@@ -63,6 +63,14 @@ module.exports = function(app) {
       openGames: new GameDecorator(req.openGames, req.user.username, req.users),
       runningGames: new GameDecorator(req.runningGames, req.user.username, req.users),
       waitingGames: new GameDecorator(req.waitingGames, req.user.username, req.users),
+      users: req.users,
+      channel: '_free'
+    });
+  });
+
+  app.get('/games/archive', auth.redirectIfLogin, gamesOfPlayer, loadPlayersOfGames, function(req, res, next) {
+    res.render('games/archive', {
+      username: req.user.username,
       endedGames: new GameDecorator(req.endedGames, req.user.username, req.users),
       users: req.users,
       channel: '_free'

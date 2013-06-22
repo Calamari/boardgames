@@ -80,39 +80,6 @@
   </section>
 {{/if}}
 
-{{#if endedGames}}
-  <section class="games-list">
-    <h2>Your finished Games:</h2>
-    {{#each endedGames}}
-
-      <div class="game-vcard game-{{lowercase type}} {{#if hasWon}}won{{else}}lost{{/if}}">
-        {{#with opponent}}
-          <a href="#" class="user-icon">
-            <img src="{{avatarUrl}}" width="40" height="40">
-          </a>
-          <a href="{{profileUrl}}" class="name">{{name}}</a>
-        {{/with}}
-
-        <ul class="actions">
-          {{#if hasWon}}
-            <li><a href="/game/{{id}}">View your victory</a></li>
-          {{else}}
-            <li><a href="/game/{{id}}">Look at that defeat</a></li>
-          {{/if}}
-        </ul>
-        <ul class="stats">
-          {{#if hasWon}}
-            <li><a href="/game/{{id}}">You won the game</a></li>
-          {{else}}
-            <li><a href="/game/{{id}}">You lost the game</a></li>
-          {{/if}}
-          <li><span class="number">{{turns}}</span> Turns</li>
-        </ul>
-      </div>
-    {{/each}}
-  </section>
-{{/if}}
-
 
 <div id="chat">
   <div class="content"></div>
