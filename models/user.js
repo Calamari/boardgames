@@ -42,10 +42,14 @@ userSchema.virtual('statistics').get(function () {
   return this._statistics || new Statistics(this);
 });
 
-userSchema.virtual('avatarUrl').get(function () {
+userSchema.virtual('emailHash').get(function () {
   var hash = crypto.createHash('md5');
   hash.update(this.email.toLowerCase());
-  return 'http://www.gravatar.com/avatar/' + hash.digest('hex') + '?d=retro';
+  return hash.digest('hex');
+});
+
+userSchema.virtual('avatarUrl').get(function () {
+  return 'http://www.gravatar.com/avatar/' + this.emailHash + '?d=retro';
 });
 
 userSchema.pre('save', function(next) {

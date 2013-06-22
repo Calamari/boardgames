@@ -15,7 +15,8 @@ module.exports = function(app) {
     User.findOne({ username: req.params.profileName }, function(err, user) {
       if (err || !user) { return next(); }
       res.render('profile', {
-        user: user
+        user: user,
+        isOwnProfile: user.username === req.user.username
       });
     });
   });

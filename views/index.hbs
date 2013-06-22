@@ -1,22 +1,11 @@
 <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
-{{#if waitingGames}}
-  <section class="games-list">
-    <h2>Your games waiting for players</h2>
-    {{#each waitingGames}}
-      <div class="game-vcard game-{{lowercase type}}">
-        <img src="???" width="40" height="40" class="user-icon">
-
-        <ul class="actions">
-          <li><a href="/game/{{id}}">View the game</a></li>
-        </ul>
-        <ul class="stats">
-          <li>Waiting for players</li>
-        </ul>
-      </div>
-    {{/each}}
-  </section>
-{{/if}}
+<h2>Start a new game:</h2>
+<ul>
+  <li><a href="/game/Multiplication/new" data-method="post">of <strong>cloned</strong></a></li>
+  <li><a href="/game/Reversi/new" data-method="post">of <strong>reversi</strong></a></li>
+  <li><a href="/game/Morris/new" data-method="post">of <strong>Morris</strong></a></li>
+</ul>
 
 {{#if runningGames}}
   <section class="games-list">
@@ -50,13 +39,6 @@
   </section>
 {{/if}}
 
-<h2>Start a new game:</h2>
-<ul>
-  <li><a href="/game/Multiplication/new" data-method="post">of <strong>cloned</strong></a></li>
-  <li><a href="/game/Reversi/new" data-method="post">of <strong>reversi</strong></a></li>
-  <li><a href="/game/Morris/new" data-method="post">of <strong>Morris</strong></a></li>
-</ul>
-
 {{#if openGames}}
   <section class="games-list">
     <h2>Games you could join:</h2>
@@ -71,6 +53,24 @@
 
         <ul class="actions">
           <li><a href="/game/{{id}}/join" data-method="put">Join this game</a></li>
+        </ul>
+        <ul class="stats">
+          <li>Waiting for players</li>
+        </ul>
+      </div>
+    {{/each}}
+  </section>
+{{/if}}
+
+{{#if waitingGames}}
+  <section class="games-list">
+    <h2>Your games waiting for players</h2>
+    {{#each waitingGames}}
+      <div class="game-vcard game-{{lowercase type}}">
+        <img src="???" width="40" height="40" class="user-icon">
+
+        <ul class="actions">
+          <li><a href="/game/{{id}}">View the game</a></li>
         </ul>
         <ul class="stats">
           <li>Waiting for players</li>
