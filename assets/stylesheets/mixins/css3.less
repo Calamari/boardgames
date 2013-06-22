@@ -1,6 +1,11 @@
 .text-shadow (@string: 0 1px 3px rgba(0, 0, 0, 0.25)) {
   text-shadow: @string;
 }
+.backface-visibility (@string) {
+  -webkit-backface-visibility: @string;
+     -moz-backface-visibility: @string;
+          backface-visibility: @string;
+}
 .box-shadow (@shadow) {
   -webkit-box-shadow: @shadow;
   -moz-box-shadow:    @shadow;
@@ -100,11 +105,20 @@
   @temp: @transition1, @transition2;
   .transition(@temp);
 }
+.transition (@transition1, @transition2, @transition3) {
+  @temp: @transition1, @transition2, @transition3;
+  .transition(@temp);
+}
 .transform(@string){
   -webkit-transform: @string;
   -moz-transform:    @string;
   -ms-transform:     @string;
   -o-transform:      @string;
+}
+.transform-style(@string){
+  -webkit-transform-style: @string;
+     -moz-transform-style: @string;
+          transform-style: @string;
 }
 .scale (@factor) {
   -webkit-transform: scale(@factor);

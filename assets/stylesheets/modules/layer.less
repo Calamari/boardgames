@@ -1,5 +1,5 @@
 .layer {
-  .transition(visibility 0 linear 333ms, opacity 333ms linear 0);
+  .transition(visibility 0 linear 333ms, opacity 333ms linear 0, transform 600ms);
   opacity: 1;
   visibility: visible;
 
@@ -13,17 +13,32 @@
     .box-shadow(0 0 5px rgba(0, 0, 0, 0.2));
     .border-radius(3px);
 
-    > h1 {
+    h1 {
       margin-top: 2px;
       border-bottom: 1px solid @line-color;
       padding-bottom: 6px;
     }
   }
 
+  .help-link {
+    float: right;
+    font-family: @sans-serif;
+    color: @grey;
+
+    &:hover {
+      color: @dark-grey;
+    }
+  }
+
+  h1 .help-link {
+    font-size: 0.6em;
+  }
+
   &.full-size {
     .wrap {
       left: 6%;
       width: 80%;
+      height: 64%;
     }
   }
 
@@ -49,5 +64,21 @@
   &.is-closed {
     opacity: 0;
     visibility: hidden;
+  }
+
+  .normal-text {
+    display: block;
+  }
+  .help-text {
+    display: none;
+  }
+
+  &.is-helping {
+    .normal-text {
+      display: none;
+    }
+    .help-text {
+      display: block;
+    }
   }
 }

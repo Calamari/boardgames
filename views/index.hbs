@@ -2,9 +2,9 @@
 
 <h2>Start a new game:</h2>
 
-<a class="play-game-button" href="/game/Multiplication/new" data-method="post"><strong>Cloned</strong></a>
-<a class="play-game-button" href="/game/Reversi/new" data-method="post"><strong>Reversi</strong></a>
-<a class="play-game-button" href="/game/Morris/new" data-method="post"><strong>Morris</strong></a>
+<a class="play-game-button" data-layer="game-layer-cloned" href="#">Cloned</a>
+<a class="play-game-button" data-layer="game-layer-reversi" href="#">Reversi</a>
+<a class="play-game-button" data-layer="game-layer-morris" href="#">Morris</a>
 
 {{#if runningGames}}
   <section class="games-list">
@@ -89,3 +89,54 @@
   // TODO: make the chat work
   var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
 </script>
+
+<section id="game-layer-cloned" class="layer full-size is-closed">
+  <div class="wrap">
+    <div class="normal-text">
+      <h1>Start a game of Cloned  <a href="#" class="help-link">What is Cloned?</a></h1>
+      <div class="button-line">
+        <a href="/game/Multiplication/new" data-method="post" class="button positive">Open for all</a>
+        <a href="#" class="cancel-link">I reconsidered…</a>
+      </div>
+    </div>
+    <div class="help-text">
+      <h1>How to play Cloned  <a href="#" class="help-link">I understand</a></h1>
+      <p>TODO: Here will be some help text.</p>
+      <a href="#" class="help-link">Thanks, enough help.</a>
+    </div>
+  </div>
+</section>
+
+<section id="game-layer-reversi" class="layer full-size is-closed">
+  <div class="wrap">
+    <div class="normal-text">
+      <h1>Start a game of Reversi <a href="#" class="help-link">What is Reversi?</a></h1>
+      <div class="button-line">
+        <a href="/game/Reversi/new" data-method="post" class="button positive">Open for all</a>
+        <a href="#" class="cancel-link">I reconsidered…</a>
+      </div>
+    </div>
+    <div class="help-text">
+      <h1>How to play Reversi  <a href="#" class="help-link">I understand</a></h1>
+      <p>TODO: Here will be some help text.</p>
+      <a href="#" class="help-link">Thanks, enough help.</a>
+    </div>
+  </div>
+</section>
+
+<section id="game-layer-morris" class="layer full-size is-closed">
+  <div class="wrap">
+    <div class="normal-text">
+      <h1>Start a game of Nine Men's Morris  <a href="#" class="help-link">What is Morris?</a></h1>
+      <div class="button-line">
+        <a href="/game/Morris/new" data-method="post" class="button positive">Open for all</a>
+        <a href="#" class="cancel-link">I reconsidered…</a>
+      </div>
+    </div>
+    <div class="help-text">
+      <h1>How to play Nine Men's Morris  <a href="#" class="help-link">I understand</a></h1>
+      <p>TODO: Here will be some help text.</p>
+      <a href="#" class="help-link">Thanks, enough help.</a>
+    </div>
+  </div>
+</section>
