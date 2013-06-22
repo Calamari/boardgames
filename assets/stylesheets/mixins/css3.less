@@ -96,6 +96,10 @@
   -ms-transition:     @transition;
   -o-transition:      @transition;
 }
+.transition (@transition1, @transition2) {
+  @temp: @transition1, @transition2;
+  .transition(@temp);
+}
 .transform(@string){
   -webkit-transform: @string;
   -moz-transform:    @string;

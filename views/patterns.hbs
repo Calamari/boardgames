@@ -1,12 +1,19 @@
 {{{js 'webpage'}}}
 
-<ul class="no-liststyle" id="top-messages">
+<a href="#" id="show-top-messages">Show TopMessages</a> - <a href="#" id="layer-opener">Open full layer</a>
+
+<ul class="no-liststyle" id="top-messages" style="display:none">
   <li class="info message">I am an information for your satisfaction.</li>
   <li class="error message">You probably did something wrong.</li>
   <li class="success message">I like you, really, I do!</li>
 </ul>
 <script type="text/javascript">
   $(function() {
+    $('#show-top-messages').on('click', function(event) {
+      event.preventDefault();
+      $('#show-top-messages').hide();
+      $('#top-messages').show();
+    })
     $('#top-messages').on('click', 'li', function(event) {
       $(event.currentTarget).addClass('is-deleted');
     });
@@ -86,5 +93,24 @@
     <ul class="stats">
       <li>You won the game</li>
     </ul>
+  </div>
+</section>
+
+<script>
+  $('#layer-opener').on('click', function(event) {
+    event.preventDefault();
+    new Layer('#full-layer');
+  });
+</script>
+<section id="full-layer" class="layer full-size is-closed">
+  <div class="wrap">
+    <h1>Start a game of Nine Men's Morris</h1>
+    I am a big layer
+    <div class="button-line">
+      <button class="button positive">Think positive!</button>
+      <button class="button negative">Dont do that</button>
+      <button class="button">I don't care</button>
+      <a href="#" class="cancel-link">Cancel whatever</a>
+    </div>
   </div>
 </section>

@@ -1,11 +1,10 @@
 <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
 <h2>Start a new game:</h2>
-<ul>
-  <li><a href="/game/Multiplication/new" data-method="post">of <strong>cloned</strong></a></li>
-  <li><a href="/game/Reversi/new" data-method="post">of <strong>reversi</strong></a></li>
-  <li><a href="/game/Morris/new" data-method="post">of <strong>Morris</strong></a></li>
-</ul>
+
+<a class="play-game-button" href="/game/Multiplication/new" data-method="post"><strong>Cloned</strong></a>
+<a class="play-game-button" href="/game/Reversi/new" data-method="post"><strong>Reversi</strong></a>
+<a class="play-game-button" href="/game/Morris/new" data-method="post"><strong>Morris</strong></a>
 
 {{#if runningGames}}
   <section class="games-list">

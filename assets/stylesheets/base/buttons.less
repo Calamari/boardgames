@@ -1,0 +1,31 @@
+button,
+.button {
+  background: @blue;
+  border: none;
+  .border-radius(2px);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.85em;
+  padding: 8px 14px;
+  .transition(background-color 200ms);
+
+  &:hover {
+    background: darken(@blue, 10%);
+  }
+
+  &.positive {
+    background: @green;
+
+    &:hover {
+      background: darken(@green, 10%);
+    }
+  }
+
+  &.negative {
+    background: @red;
+
+    &:hover {
+      background: darken(@red, 10%);
+    }
+  }
+}
