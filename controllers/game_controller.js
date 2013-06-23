@@ -36,6 +36,20 @@ module.exports = function(app) {
     });
   });
 
+  app.delete('/game/:id', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
+    if (!req.game.started && req.game.owner === req.user.username) {
+      req.game.remove(function(err) {
+        if (err) {
+          req.flash('error', 'Game could not be removed.');
+        }
+        res.redirect('/');
+      });
+    } else {
+      req.flash('error', 'You cannot remove this game.');
+      res.redirect('/');
+    }
+  });
+
   app.put('/game/:id/join', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
     var id = req.params.id,
         events;
