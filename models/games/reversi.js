@@ -99,18 +99,27 @@ function getWinner(game) {
 }
 
 function checkForGameEnding(game) {
+  var counts = countStones(game);
+
+  if (counts[1] + counts[2] === 64) {
+    return { winner: getWinner(game) };
+  }
+  return null;
+}
+
+function canMove(game, playerNumber) {
   var x, y;
   for (y=0; y<8; ++y) {
     for (x=0; x<8; ++x) {
       if (!getStone(game.board.stones, x, y)) {
         // if the next user can enclose at least one line, game is not ended yet
-        if (getTrappedLines(game.board.stones, x, y, game.actualPlayer).length) {
-          return null;
+        if (getTrappedLines(game.board.stones, x, y, playerNumber).length) {
+          return true;
         }
       }
     }
   }
-  return { winner: getWinner(game) };
+  return false;
 }
 
 var gameDef = {
@@ -156,7 +165,9 @@ var gameDef = {
           stone.player = playerNumber;
           game.board.stones[stone.y][stone.x] = playerNumber;
         });
-        game.nextTurn();
+        if (canMove(game, game.nextPlayerPosition)) {
+          game.nextTurn();
+        }
         game.markModified('board');
 
         cb(null, {

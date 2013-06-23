@@ -1,4 +1,5 @@
 var sinon    = require('sinon'),
+    expect   = require('expect.js'),
 
     Reversi = require('../../../models/games/reversi').getDefinition();
     Game    = require('../../../models/game');
@@ -126,7 +127,7 @@ describe('Games/Reversi', function() {
 
         it('it does not send gameEnded event with update', function(done) {
           Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err, data) {
-            (data.gameEnded === null).should.eql(true);
+            expect(data.gameEnded).to.be(null);
             done();
           });
         });
@@ -151,7 +152,29 @@ describe('Games/Reversi', function() {
 
         describe('if after the turn the enemy has no valid move left', function() {
           beforeEach(function() {
-            game.board.stones = [ [ 2, 2, null, 2, 2, 2, 2, 2 ], [ 2, 2, 1, 2, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ null, 1, 2, 2, 1, 1, 1, 1 ], [ null, 1, 1, 2, 2, 1, 1, 1 ], [ null, null, 1, 2, 2, 2, 1, 1 ], [ 2, 2, 2, 1, 1, 1, 1, 1 ] ];
+            game.board.stones = [ [ 2, 2, null, 2, 2, 2, 2, 2 ], [ 2, 2, 1, 2, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ 2, 2, 2, 1, 1, 1, 1, 1 ], [ null, 2, 2, 2, 1, 1, 1, 1 ], [ null, 2, 2, 2, 2, 1, 1, 1 ], [ null, null, 2, 2, 2, 2, 1, 1 ], [ 2, 2, 2, 1, 1, 1, 1, 1 ] ];
+            game.actualPlayer = 1;
+            game.save();
+          });
+
+          it('it does not send update with gameEnded event yet', function(done) {
+            Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
+              expect(data.gameEnded).to.be(null);
+              done();
+            });
+          });
+
+          it('same player is again', function(done) {
+            Reversi.actions.set(game, { to: [2,0], user: 'two' }, function(err, data) {
+              data.newPlayer.should.eql(1);
+              done();
+            });
+          });
+        });
+
+        describe('if last spot will be taken', function() {
+          beforeEach(function() {
+            game.board.stones = [ [ 2, 2, null, 2, 2, 2, 1, 2 ], [ 2, 2, 1, 2, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ 1, 2, 2, 1, 1, 1, 1, 1 ], [ 1, 1, 2, 2, 1, 1, 1, 1 ], [ 1, 1, 1, 2, 2, 1, 1, 1 ], [ 1, 1, 1, 2, 2, 2, 1, 1 ], [ 2, 2, 2, 1, 1, 1, 1, 1 ] ];
             game.actualPlayer = 2;
             game.save();
           });

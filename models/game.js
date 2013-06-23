@@ -61,6 +61,12 @@ gameSchema.virtual('definition').get(function () {
   return GameTypes.get(this.type, this.config);
 });
 
+// Return the position of the next player
+// (BEWARE: this assumes only 2 Player games right now)
+gameSchema.virtual('nextPlayerPosition').get(function () {
+  return this.actualPlayer === 1 ? 2 : 1;
+});
+
 gameSchema.methods.addPlayer = function(playerName) {
   if (this.players.length < this.definition.maxPlayers && this.players.indexOf(playerName) === -1) {
     this.players.push(playerName);
