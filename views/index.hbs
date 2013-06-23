@@ -11,10 +11,10 @@
 
   <div class="main-stats twothird">
     <h2 class="bordered"><span class="verb">You have…</span></h2>
-    <p><span class="verb">started</span> <span class="number">{{user.statistics.gamesStarted}}</span> games yourself.</p>
-    <p><span class="verb">joined</span> <span class="number">{{user.statistics.gamesJoined}}</span> games.</p>
-    <p><span class="verb">won</span> <span class="number">{{user.statistics.gamesWon}}</span> games.</p>
-    <p><span class="verb">lost</span> <span class="number">{{user.statistics.gamesLost}}</span> games.</p>
+    <p><span class="verb">started</span> <span class="number">{{user.statistics.gamesStarted}}</span> {{#ifSingular user.statistics.gamesStarted}}game{{else}}games{{/ifSingular}} yourself.</p>
+    <p><span class="verb">joined</span> <span class="number">{{user.statistics.gamesJoined}}</span> {{#ifSingular user.statistics.gamesJoined}}game{{else}}games{{/ifSingular}}.</p>
+    <p><span class="verb">won</span> <span class="number">{{user.statistics.gamesWon}}</span> {{#ifSingular user.statistics.gamesWon}}game{{else}}games{{/ifSingular}}.</p>
+    <p><span class="verb">lost</span> <span class="number">{{user.statistics.gamesLost}}</span> {{#ifSingular user.statistics.gamesLost}}game{{else}}games{{/ifSingular}}.</p>
   </div>
 </div>
 

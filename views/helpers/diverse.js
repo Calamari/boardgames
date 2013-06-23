@@ -18,3 +18,11 @@ Handlebars.registerHelper('lowercase', function(str) {
 Handlebars.registerHelper('uppercase', function(str) {
   return (str || '').toUpperCase();
 });
+
+Handlebars.registerHelper('ifSingular', function(value, data) {
+  if (value === 1) {
+    return data.fn();
+  } else {
+    return data.inverse();
+  }
+});
