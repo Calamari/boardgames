@@ -1,14 +1,26 @@
 <div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
 
-<h2>Start a new game:</h2>
+<div class="row">
+  <div class="third">
+    <h2 class="bordered">Start a new game:</h2>
 
-<a class="play-game-button" data-layer="game-layer-cloned" href="#">Cloned</a>
-<a class="play-game-button" data-layer="game-layer-reversi" href="#">Reversi</a>
-<a class="play-game-button" data-layer="game-layer-morris" href="#">Morris</a>
+    <a class="play-game-button" data-layer="game-layer-cloned" href="#">Cloned</a>
+    <a class="play-game-button" data-layer="game-layer-reversi" href="#">Reversi</a>
+    <a class="play-game-button" data-layer="game-layer-morris" href="#">Morris</a>
+  </div>
+
+  <div class="main-stats twothird">
+    <h2 class="bordered"><span class="verb">You have…</span></h2>
+    <p><span class="verb">started</span> <span class="number">{{user.statistics.gamesStarted}}</span> games yourself.</p>
+    <p><span class="verb">joined</span> <span class="number">{{user.statistics.gamesJoined}}</span> games.</p>
+    <p><span class="verb">won</span> <span class="number">{{user.statistics.gamesWon}}</span> games.</p>
+    <p><span class="verb">lost</span> <span class="number">{{user.statistics.gamesLost}}</span> games.</p>
+  </div>
+</div>
 
 {{#if runningGames}}
   <section class="games-list">
-    <h2>Games you are involved in:</h2>
+    <h2 class="bordered">Games you are involved in:</h2>
     {{#each runningGames}}
       <div class="game-vcard game-{{lowercase type}}">
         {{#with opponent}}
@@ -40,7 +52,7 @@
 
 {{#if openGames}}
   <section class="games-list">
-    <h2>Games you could join:</h2>
+    <h2 class="bordered">Games you could join:</h2>
     {{#each openGames}}
       <div class="game-vcard game-{{lowercase type}}">
         {{#with opponent}}
@@ -63,7 +75,7 @@
 
 {{#if waitingGames}}
   <section class="games-list">
-    <h2>Your games waiting for players</h2>
+    <h2 class="bordered">Your games waiting for players</h2>
     {{#each waitingGames}}
       <div class="game-vcard game-{{lowercase type}}">
         <span class="user-icon question">?</span>

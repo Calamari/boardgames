@@ -1,0 +1,25 @@
+
+.row {
+  display: table;
+  width: 100%;
+
+  .third {
+    box-sizing: border-box;
+    display: table-cell;
+    width: 32%;
+    padding-left: 1%;
+    vertical-align: top;
+  }
+
+  .twothird {
+    box-sizing: border-box;
+    display: table-cell;
+    width: 66%;
+    padding-left: 1%;
+    vertical-align: top;
+  }
+
+  > :first-child {
+    padding-left: 0;
+  }
+}

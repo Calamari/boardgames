@@ -7,16 +7,18 @@
   {{{css 'application'}}}
 </head>
 <body>
-  {{#each flash.info}}
-    <p class="info-message">{{flash.info}}</p>
-  {{/each}}
-  {{#each flash.error}}
-    <p class="error-message">{{this}}</p>
-  {{/each}}
-  {{#each flash.success}}
-    <p class="success-message">{{flash.success}}</p>
-  {{/each}}
+  <div class="wrap">
+    {{#each flash.info}}
+      <p class="info-message">{{flash.info}}</p>
+    {{/each}}
+    {{#each flash.error}}
+      <p class="error-message">{{this}}</p>
+    {{/each}}
+    {{#each flash.success}}
+      <p class="success-message">{{flash.success}}</p>
+    {{/each}}
 
-  {{{body}}}
+    {{{body}}}
+  </div>
 </body>
 </html>
