@@ -96,9 +96,11 @@
         lines;
 
     board.forEachField(function(field) {
-      lines = getTrappedLines(board, field.x, field.y, actualPlayer);
-      if (lines.length) {
-        possibleMoves.push(field);
+      if (!field.getPlayer()) {
+        lines = getTrappedLines(board, field.x, field.y, actualPlayer);
+        if (lines.length) {
+          possibleMoves.push(field);
+        }
       }
     });
     return possibleMoves;
