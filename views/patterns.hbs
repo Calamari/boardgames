@@ -1,6 +1,8 @@
 {{{js 'webpage'}}}
 
-<a href="#" id="show-top-messages">Show TopMessages</a> - <a href="#" id="layer-opener">Open full layer</a>
+<a href="#" id="show-top-messages">Show TopMessages</a>
+- <a href="#" id="layer-opener">Open full layer</a>
+- <a href="#" id="noticiation-opener">Create a Notification</a>
 
 <ul class="no-liststyle" id="top-messages" style="display:none">
   <li class="info message">I am an information for your satisfaction.</li>
@@ -114,3 +116,32 @@
     </div>
   </div>
 </section>
+
+<ul id="notifications-list" class="notifications-list">
+  <li class="notification">
+    <strong>Something happened</strong>
+    <p>And that is really really bad. But live goes on. Don't worry.</p>
+    <a href="#" class="goto">Go there…</a>
+    <a href="#" class="closer">x</a>
+  </li>
+</ul>
+
+<script type="text/html" id="notification-template">
+  <li class="notification">
+    <strong>[title]</strong>
+    <p>[text]</p>
+    <a href="[url]" class="goto">[linkText]</a>
+  </li>
+</script>
+
+<script>
+  $('#noticiation-opener').on('click', function(event) {
+    event.preventDefault();
+    new Notification({
+      title:    'Something happened' ,
+      text:     'My exampe happening',
+      url:      '#',
+      linkText: 'go there…'
+    });
+  });
+</script>

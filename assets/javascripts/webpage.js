@@ -4,5 +4,6 @@
 //= require vendor/object.extend.js
 //= require chat.js
 //= require controls/layer.js
+//= require controls/notification.js
 //= require behaviors/data_layer.js
 //= require behaviors/data_method.js

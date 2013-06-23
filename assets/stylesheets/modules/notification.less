@@ -1,0 +1,47 @@
+.notifications-list {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.notification {
+  background: rgba(0,0,0,0.5);
+  .border-radius(4px);
+  .box-shadow(0 0 5px rgba(0,0,0,0.4));
+  color: #fff;
+  overflow: hidden;
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  position: relative;
+  width: 300px;
+
+  > strong {
+    display: block;
+  }
+
+  > .goto {
+    color: #fff;
+    float: right;
+
+    &:hover {
+      color: @grey;
+    }
+  }
+
+  > .closer {
+    color: #fff;
+    font-size: 16px;
+    position: absolute;
+    right: 8px;
+    top: 0px;
+    text-decoration: none;
+
+    &:hover {
+      color: @grey;
+    }
+  }
+
+  &.is-closed {
+    opacity: 0;
+  }
+}
