@@ -11,6 +11,7 @@
   }
 
   var MorrisGame = function(container, config) {
+    config.hideScore = true;
     Game.call(this, container, config);
     this._data = config.data;
     if (this._isTaking()) {
