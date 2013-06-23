@@ -137,10 +137,11 @@
       this.fire('change');
     },
     _setPlayer: function(player) {
-      this.actualPlayer = player;
-      if (this.actualPlayer == this.thisPlayerNr) {
+      if (this.actualPlayer !== player && player === this.thisPlayerNr) {
         this._logger.log('It\'s your turn again.');
+        new Notification({ title: "It's your turn again" });
       }
+      this.actualPlayer = player;
       this._board.showHover(this._isTurn());
       this.fire('change');
     },

@@ -10,6 +10,7 @@
 
     this._createElement(config);
     this.element.appendTo(this.list);
+    this.element.hide().slideDown('slow');
 
     setTimeout(function() {
       self.close();
@@ -25,10 +26,14 @@
       var template = $(TEMPLATE_SELECTOR).html();
       console.log(template, config);
       template = template.replace('[title]', config.title)
-                         .replace('[text]', config.text)
+                         .replace('[text]', config.text || '')
                          .replace('[url]', config.url)
-                         .replace('[linkText]', config.linkText);
+                         .replace('[linkText]', config.linkText)
+                         .replace('[time]', moment().format('hh:mm:ss'));
       this.element = $(template);
+      if (!config.url) {
+        this.element.find('.goto').remove();
+      }
     },
     close: function() {
       this.element.slideUp('slow');
