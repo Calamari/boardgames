@@ -51,6 +51,7 @@ module.exports = function(app) {
           actualPlayer: req.game.actualPlayer,
           stones: req.game.board.stones
         };
+        req.game.dataForGameStarted(events);
       }
       req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, events);
       req.game.save(function(err) {

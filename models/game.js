@@ -194,6 +194,11 @@ gameSchema.methods.endGame = function(winner) {
   });
 };
 
+gameSchema.methods.dataForGameStarted = function(events) {
+  if (this.definition.dataForGameStarted) {
+    this.definition.dataForGameStarted(this, events);
+  }
+};
 
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {

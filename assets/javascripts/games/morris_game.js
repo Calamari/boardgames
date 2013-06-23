@@ -38,7 +38,7 @@
 
   MorrisGame.prototype._updateGame = function(data) {
     var self = this,
-        phaseBefore = self._data.phases[this.thisPlayerNr-1],
+        phaseBefore = self._getPhase(),
         key, value;
 
     for (key in data) {
@@ -53,7 +53,7 @@
           break;
         case 'phases':
           self._data.phases = value;
-          if (phaseBefore !== self._data.phases[this.thisPlayerNr-1]) {
+          if (phaseBefore !== self._getPhase()) {
             if (this._isPhase('move')) {
               this._logger.log('You are now in move phase. Move your stones around to create closed lines.');
             }
@@ -126,8 +126,12 @@
     this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, this._handleSocketResponse.bind(this));
   };
 
+  MorrisGame.prototype._getPhase = function() {
+    return this._data.phases ? this._data.phases[this.thisPlayerNr-1] : null;
+  };
+
   MorrisGame.prototype._isPhase = function(phase) {
-    return this._data.phases[this.thisPlayerNr-1] === phase;
+    return this._data.phases ? this._data.phases[this.thisPlayerNr-1] === phase : false;
   };
 
   MorrisGame.prototype._isTaking = function(phase) {

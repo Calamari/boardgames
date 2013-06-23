@@ -113,6 +113,9 @@ var gameDef = {
       game.markModified('data');
     },
     calcScore: countStones,
+    dataForGameStarted: function(game, events) {
+      events.phases = game.data.phases;
+    },
     actions: {
       take: function(game, data, cb) {
         var from              = data.from,
