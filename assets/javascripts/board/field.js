@@ -34,7 +34,7 @@
       this._selectionHighlight = paper.rect(canvasX, canvasY, size, size)
                                       .attr('fill', 'rgba(255,155,0,0.5)').hide();
       this._interactionRect    = paper.rect(canvasX, canvasY, size, size)
-                                      .attr('fill', 'transparent').toFront();
+                                      .attr('fill', '#000').attr('fill-opacity', '0').toFront();
       return this;
     },
     setStone: function(player) {
