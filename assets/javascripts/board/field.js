@@ -37,7 +37,19 @@
                                       .attr('fill', '#000').attr('fill-opacity', '0').toFront();
       return this;
     },
-    setStone: function(player) {
+    getStone: function(player) {
+      return this._stone;
+    },
+    moveStone: function(field) {
+      field.setStone(this._stone);
+      this._stone = null;
+    },
+    setStone: function(stone) {
+      this._stone = stone;
+      this._stone.move(this);
+      this._interactionRect.toFront();
+    },
+    createStone: function(player) {
       this.removeStone();
       this._stone = new Stone(this, this._paper, player).draw();
       this._interactionRect.toFront();

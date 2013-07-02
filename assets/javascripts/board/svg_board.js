@@ -23,7 +23,7 @@
         for (x = this._boardSize; x--;) {
           this._boardFields[y][x].removeStone();
           if (stones[y] && stones[y][x]) {
-            this._boardFields[y][x].setStone(stones[y][x]);
+            this._boardFields[y][x].createStone(stones[y][x]);
           }
         }
       }
@@ -35,6 +35,10 @@
       this._fields.forEach(iterator);
     },
     getField: function(x, y) {
+      if (typeof x === 'object') {
+        y = x.y;
+        x = x.x;
+      }
       return this._boardFields[y] && this._boardFields[y][x];
     },
     select: function(field) {
@@ -55,16 +59,13 @@
       this._eventHandler.onClick(field);
     },
     addPiece: function(piece, player) {
-      this.getField(piece.x, piece.y).setStone(player || piece.player);
+      this.getField(piece).createStone(player || piece.player);
     },
     removePiece: function(piece) {
-      this.getField(piece.x, piece.y).removeStone();
+      this.getField(piece).removeStone();
     },
     movePiece: function(piece) {
-      // TODO: make nice move animation
-      var player = this.getField(piece.from.x, piece.from.y).getPlayer();
-      this.removePiece(piece.from);
-      this.addPiece(piece.to, player);
+      this.getField(piece.from).moveStone(this.getField(piece.to));
     },
 
     _createPaper: function(config) {

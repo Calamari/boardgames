@@ -24,7 +24,6 @@
   Notification.prototype = {
     _createElement: function(config) {
       var template = $(TEMPLATE_SELECTOR).html();
-      console.log(template, config);
       template = template.replace('[title]', config.title)
                          .replace('[text]', config.text || '')
                          .replace('[url]', config.url)

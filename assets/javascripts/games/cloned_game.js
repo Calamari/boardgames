@@ -64,7 +64,7 @@
         // this._captureEnemies(to.x, to.y);
         this.nextPlayer();
         this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, function(data) {
-          self._updateGame(data);
+      //    self._updateGame(data);
         });
       }
     }
