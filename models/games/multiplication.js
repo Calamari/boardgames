@@ -131,7 +131,7 @@ var gameDef = {
       var from = data.from,
           to   = data.to,
           playerNumber = game.getPlayerPosition(data.user),
-          addPieces, removePieces, capturedPieces,
+          addPieces, movePieces, capturedPieces,
           distance;
 
       // from and to can be point objects or arrays with 2 numbers
@@ -153,20 +153,21 @@ var gameDef = {
           cb(new Error('INVALID_MOVE'));
         } else {
           addPieces = [];
-          removePieces = [];
+          movePieces = [];
           if (distance === 2) {
             game.board.stones[from.y][from.x] = 0;
-            removePieces.push(from);
+            movePieces.push({ from: from, to: to });
+          } else {
+            to.player = playerNumber;
+            addPieces.push(to);
           }
           game.board.stones[to.y][to.x] = playerNumber;
-          to.player = playerNumber;
-          addPieces.push(to);
           capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to.x, to.y);
           game.nextTurn();
           game.markModified('board');
           cb(null, {
             addPieces      : addPieces,
-            removePieces   : removePieces,
+            movePieces     : movePieces,
             capturedPieces : capturedPieces,
             newPlayer      : game.actualPlayer,
             gameEnded      : checkForGameEnding(game)

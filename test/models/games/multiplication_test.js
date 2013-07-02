@@ -128,12 +128,10 @@ describe('Games/Multiplication', function() {
 
           it('sends update information in the callbacks on jump', function(done) {
             Multiplication.actions.move(game, { from: [0,0], to: [2,0], user: 'one' }, function(err, data) {
-              data.removePieces.should.be.instanceOf(Array);
-              data.removePieces.should.have.lengthOf(1);
-              data.removePieces[0].should.eql({ x: 0, y: 0 });
-              data.addPieces.should.be.instanceOf(Array);
-              data.addPieces.should.have.lengthOf(1);
-              data.addPieces[0].should.eql({ x: 2, y: 0, player: 1 });
+              data.movePieces.should.be.instanceOf(Array);
+              data.movePieces.should.have.lengthOf(1);
+              data.movePieces[0].should.eql({ from: { x:0, y:0 }, to: { x:2, y:0 } })
+
               data.newPlayer.should.eql(2);
               done();
             });
@@ -155,7 +153,7 @@ describe('Games/Multiplication', function() {
 
         it('sends update information in the callbacks on move', function(done) {
           Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err, data) {
-            data.removePieces.should.have.lengthOf(0);
+            data.movePieces.should.have.lengthOf(0);
             data.addPieces.should.have.lengthOf(1);
             data.addPieces[0].should.eql({ x: 1, y: 0, player: 1 });
             data.newPlayer.should.eql(2);

@@ -54,11 +54,16 @@
     _handleClick: function(field) {
       this._eventHandler.onClick(field);
     },
-    addPiece: function(piece) {
-      this.getField(piece.x, piece.y).setStone(piece.player);
+    addPiece: function(piece, player) {
+      this.getField(piece.x, piece.y).setStone(player || piece.player);
     },
     removePiece: function(piece) {
       this.getField(piece.x, piece.y).removeStone();
+    },
+    movePiece: function(piece) {
+      var player = this.getField(piece.from.x, piece.from.y).getPlayer();
+      this.removePiece(piece.from);
+      this.addPiece(piece.to, player);
     },
 
     _createPaper: function(config) {

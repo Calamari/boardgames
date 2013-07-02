@@ -96,6 +96,9 @@
           removePieces   = function(piece) {
             self._board.removePiece(piece);
           },
+          movePieces     = function(piece) {
+            self._board.movePiece(piece);
+          },
           capturedPieces = function(piece) {
             self._board.addPiece(piece);
           };
@@ -123,6 +126,9 @@
             break;
           case 'addPieces':
             value.forEach(addPieces);
+            break;
+          case 'movePieces':
+            value.forEach(movePieces);
             break;
           case 'removePieces':
             value.forEach(removePieces);
