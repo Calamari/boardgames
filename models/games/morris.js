@@ -173,7 +173,7 @@ var gameDef = {
         var from         = data.from,
             to           = data.to,
             playerNumber = game.getPlayerPosition(data.user),
-            addPieces, removePieces, closedALine;
+            movePieces, closedALine;
 
         // from and to can be point objects or arrays with 2 numbers
         if (Array.isArray(from)) {
@@ -194,14 +194,11 @@ var gameDef = {
         } else if (!isValidPoint(game.definition, to)) {
           cb(new Error('INVALID_MOVE'));
         } else {
-          addPieces = [];
-          removePieces = [];
+          movePieces = [];
           game.board.stones[to.y][to.x] = playerNumber;
-          to.player = playerNumber;
-          addPieces.push(to);
           game.board.stones[from.y][from.x] = 0;
           game.markModified('board');
-          removePieces.push(from);
+          movePieces.push({ from: from, to: to });
 
           closedALine = hasJustClosedLine(game.definition, game.board.stones, to, playerNumber);
           if (closedALine) {
@@ -212,8 +209,7 @@ var gameDef = {
           }
 
           cb(null, {
-            addPieces   : addPieces,
-            removePieces: removePieces,
+            movePieces  : movePieces,
             newPlayer   : game.actualPlayer,
             gameEnded   : null,
             takeMode    : closedALine ? game.actualPlayer : false,

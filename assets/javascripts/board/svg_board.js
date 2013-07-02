@@ -61,6 +61,7 @@
       this.getField(piece.x, piece.y).removeStone();
     },
     movePiece: function(piece) {
+      // TODO: make nice move animation
       var player = this.getField(piece.from.x, piece.from.y).getPlayer();
       this.removePiece(piece.from);
       this.addPiece(piece.to, player);

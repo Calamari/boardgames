@@ -314,12 +314,11 @@ describe('Games/Morris', function() {
               });
 
               it('sends update information on moved pieces', function() {
-                sendData.addPieces.should.be.instanceOf(Array);
-                sendData.addPieces.should.have.lengthOf(1);
-                sendData.addPieces[0].should.eql({ x: 0, y: 0, player: 1 });
-                sendData.removePieces.should.be.instanceOf(Array);
-                sendData.removePieces.should.have.lengthOf(1);
-                sendData.removePieces[0].should.eql({ x: 6, y: 0});
+                sendData.movePieces.should.be.instanceOf(Array);
+                sendData.movePieces.should.have.lengthOf(1);
+                sendData.movePieces[0].should.eql({ from: { x: 6, y: 0 }, to: { x: 0, y: 0} });
+                expect(sendData.addPieces).to.be(undefined)
+                expect(sendData.removePieces).to.be(undefined)
                 sendData.newPlayer.should.eql(2);
               });
             });
@@ -399,12 +398,11 @@ describe('Games/Morris', function() {
               });
 
               it('sends update information on moved pieces', function() {
-                sendData.addPieces.should.be.instanceOf(Array);
-                sendData.addPieces.should.have.lengthOf(1);
-                sendData.addPieces[0].should.eql({ x: 12, y: 12, player: 1 });
-                sendData.removePieces.should.be.instanceOf(Array);
-                sendData.removePieces.should.have.lengthOf(1);
-                sendData.removePieces[0].should.eql({ x: 6, y: 0});
+                sendData.movePieces.should.be.instanceOf(Array);
+                sendData.movePieces.should.have.lengthOf(1);
+                sendData.movePieces[0].should.eql({ from: { x: 6, y: 0 }, to: { x: 12, y: 12} });
+                expect(sendData.addPieces).to.be(undefined)
+                expect(sendData.removePieces).to.be(undefined)
                 sendData.newPlayer.should.eql(2);
               });
 
