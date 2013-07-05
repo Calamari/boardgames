@@ -28,6 +28,7 @@ module.exports = function(app) {
     res.render('game', {
       canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
       canJoin:            !req.game.started && !req.game.isPlayer(req.user.username),
+      canCancel:          !req.game.started && req.game.owner === req.user.username,
       username:           req.user.username,
       game:               req.game,
       thisSpectator:      !req.game.isPlayer(req.user.username),
@@ -78,6 +79,20 @@ module.exports = function(app) {
     } else {
       req.flash('error', 'You can not join this game.');
       res.redirect('/game/' + req.game.id);
+    }
+  });
+
+  app.put('/game/:id/cancel', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
+    var game = req.game,
+        id   = req.params.id;
+
+    if (game.started || game.owner !== req.user.username) {
+      req.flash('error', 'Could not cancel game. Game has already started.');
+      res.redirect('/game/' + game.id);
+    } else {
+      game.remove();
+      req.flash('success', 'Game has been cancelled');
+      res.redirect('/');
     }
   });
 
