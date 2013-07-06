@@ -65,7 +65,7 @@
 
     // general config
     socket: io.connect('/'),
-    socketeerId: '{{socketeerId}}',
+    socketeerId: globals.socketeerId,
     {{#if game.started}}
     stones: {{{json game.board.stones}}},
     gameStarted: {{game.started}},

@@ -7,7 +7,6 @@
 //= require traits/traits.js
 //= require traits/event_emitter.js
 //= require canvas.js
-//= require socketeer.js
 //= require canvas_board.js
 
 // BOARD RELATED

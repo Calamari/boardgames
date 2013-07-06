@@ -32,8 +32,7 @@ module.exports = function(app) {
       username:           req.user.username,
       game:               req.game,
       thisSpectator:      !req.game.isPlayer(req.user.username),
-      thisPlayerPosition: req.game.getPlayerPosition(req.user.username) || 0,
-      socketeerId:        req.socketeer.id
+      thisPlayerPosition: req.game.getPlayerPosition(req.user.username) || 0
     });
   });
 
@@ -138,6 +137,12 @@ module.exports = function(app) {
         res.redirect('/');
       } else {
         game.addPlayer(req.user.username);
+        req.socketeer.send('notification', {
+          title:    req.user.username + ' has created a new Game of ' + type,
+          url:      '/game/' + game.id,
+          linkText: 'Check it out'
+        });
+
         game.save(function() {
           req.user.statistics.increment('gamesStarted');
           req.user.save(function() {
