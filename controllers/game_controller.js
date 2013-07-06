@@ -10,8 +10,9 @@ function loadGameOr404(req, res, next) {
       id   = req.params.id;
 
   Game.findById(id, function(err, game) {
-    if (err) {
-      res.notFound('404');
+    if (err || !game) {
+    // TODO: this has to be done with a call to the ErrorController somehow
+      res.send(404, 'Not Found!');
     } else {
       req.game = game;
       next();

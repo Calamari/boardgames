@@ -6,4 +6,5 @@ module.exports = function(app) {
   require('./controllers/game_controller')(app);
   require('./controllers/session_controller')(app);
   require('./controllers/user_controller')(app);
+  require('./controllers/error_controller')(app);
 };
