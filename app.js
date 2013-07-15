@@ -69,5 +69,20 @@ module.exports = function(router, mongoUrl, config) {
   app.socketeer = socketeer;
   app.server = server;
   app.io = io;
+
+  // Production Readyness
+  process.on('uncaughtException', function (err) {
+    console.error('Uncaught Exception: ', err);
+  });
+
+  app.get('/health', function(req, res){
+    res.send({
+      pid: process.pid,
+      memory: process.memoryUsage(),
+      uptime: process.uptime()
+    });
+  });
+
+
   return app;
 };
