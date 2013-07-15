@@ -1,5 +1,5 @@
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var express  = require('express'),
     connect  = require('connect'),
@@ -10,14 +10,14 @@ var express  = require('express'),
     passport = require('passport'),
     auth     = require('./filters/authentication');
 
-module.exports = function(router, mongoUrl) {
-  mongoose.connect(mongoUrl);
+module.exports = function(router, mongoUrl, config) {
+  mongoose.connect(mongoUrl + config.dbPostfix);
 
   auth.configure();
 
   var cookieParser = connect.cookieParser('multiplication-game-sess'),
       sessionStore = new (require('connect-mongo')(connect))({
-        db: 'boardgames_session_dev'
+        db: 'boardgames_session_' + config.dbPostfix
       }),
       socketeer    = require('./lib/socketeer'),
       app          = express()

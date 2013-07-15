@@ -23,7 +23,8 @@
     "moment": "2.x",
     "walk": "2.2.x",
     "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git",
-    "strftime": "0.6.x"
+    "strftime": "0.6.x",
+    "optimist": "0.6.x"
   },
   "devDependencies": {
     "mocha": "*",
