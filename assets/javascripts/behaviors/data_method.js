@@ -22,8 +22,10 @@
     form.submit();
   }
 
-  $(doc).on('click.behaviors', 'a[data-method]', function(e) {
-    handleMethod($(this));
-    return false;
+  $(function() {
+    $(doc).on('click.behaviors', 'a[data-method]', function() {
+      handleMethod($(this));
+      return false;
+    });
   });
 }(jQuery, document));

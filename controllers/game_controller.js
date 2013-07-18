@@ -120,7 +120,7 @@ module.exports = function(app) {
     }
   });
 
-  app.post('/game/:type/new', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
+  app.post('/game/:type', auth.redirectIfLogin, function(req, res, next) {
     var Game = mongoose.model('Game'),
         type = req.params.type,
         game;

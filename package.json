@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "socket.io": "0.9.x",
+    "connect": "2.8.x",
     "express": "3.2.x",
     "express-hbs": "0.2.x",
     "connect-assets": "2.4.x",
