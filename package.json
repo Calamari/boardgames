@@ -25,7 +25,8 @@
     "walk": "2.2.x",
     "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git",
     "strftime": "0.6.x",
-    "optimist": "0.6.x"
+    "optimist": "0.6.x",
+    "winston": "0.7.x"
   },
   "devDependencies": {
     "mocha": "*",
