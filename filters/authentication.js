@@ -1,10 +1,8 @@
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var passport      = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
-
-    mongoose      = require('mongoose');
+    LocalStrategy = require('passport-local').Strategy;
 
 
 function redirectIfLogin(req, res, next) {

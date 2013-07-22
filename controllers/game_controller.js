@@ -1,5 +1,5 @@
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var auth      = require('../filters/authentication'),
     mongoose  = require('mongoose');
@@ -21,7 +21,7 @@ function loadGameOr404(req, res, next) {
 }
 
 module.exports = function(app) {
-  app.get('/game/:id', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
+  app.get('/game/:id', auth.redirectIfLogin, loadGameOr404, function(req, res) {
     var id = req.params.id;
     req.socketeer.set('gameId', req.game.id);
     req.socketeer.set('username', req.user.username);

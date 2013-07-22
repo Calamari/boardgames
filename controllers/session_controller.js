@@ -1,29 +1,15 @@
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var auth      = require('../filters/authentication'),
     passport  = require('passport'),
     mongoose  = require('mongoose');
 
 
-function loadGameOr404(req, res, next) {
-  var Game = mongoose.model('Game'),
-      id   = req.params.id;
-
-  Game.findById(id, function(err, game) {
-    if (err) {
-      res.notFound('404');
-    } else {
-      req.game = game;
-      next();
-    }
-  });
-}
-
 module.exports = function(app) {
   var User = mongoose.model('User');
 
-  app.get('/login', function(req, res, next) {
+  app.get('/login', function(req, res) {
     res.render('login/show', {
       action: '/login' + (req.query.redir ? '?redir=' + encodeURIComponent(req.query.redir) : ''),
       csrfToken: req.session._csrf
@@ -44,15 +30,15 @@ module.exports = function(app) {
     })(req, res, next);
   });
 
-  app.get('/logout', function(req, res, next) {
+  app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
   });
 
-  app.get('/register', function(req, res, next) {
+  app.get('/register', function(req, res) {
     res.render('register');
   });
-  app.post('/register', function(req, res, next) {
+  app.post('/register', function(req, res) {
     function showRegisterPage(error, user) {
       res.render('register', {
         error: error,

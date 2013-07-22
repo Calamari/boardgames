@@ -1,5 +1,5 @@
 (function($, doc) {
-  "use strict";
+  'use strict';
 
   // Handles "data-method" on links such as:
   // <a href="/users/5" data-method="delete" rel="nofollow" data-confirm="Are you sure?">Delete</a>
