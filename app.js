@@ -21,6 +21,19 @@ module.exports = function(router, mongoUrl, config) {
       }),
       socketeer    = require('./lib/socketeer'),
       app          = express()
+        // Performance measurement
+        .use(function(req, res, next) {
+          var render = res.render;
+          app._requestStarted = new Date();
+          res.render = function() {
+            app.logger.info('render.time', {
+              url: req.url,
+              time: (new Date())-app._requestStarted // in ms
+            });
+            render.apply(this, arguments);
+          }
+          next();
+        })
         //.use(express.compess())
         .use(express.static(__dirname + '/public'))
         .use(require('connect-assets')())
