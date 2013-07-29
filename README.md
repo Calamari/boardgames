@@ -11,7 +11,13 @@ cd /boardgames/directory
 mongod --dbpath=./db
 ~~~
 
-start node
+or use simply use [foreman](https://github.com/ddollar/foreman)
+
+~~~ bash
+foreman start
+~~~
+
+start the node server:
 
 ~~~ bash
 node server.js --port 8125
