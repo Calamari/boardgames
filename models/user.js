@@ -15,12 +15,13 @@ function trim(value) {
 }
 
 var userSchema = mongoose.Schema({
-    username: { 'type': String, 'required': true, match: /^[a-zA-Z0-9_-]{3,}$/, index: { unique: true } },
-    password: { 'type': String, 'required': true, min: 6 },
-    email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true }, set: trim },
-    createdAt: { 'type': Date, 'default': Date.now },
-    lastLoginAt: { 'type': Date, 'default': Date.now },
-    stats: { 'type': Object, 'default': {} }
+  username: { 'type': String, 'required': true, match: /^[a-zA-Z0-9_-]{3,}$/, index: { unique: true } },
+  usernameDowncased: { 'type': String, 'required': true, match: /^[a-z0-9_-]{3,}$/, index: { unique: true } },
+  password: { 'type': String, 'required': true, min: 6 },
+  email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true }, set: trim },
+  createdAt: { 'type': Date, 'default': Date.now },
+  lastLoginAt: { 'type': Date, 'default': Date.now },
+  stats: { 'type': Object, 'default': {} }
 });
 
 userSchema.path('username').validate(function(value) {
@@ -50,6 +51,15 @@ userSchema.virtual('emailHash').get(function () {
 
 userSchema.virtual('avatarUrl').get(function () {
   return 'http://www.gravatar.com/avatar/' + this.emailHash + '?d=retro';
+});
+
+userSchema.pre('validate', function(next) {
+  var user = this;
+
+  if (!user.usernameDowncased || user.isModified('username')) {
+    user.usernameDowncased = user.username.toLowerCase();
+  }
+  next();
 });
 
 userSchema.pre('save', function(next) {
