@@ -68,7 +68,7 @@ NAME="boardgames"
 NODE_BIN_DIR=/usr/local/bin/node
 NODE_PATH=/usr/local/lib/node_modules
 APPLICATION_DIRECTORY=/var/www/boardgames
-APPLICATION_START="boardgames.js --port 8125"
+APPLICATION_START="boardgames.js --port 80 --address 81.169.250.33"
 PIDFILE=/var/www/boardgames.pid
 LOGFILE=/var/www/boardgames/log/boardgames.log
 
