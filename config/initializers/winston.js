@@ -3,6 +3,8 @@
 
 var winston = require('winston');
 
+// TODO: That shows error, if you do repl while running server in same ENV
+
 module.exports = function(app) {
   var transports = [
     new winston.transports.File({
@@ -17,6 +19,4 @@ module.exports = function(app) {
     transports: transports,
     level: process.env.NODE_ENV === 'production' ? 'warning' : 'info'
   });
-
-  app.logger.info("TEST");
 };
