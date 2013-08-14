@@ -9,6 +9,9 @@ var router = require(__dirname + '/router'),
     }),
     repl   = require('repl');
 
+
+console.log('Starting in ' + process.env.NODE_ENV + ' mode.');
+
 var instance = repl.start({
   prompt: 'boardgames> ',
   input: process.stdin,
