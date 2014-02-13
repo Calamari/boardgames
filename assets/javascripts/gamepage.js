@@ -25,3 +25,4 @@
 //= require games/cloned_game.js
 //= require games/reversi_game.js
 //= require games/morris_game.js
+//= require games/tafl_game.js
