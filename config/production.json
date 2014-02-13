@@ -1,0 +1,10 @@
+{
+  "mongodb": {
+    "url": "localhost",
+    "port": 27017,
+    "name": "boardgames_production"
+  },
+  "session": {
+    "db": "boardgames_session"
+  }
+}

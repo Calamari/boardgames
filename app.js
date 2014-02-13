@@ -8,16 +8,18 @@ var express  = require('express'),
     fs       = require('fs'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    auth     = require('./filters/authentication');
+    auth     = require('./filters/authentication'),
+    config   = require('./config');
 
-module.exports = function(router, mongoUrl, config) {
-  mongoose.connect(mongoUrl + config.dbPostfix);
-
+module.exports = function(router) {
+  mongoose.connect([
+    'mongodb://',config.mongodb.url,':',config.mongodb.port,'/',config.mongodb.name
+  ].join(''));
   auth.configure();
 
   var cookieParser = connect.cookieParser('multiplication-game-sess'),
       sessionStore = new (require('connect-mongo')(connect))({
-        db: 'boardgames_session_' + config.dbPostfix
+        db: config.session.db
       }),
       socketeer    = require('./lib/socketeer'),
       app          = express()
@@ -85,7 +87,7 @@ module.exports = function(router, mongoUrl, config) {
 
   // Production Readyness
   process.on('uncaughtException', function (err) {
-    console.error('Uncaught Exception: ', err);
+    app.logger.error('Uncaught Exception: ', err);
   });
 
   app.get('/health', function(req, res){

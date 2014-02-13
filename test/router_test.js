@@ -1,7 +1,5 @@
 var router   = require(__dirname + '/../router.js'),
-    app      = require(__dirname + '/../app')(router, 'mongodb://localhost/boardgames_test', {
-      dbPostfix: 'test'
-    });
+    app      = require(__dirname + '/../app')(router);
 
 
 describe('GET /', function() {

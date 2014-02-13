@@ -5,11 +5,10 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var router = require(__dirname + '/router'),
     argv   = require('optimist').argv,
-    port   = argv.port || 8124,
-    address= argv.address || '127.0.0.1',
-    app    = require(__dirname + '/app')(router, 'mongodb://localhost/boardgames_', {
-      dbPostfix: process.env.NODE_ENV == 'development' ? 'dev' : process.env.NODE_ENV
-    });
+    config = require('./config'),
+    port   = argv.port || config.app.port,
+    address= argv.address || config.app.address,
+    app    = require(__dirname + '/app')(router);
 
 app.server.listen(port, address);
 // Should Chat also be done via Socketeer?

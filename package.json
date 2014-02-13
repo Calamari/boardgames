@@ -26,7 +26,8 @@
     "jaz-toolkit": "git://github.com/Calamari/jaz-toolkit.git",
     "strftime": "0.6.x",
     "optimist": "0.6.x",
-    "winston": "0.7.x"
+    "winston": "0.7.x",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
@@ -35,6 +36,7 @@
     "sinon": "*"
   },
   "scripts": {
+    "start": "node server",
     "test": "make test"
   }
 }
