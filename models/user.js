@@ -55,8 +55,7 @@ userSchema.virtual('avatarUrl').get(function () {
 
 userSchema.pre('validate', function(next) {
   var user = this;
-
-  if (!user.usernameDowncased || user.isModified('username')) {
+  if ((!user.usernameDowncased || user.isModified('username')) && user.username) {
     user.usernameDowncased = user.username.toLowerCase();
   }
   next();

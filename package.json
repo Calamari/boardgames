@@ -29,7 +29,7 @@
     "winston": "0.7.x"
   },
   "devDependencies": {
-    "mocha": "*",
+    "mocha": "~1.17.1",
     "should": "*",
     "expect.js": "*",
     "sinon": "*"
