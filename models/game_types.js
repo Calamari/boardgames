@@ -1,10 +1,11 @@
 /*jslint node: true */
-"use strict";
+'use strict';
 
 var Games = {
   'Multiplication': require('./games/multiplication'),
   'Reversi'       : require('./games/reversi'),
-  'Morris'        : require('./games/morris')
+  'Morris'        : require('./games/morris'),
+  'Tafl'          : require('./games/tafl')
 };
 
 var GameTypes = (function() {
