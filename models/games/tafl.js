@@ -147,14 +147,11 @@ function isCenterField(field) {
 }
 
 var gameDef = {
-  newGame: function(options) {
-    return new Game({ type: 'Tafl', config: options });
-  },
   getDefinition: function(options) {
     return this.definitions[options.type];
   },
   definitions: {
-    tablut: _.merge(_.clone(_defaultDef), {
+    Tablut: _.merge(_.clone(_defaultDef), {
       boardLayout: [
         '  22222  ',
         '    2    ',
@@ -168,7 +165,7 @@ var gameDef = {
       ],
       newBoard: function() {
         var stones = [],
-            layout = gameDef.definitions.tablut.boardLayout,
+            layout = gameDef.definitions.Tablut.boardLayout,
             x, y;
 
         for (y=layout.length; y--;) {

@@ -1,7 +1,8 @@
-var sinon  = require('sinon'),
+var sinon     = require('sinon'),
 
-    Tafl   = require('../../../models/games/tafl'),
-    Tablut = Tafl.getDefinition({ type: 'tablut' });
+    GameTypes = require('../../../models/game_types'),
+    Tafl      = require('../../../models/games/tafl'),
+    Tablut    = Tafl.getDefinition({ type: 'Tablut' });
 
 describe('Games/Tafl (Tablut)', function() {
   it('needs 2 players', function() {
@@ -48,7 +49,7 @@ describe('Games/Tafl (Tablut)', function() {
     var game;
 
     beforeEach(function() {
-      game = Tafl.newGame({ type: 'tablut'});
+      game = GameTypes.newGame('Tafl', { type: 'Tablut'});
       game.addPlayer('one');
       game.addPlayer('two');
     });

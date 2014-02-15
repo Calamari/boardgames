@@ -2,6 +2,7 @@ var sinon  = require('sinon'),
     expect = require('expect.js'),
     async  = require('async'),
 
+    GameTypes    = require('../../../models/game_types'),
     Morris       = require('../../../models/games/morris');
     ThreeMorris  = Morris.getDefinition({ type: 3 }),
     SixMorris    = Morris.getDefinition({ type: 6 }),
@@ -39,7 +40,7 @@ describe('Games/Morris', function() {
       var game;
 
       beforeEach(function() {
-        game = new Morris.newGame({ type: 9 });
+        game = GameTypes.newGame('Morris', { type: 9 });
         game.addPlayer('one');
         game.addPlayer('two');
       });

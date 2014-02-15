@@ -49,6 +49,18 @@ describe('Game', function() {
     });
   });
 
+  describe('#createGame', function() {
+    it('calls newGame method on the respective GameType description', function() {
+      expect(Game.createGame('Tafl', { type: 'Tablut' }).type).to.equal('Tafl');
+      expect(Game.createGame('Morris', { type: 9 }).type).to.equal('Morris');
+      expect(Game.createGame('Reversi').type).to.equal('Reversi');
+    });
+
+    it('also passes in the config', function() {
+      expect(Game.createGame('Tafl', { type: 'Tablut', foo: 'bar' }).config).to.eql({ type: 'Tablut', foo: 'bar' });
+    });
+  });
+
   describe('#startGame', function() {
     var game,
         testGameDef = {

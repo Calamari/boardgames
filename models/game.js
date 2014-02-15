@@ -206,6 +206,10 @@ gameSchema.methods.dataForGameStarted = function(events) {
   }
 };
 
+gameSchema.statics.createGame = function createGame(type,config) {
+  return GameTypes.newGame(type, config);
+};
+
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
   this.find({ players: { $ne: username }, started: false }, function(err, games) {

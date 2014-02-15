@@ -21,6 +21,9 @@ var GameTypes = (function() {
     },
     get: function(type, config) {
       return Games[type].getDefinition(config);
+    },
+    newGame: function(type, config) {
+      return new Game({ type: type, config: config });
     }
   };
 }());

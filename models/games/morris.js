@@ -58,10 +58,6 @@ function hasJustClosedLine(def, board, pos, playerNumber) {
 }
 
 var gameDef = {
-  newGame: function(options) {
-    // TODO: use that and require Game
-    return new Game({ type: 'Morris', config: options });
-  },
   getDefinition: function(options) {
     return this[options.type];
   },
