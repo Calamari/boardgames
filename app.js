@@ -87,7 +87,7 @@ module.exports = function(router) {
 
   // Production Readyness
   process.on('uncaughtException', function (err) {
-    app.logger.error('Uncaught Exception: ', err);
+    app.logger.error('Uncaught Exception: ', { message: err.message, stack: err.stack });
   });
 
   app.get('/health', function(req, res){
