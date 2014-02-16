@@ -55,7 +55,8 @@
     username: '{{username}}',
 
     // game specific config
-    boardSize: 8,
+    // TODO: define this stuff in the game model
+    boardSize: {{game.definition.boardSize}},
     cellWidth: 40,
     possibleMovesSwitch: '#possibile-moves-switch',
     data: {{{json game.data}}},

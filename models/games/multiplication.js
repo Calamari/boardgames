@@ -112,6 +112,7 @@ var gameDef = {
   onStart: function() {},
   minPlayers: 2,
   maxPlayers: 2,
+  boardSize: 8,
   newBoard: function() {
     var stones = [];
     for (var x=0; x<8; ++x) {

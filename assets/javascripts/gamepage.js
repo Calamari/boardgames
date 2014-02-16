@@ -18,6 +18,9 @@
 //= require board/morris_field.js
 //= require board/morris_board.js
 
+// TAFL GAME RELATED
+//= require board/tafl_stone.js
+
 // GAME RELATED
 //= require score.js
 //= require game_state_display.js

@@ -26,7 +26,7 @@ var gameSchema = mongoose.Schema({
 });
 
 gameSchema.pre('save', function(next) {
-  if (this.started) {
+  if (this.started && this.definition.calcScore) {
     var score = this.definition.calcScore(this);
     this.score = [score['1'], score['2']];
   }

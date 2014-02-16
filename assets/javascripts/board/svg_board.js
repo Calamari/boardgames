@@ -18,13 +18,14 @@
     },
     updateBoard: function(stones) {
       // TODO: make this list of stones flat
-      var y, x;
+      var StoneConstructor = this._config.StoneClass || Stone,
+          y, x;
 
       for (y = this._boardSize; y--;) {
         for (x = this._boardSize; x--;) {
           this._boardFields[y][x].removeStone();
           if (stones[y] && stones[y][x]) {
-            this._boardFields[y][x].addStone(new Stone(this._paper, stones[y][x]));
+            this._boardFields[y][x].addStone(new StoneConstructor(this._paper, stones[y][x]));
           }
         }
       }

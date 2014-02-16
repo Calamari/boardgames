@@ -1,4 +1,4 @@
-(function(win, doc, Game, extend) {
+(function(win, doc, Game, extend, TaflStone) {
   "use strict";
 
   function getDistance(from, to) {
@@ -11,7 +11,7 @@
   }
 
   var TaflGame = function(container, config) {
-    Stone.type = 'rect';
+    config.StoneClass = TaflStone;
     Game.call(this, container, config);
   };
   extend(TaflGame, Game);
@@ -74,11 +74,6 @@
     this._board[to.y][to.x] = this._board[from.y][from.x];
     this._countPieces();
   };
-  TaflGame.prototype._jump = function(from, to) {
-    this._logger.log('Jumped piece');
-    this._board[to.y][to.x] = this._board[from.y][from.x];
-    this._board[from.y][from.x] = null;
-  };
   TaflGame.prototype._captureEnemies = function(x, y) {
     var xi, yi;
     for (xi=-1; xi<=1; ++xi) {
@@ -91,4 +86,4 @@
   };
 
   win.TaflGame = TaflGame;
-}(window, document, Game, extend));
+}(window, document, Game, extend, TaflStone));

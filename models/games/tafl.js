@@ -163,6 +163,7 @@ var gameDef = {
         '    2    ',
         '  22222  '
       ],
+      boardSize: 9,
       newBoard: function() {
         var stones = [],
             layout = gameDef.definitions.Tablut.boardLayout,
