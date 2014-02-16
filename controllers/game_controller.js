@@ -69,9 +69,12 @@ module.exports = function(app) {
         };
         req.game.dataForGameStarted(events);
       }
-      req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, events);
       req.game.save(function(err) {
-        if (err) { req.flash('error', 'You can not join this game.'); }
+        if (err) {
+          req.flash('error', 'You can not join this game.');
+          return res.redirect('/game/' + req.game.id);
+        }
+        req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, events);
         req.user.statistics.increment('gamesJoined');
         req.user.save(function() {
           res.redirect('/game/' + req.game.id);
