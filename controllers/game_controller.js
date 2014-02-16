@@ -2,7 +2,8 @@
 'use strict';
 
 var auth      = require('../filters/authentication'),
-    mongoose  = require('mongoose');
+    mongoose  = require('mongoose'),
+    GameTypes = require('../models/game_types');
 
 
 function loadGameOr404(req, res, next) {
@@ -127,9 +128,11 @@ module.exports = function(app) {
 
     if (type === 'Morris') {
       // TODO: That is a mock right now and has to be replaced with better game start process
-      game = new Game({ type: type, config: { type: 9 } });
+      game = GameTypes.newGame('Morris', { type: 9 });
+    } else if (type === 'Tafl') {
+      game = GameTypes.newGame('Tafl', { type: 'Tablut'});
     } else {
-      game = new Game({ type: type });
+      game = GameTypes.newGame(type);
     }
 
     game.save(function(err) {

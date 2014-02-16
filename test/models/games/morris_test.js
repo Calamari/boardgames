@@ -3,7 +3,7 @@ var sinon  = require('sinon'),
     async  = require('async'),
 
     GameTypes    = require('../../../models/game_types'),
-    Morris       = require('../../../models/games/morris');
+    Morris       = require('../../../models/games/morris'),
     ThreeMorris  = Morris.getDefinition({ type: 3 }),
     SixMorris    = Morris.getDefinition({ type: 6 }),
     NineMorris   = Morris.getDefinition({ type: 9 }),

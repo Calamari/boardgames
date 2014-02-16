@@ -23,6 +23,7 @@ var GameTypes = (function() {
       return Games[type].getDefinition(config);
     },
     newGame: function(type, config) {
+      var Game = require('mongoose').model('Game');
       return new Game({ type: type, config: config });
     }
   };
