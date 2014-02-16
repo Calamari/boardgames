@@ -49,10 +49,9 @@
       this._stone.move(this);
       this._interactionRect.toFront();
     },
-    createStone: function(player) {
+    addStone: function(stone) {
       this.removeStone();
-      this._stone = new Stone(this, this._paper, player).draw();
-      this._interactionRect.toFront();
+      this.setStone(stone);
     },
     removeStone: function() {
       if (this._stone) {

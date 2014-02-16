@@ -1,5 +1,6 @@
-(function(win, doc, Raphael) {
-  "use strict";
+/* globals Raphael, Stone, Field */
+(function(win, doc, Raphael, Stone, Field) {
+  'use strict';
 
   var SVGBoard = function(container, config, eventHandler) {
     this._container = $(container);
@@ -17,13 +18,13 @@
     },
     updateBoard: function(stones) {
       // TODO: make this list of stones flat
-      var y, x, stone;
+      var y, x;
 
       for (y = this._boardSize; y--;) {
         for (x = this._boardSize; x--;) {
           this._boardFields[y][x].removeStone();
           if (stones[y] && stones[y][x]) {
-            this._boardFields[y][x].createStone(stones[y][x]);
+            this._boardFields[y][x].addStone(new Stone(this._paper, stones[y][x]));
           }
         }
       }
@@ -68,14 +69,14 @@
       this.getField(piece.from).moveStone(this.getField(piece.to));
     },
 
-    _createPaper: function(config) {
+    _createPaper: function() {
       var boardWidth = this._cellWidth * this._boardSize + 1;
       this._paper = new Raphael(this._container[0], boardWidth, boardWidth);
       this._createBoard();
     },
     _createBoard: function() {
       var self = this,
-          y, x, field, stone;
+          y, x, field;
 
       this._boardFields = [];
 
@@ -104,4 +105,4 @@
   };
 
   win.SVGBoard = SVGBoard;
-}(window, document, Raphael));
+}(window, document, Raphael, Stone, Field));
