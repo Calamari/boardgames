@@ -24,24 +24,32 @@ describe('Games/Tafl (Tablut)', function() {
     board.stones[5][4].should.eql('1s');
     board.stones[6][4].should.eql('1s');
     // The Muscovites attacking from the edge
+    board.stones[0][2].should.eql('2s');
     board.stones[0][3].should.eql('2s');
     board.stones[0][4].should.eql('2s');
     board.stones[0][5].should.eql('2s');
+    board.stones[0][6].should.eql('2s');
     board.stones[1][4].should.eql('2s');
 
+    board.stones[8][2].should.eql('2s');
     board.stones[8][3].should.eql('2s');
     board.stones[8][4].should.eql('2s');
     board.stones[8][5].should.eql('2s');
+    board.stones[8][6].should.eql('2s');
     board.stones[7][4].should.eql('2s');
 
+    board.stones[2][0].should.eql('2s');
     board.stones[3][0].should.eql('2s');
     board.stones[4][0].should.eql('2s');
     board.stones[5][0].should.eql('2s');
+    board.stones[6][0].should.eql('2s');
     board.stones[4][1].should.eql('2s');
 
+    board.stones[2][8].should.eql('2s');
     board.stones[3][8].should.eql('2s');
     board.stones[4][8].should.eql('2s');
     board.stones[5][8].should.eql('2s');
+    board.stones[6][8].should.eql('2s');
     board.stones[4][7].should.eql('2s');
   });
 
