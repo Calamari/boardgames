@@ -61,7 +61,8 @@
       this._eventHandler.onClick(field);
     },
     addPiece: function(piece, player) {
-      this.getField(piece).createStone(player || piece.player);
+      var StoneConstructor = this._config.StoneClass || Stone;
+      this.getField(piece).addStone(new StoneConstructor(this._paper, player || piece.player));
     },
     removePiece: function(piece) {
       this.getField(piece).removeStone();
