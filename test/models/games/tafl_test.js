@@ -236,9 +236,9 @@ describe('Games/Tafl (Tablut)', function() {
         it('sends update information on captured pieces', function(done) {
           game.board.stones[4][3] = '';
           Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 }, user: 'two' }, function(err, data) {
-            data.capturedPieces.should.be.instanceOf(Array);
-            data.capturedPieces.should.have.lengthOf(1);
-            data.capturedPieces.should.includeEql({ x: 2, y: 4 });
+            data.removePieces.should.be.instanceOf(Array);
+            data.removePieces.should.have.lengthOf(1);
+            data.removePieces.should.includeEql({ x: 2, y: 4 });
             data.newPlayer.should.eql(2);
             done();
           });

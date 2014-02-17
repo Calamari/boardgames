@@ -21,7 +21,7 @@ function getNeighbours(x, y) {
 }
 
 function captureUnitsAround(stones, playerNumber, x, y) {
-  var capturedPieces = [],
+  var removePieces = [],
       x1, y1, x2, y2, field, orthoDir;
 
   [ [1,0], [-1,0], [0,1], [0,-1] ].forEach(function(dir) {
@@ -40,7 +40,7 @@ function captureUnitsAround(stones, playerNumber, x, y) {
               y: y1,
               king: true
             };
-            capturedPieces.push(field);
+            removePieces.push(field);
           }
         } else {
           stones[y1][x1] = '';
@@ -48,12 +48,12 @@ function captureUnitsAround(stones, playerNumber, x, y) {
             x: x1,
             y: y1
           };
-          capturedPieces.push(field);
+          removePieces.push(field);
         }
       }
     }
   });
-  return capturedPieces;
+  return removePieces;
 }
 
 function getWinner(game) {
@@ -98,11 +98,11 @@ function isPathClear(board, from, to) {
   return true;//!getStone(board, to.x, to.y);
 }
 
-function checkForGameEnding(stones, capturedPieces) {
+function checkForGameEnding(stones, removePieces) {
   if (stones[0][0] === '1k' || stones[0][8] === '1k' || stones[8][0] === '1k' || stones[8][8] === '1k') {
     return { winner: 1 };
   }
-  if (_.filter(capturedPieces, function(piece) {
+  if (_.filter(removePieces, function(piece) {
     return !!piece.king;
   }).length) {
     return { winner: 2 };
@@ -184,7 +184,7 @@ var gameDef = {
           var from = data.from,
               to   = data.to,
               playerNumber = game.getPlayerPosition(data.user),
-              addPieces, movePieces, capturedPieces,
+              addPieces, movePieces, removePieces,
               piece;
 
           // from and to can be point objects or arrays with 2 numbers
@@ -213,14 +213,14 @@ var gameDef = {
               movePieces.push({ from: from, to: to });
 
               game.board.stones[to.y][to.x] = piece;
-              capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to.x, to.y);
+              removePieces = captureUnitsAround(game.board.stones, playerNumber, to.x, to.y);
               game.nextTurn();
               game.markModified('board');
               cb(null, {
                 movePieces     : movePieces,
-                capturedPieces : capturedPieces,
+                removePieces   : removePieces,
                 newPlayer      : game.actualPlayer,
-                gameEnded      : checkForGameEnding(game.board.stones, capturedPieces)
+                gameEnded      : checkForGameEnding(game.board.stones, removePieces)
               });
             } else {
               // dont move diagonal
