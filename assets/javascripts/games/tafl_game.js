@@ -11,6 +11,7 @@
   }
 
   var TaflGame = function(container, config) {
+    config.hideScore = true;
     config.StoneClass = TaflStone;
     Game.call(this, container, config);
   };
