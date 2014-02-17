@@ -201,7 +201,7 @@ describe('Games/Tafl (Tablut)', function() {
           });
         });
 
-        it('if a Swede is surrounded on oppsing sides, it is caputured', function(done) {
+        it('if a Swede is surrounded on opposing sides, it is caputured', function(done) {
           game.board.stones[4][3] = '';
           Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 }, user: 'two' }, function(err) {
             game.board.stones[4][3].should.eql('2s');
@@ -211,7 +211,7 @@ describe('Games/Tafl (Tablut)', function() {
           });
         });
 
-        it('if a Muscovite is surrounded on oppsing sides, it is caputured', function(done) {
+        it('if a Muscovite is surrounded on opposing sides, it is caputured', function(done) {
           game.board.stones[3][3] = '2s';
           Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 3 }, user: 'one' }, function(err) {
             game.board.stones[3][2].should.eql('1s');
@@ -221,7 +221,7 @@ describe('Games/Tafl (Tablut)', function() {
           });
         });
 
-        it('if the king is surrounded only on oppsing sides, it is not caputured', function(done) {
+        it('if the king is surrounded only on opposing sides, it is not caputured', function(done) {
           game.board.stones[4][3] = '';
           game.board.stones[4][2] = '1k';
           game.board.stones[4][4] = '';
@@ -229,6 +229,15 @@ describe('Games/Tafl (Tablut)', function() {
             game.board.stones[4][3].should.eql('2s');
             game.board.stones[4][2].should.eql('1k'); // this one was surrounded
             game.board.stones[8][3].should.eql('');
+            done(err);
+          });
+        });
+
+        it('if a Muscovite is not surrounded on opposing sides, it is not caputured', function(done) {
+          game.board.stones[6][0] = '';
+          game.board.stones[6][1] = '2s';
+          Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 6 }, user: 'one' }, function(err) {
+            game.board.stones[6][1].should.eql('2s');
             done(err);
           });
         });

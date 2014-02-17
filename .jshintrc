@@ -16,7 +16,6 @@
   },
 
 // Enforcing
-  "indent" : 2,
   "camelcase": true,
   "bitwise": true,
   "curly": true,

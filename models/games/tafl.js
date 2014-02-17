@@ -128,22 +128,26 @@ function isKing(piece) {
 }
 
 // Method has to change for other versions as Tablut
-function isCornerField(field, y) {
-  if (typeof y !== 'undefined') {
-    field = { x: field, y: field };
+function isCornerField(x, y) {
+  if (y === undefined) {
+    // Is is either a point or an array
+    y = x.y || x[1] || 0;
+    x = x.x || x[0] || 0;
   }
-  return (field.x === 0 && field.y === 0) ||
-         (field.x === 0 && field.y === 8) ||
-         (field.x === 8 && field.y === 0) ||
-         (field.x === 8 && field.y === 8);
+  return (x === 0 && y === 0) ||
+         (x === 0 && y === 8) ||
+         (x === 8 && y === 0) ||
+         (x === 8 && y === 8);
 }
 
 // Method has to change for other versions as Tablut
-function isCenterField(field) {
-  if (typeof y !== 'undefined') {
-    field = { x: field, y: field };
+function isCenterField(x, y) {
+  if (y === undefined) {
+    // Is is either a point or an array
+    y = x.y || x[1] || 0;
+    x = x.x || x[0] || 0;
   }
-  return (field.x === 4 && field.y === 4);
+  return (x === 4 && y === 4);
 }
 
 var gameDef = {
