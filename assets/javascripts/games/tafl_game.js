@@ -21,7 +21,7 @@
       onClick: this._clickHandler.bind(this)
     };
   };
-  // TODO: move this to game and make this behavior configurable
+
   TaflGame.prototype._clickHandler = function(field) {
     if (this._isTurn()) {
       var board    = this._board,
@@ -35,38 +35,51 @@
         this.move(selected, field);
         board.deselect();
       } else {
-        if (field.getPlayer() === this.thisPlayerNr) {
+        if (parseInt(field.getPlayer(), 10) === this.thisPlayerNr) {
           board.select(field);
-          for (xi=-2; xi<=2; ++xi) {
-            for (yi=-2; yi<=2; ++yi) {
-              highlightField = board.getField(xi+x, yi+y);
-              if (highlightField && !highlightField.getPlayer()) {
-                color = Math.abs(xi) <= 1 && Math.abs(yi) <= 1 ? 'rgba(0,155,255,.7)' : 'rgba(0,155,255,.3)';
-                highlightField.highlight(color);
-              }
-            }
-          }
+          highlightField = field;
+          highlightField.highlight('rgba(0,155,255,.7)');
+          this._getReachableFieldsOf(field).forEach(function(reachableField) {
+            reachableField.highlight('rgba(0,255,255,.4)');
+          });
         }
       }
     }
   };
-  TaflGame.prototype.move = function(from, to) {
-    if (this._board.getField(from.x, from.y).getPlayer() === this.thisPlayerNr && !this._board.getField(to.x, to.y).getPlayer()) {
-      var distance = getDistance(from, to),
-          self     = this;
 
-      if (distance === 1 || distance === 2) {
-        // if (distance === 1) {
-        //   this._move(from, to);
-        // } else {
-        //   this._jump(from, to);
-        // }
-        // this._captureEnemies(to.x, to.y);
-        this.nextPlayer();
-        this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, function(data) {
-      //    self._updateGame(data);
-        });
+  TaflGame.prototype._getReachableFieldsOf = function _getReachableFieldsOf(field) {
+    var x = field.x,
+        y = field.y,
+        board = this._board,
+        result = [];
+
+    function goInDir(dir) {
+      var xi = dir[0],
+          yi = dir[1],
+          field = board.getField(x+xi, y+yi);
+
+      if (field && !field.getPlayer()) {
+        result.push(field);
+        goInDir([xi === 0 ? 0 : xi<0 ? xi-1 : xi+1, yi === 0 ? 0 : yi<0 ? yi-1 : yi+1]);
       }
+    }
+
+    [[0,1], [0,-1], [1,0], [-1,0]].forEach(goInDir);
+
+    return result;
+  };
+
+  TaflGame.prototype.move = function(from, to) {
+    if (parseInt(this._board.getField(from.x, from.y).getPlayer(), 10) === this.thisPlayerNr && !parseInt(this._board.getField(to.x, to.y).getPlayer(), 10)) {
+      var self = this;
+
+      this.nextPlayer();
+      this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, function(data) {
+        if (data.error) {
+          new Notification({ title: 'This move is not allowed.' });
+          self._setPlayer(data.actualPlayer, !data.error);
+        }
+      });
     }
   };
   TaflGame.prototype._move = function(from, to) {

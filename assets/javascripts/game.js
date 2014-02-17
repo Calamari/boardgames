@@ -122,7 +122,7 @@
             break;
           case 'actualPlayer':
           case 'newPlayer':
-            self._setPlayer(value);
+            self._setPlayer(value, !data.error);
             break;
           case 'addPieces':
             value.forEach(addPieces);
@@ -144,8 +144,8 @@
       this._countPieces();
       this.fire('change');
     },
-    _setPlayer: function(player) {
-      if (this.actualPlayer !== player && player === this.thisPlayerNr) {
+    _setPlayer: function(player, showNote) {
+      if (showNote && this.actualPlayer !== player && player === this.thisPlayerNr) {
         this._logger.log('It\'s your turn again.');
         new Notification({ title: "It's your turn again" });
       }

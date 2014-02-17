@@ -45,7 +45,8 @@
       this._stone = null;
     },
     setStone: function(stone) {
-      this._stone = stone;
+      // Why is this called twice on moves and therefor break the second time?
+      if (stone) { this._stone = stone; }
       this._stone.move(this);
       this._interactionRect.toFront();
     },
