@@ -157,15 +157,15 @@ var gameDef = {
   definitions: {
     Tablut: _.merge(_.clone(_defaultDef), {
       boardLayout: [
-        '  22222  ',
+        '   222   ',
         '    2    ',
-        '2   1   2',
+        '    1    ',
         '2   1   2',
         '2211K1122',
         '2   1   2',
-        '2   1   2',
+        '    1    ',
         '    2    ',
-        '  22222  '
+        '   222   '
       ],
       boardSize: 9,
       newBoard: function() {
