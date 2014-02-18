@@ -9,15 +9,9 @@
 </head>
 <body>
   <div class="wrap">
-    {{#each flash.info}}
-      <p class="info-message">{{this}}</p>
-    {{/each}}
-    {{#each flash.error}}
-      <p class="error-message">{{this}}</p>
-    {{/each}}
-    {{#each flash.success}}
-      <p class="success-message">{{this}}</p>
-    {{/each}}
+    {{#flash}}
+      <p class="{{type}}-message">{{msg}}</p>
+    {{/flash}}
 
     {{{body}}}
 

@@ -61,7 +61,7 @@ module.exports = function(app) {
           // TODO: make this better
           showRegisterPage(err.message, user);
         } else {
-          req.flash('success', 'Welcome');
+          req.flash('success', 'Welcome ' + user.username + '. You can now login.');
           res.redirect('/');
         }
       });
