@@ -8,29 +8,27 @@ var mongoose = require('mongoose'),
 
     crypto = require('crypto'),
 
+    uniqueValidator = require('mongoose-unique-validator'),
+
     SALT_WORK_FACTOR = 10;
 
 function trim(value) {
   return value.trim();
 }
 
+
+
 var userSchema = mongoose.Schema({
-  username: { 'type': String, 'required': true, match: /^[a-zA-Z0-9_-]{3,}$/, index: { unique: true } },
+  username: { 'type': String, 'required': [true, 'Please choose a username.'], match: [/^[a-zA-Z0-9_-]{3,}$/, 'Your username has to be at least 3 chars and only alphanumeric characters.'], index: { unique: true } },
   usernameDowncased: { 'type': String, 'required': true, match: /^[a-z0-9_-]{3,}$/, index: { unique: true } },
-  password: { 'type': String, 'required': true, min: 6 },
-  email: { 'type': String, 'required': true, match: /[^@]+@[^@]+\.[^@]{1,6}/, index: { unique: true }, set: trim },
+  password: { 'type': String, 'required': [true, 'Please enter a password.'], match: [/^.{6,}$/, 'Your password has to be at least 6 characters.'] },
+  email: { 'type': String, 'required': [true, 'Please enter your email address.'], match: [/[^@]+@[^@]+\.[^@]{1,6}/, 'Your email address does not appear to be valid.'], index: { unique: true }, set: trim },
   createdAt: { 'type': Date, 'default': Date.now },
   lastLoginAt: { 'type': Date, 'default': Date.now },
   stats: { 'type': Object, 'default': {} }
 });
 
-userSchema.path('username').validate(function(value) {
-  return value && value.length >= 3;
-});
-
-userSchema.path('password').validate(function(value) {
-  return value && value.length >= 6;
-});
+userSchema.plugin(uniqueValidator, { message: 'Sorry, but this {PATH} is already taken.' });
 
 userSchema.methods.validatePassword = function(testPassword, cb) {
   bcrypt.compare(testPassword, this.password, function(err, isMatch) {

@@ -1,14 +1,23 @@
 <h1>Register</h1>
 
-{{#if error}}
-  <p>ERROR: {{error}}</p>
-{{/if}}
-
 <form method="post" action="/register">
   <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+  {{#if errors.username}}
+    <p class="error-message">{{errors.username.message}}</p>
+  {{/if}}
   <label>Username: <input type="text" name="username" value="{{user.username}}"></label><br>
+  {{#if errors.email}}
+    <p class="error-message">{{errors.email.message}}</p>
+  {{/if}}
   <label>E-Mail: <input type="text" name="email" value="{{user.email}}"></label><br>
+  {{#if errors.password}}
+    <p class="error-message">{{errors.password.message}}</p>
+  {{/if}}
   <label>Password: <input type="password" name="password"></label><br>
+  {{#if errors.password2}}
+    <p class="error-message">{{errors.password2.message}}</p>
+  {{/if}}
   <label>Password again: <input type="password" name="password2"></label>
   <button type="submit">register</button>
 </form>

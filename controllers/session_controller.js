@@ -39,15 +39,15 @@ module.exports = function(app) {
     res.render('register');
   });
   app.post('/register', function(req, res) {
-    function showRegisterPage(error, user) {
+    function showRegisterPage(errors, user) {
       res.render('register', {
-        error: error,
+        errors: errors,
         user: user || {}
       });
     }
 
     if (req.body.password !== req.body.password2) {
-      showRegisterPage('Passwords do not match');
+      showRegisterPage({ password2: { message: 'Passwords do not match' } }, req.body);
     } else {
       // make this lines nicer
       var user = new User({
@@ -59,7 +59,7 @@ module.exports = function(app) {
       user.save(function(err) {
         if (err) {
           // TODO: make this better
-          showRegisterPage(err.message, user);
+          showRegisterPage(err.errors, user);
         } else {
           req.flash('success', 'Welcome ' + user.username + '. You can now login.');
           res.redirect('/');
