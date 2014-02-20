@@ -55,7 +55,7 @@
     });
 
     this._interactionRect = paper.rect(canvasX, canvasY, size, size)
-                                 .attr('fill', 'transparent')
+                                 .attr('fill', 'rgba(0,0,0,0)')
                                  .attr('stroke', 'transparent').toFront();
     return this;
   };
