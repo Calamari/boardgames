@@ -92,10 +92,10 @@
       this._rect= this._paper.rect(0, 0, this._boardSize * this._cellWidth, this._boardSize * this._cellWidth).attr('stroke', '#ba0').attr('fill', '#ba0');
 
       // draw pieces
-      for (y = boardDef.size; y--;) {
+      for (y = this._boardSize; y--;) {
         this._boardFields[y] = [];
-        for (x = boardDef.size; x--;) {
-          field = new MorrisField(x, y, boardDef.layout[y][x], this, this._cellWidth, this._paper);
+        for (x = this._boardSize; x--;) {
+          field = new MorrisField(x, y, boardDef.layout[y][x], self, this._cellWidth, this._paper);
           this._fields.push(field);
           this._boardFields[y][x] = field;
         }
