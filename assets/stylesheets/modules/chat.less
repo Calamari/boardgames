@@ -7,10 +7,14 @@
   padding: 20px 6px;
   position: fixed;
   right: 0;
-  top: 31px;
+  top: 0;
   bottom: 0;
   vertical-align: top;
   width: 400px;
+
+  &.hidden {
+    right: -210px;
+  }
 
   .system {
     color: #999;
@@ -30,14 +34,14 @@
 
   .content {
     position: absolute;
-    top: 0;
+    top: 31px;
     bottom: 22px;
     overflow-y: scroll;
     width: 100%;
   }
 
   input {
-    width: 100%;
+    width: 390px;
     position: absolute;
     bottom: 0;
   }

@@ -1,4 +1,9 @@
-<div>Hallo: <a href="/profile/{{username}}">{{username}}</a></div>
+<div class="fixed-bar">
+  <ul class="nav-bar">
+    <li><a href="/">HOME</a></li>
+    <li class="username-you"><a href="/profile/{{username}}">{{username}}</a></li>
+  </ul>
+</div>
 
 <div class="row">
   <div class="third">
@@ -19,89 +24,94 @@
   </div>
 </div>
 
-{{#if runningGames}}
-  <section class="games-list">
-    <h2 class="bordered">Games you are involved in:</h2>
-    {{#each runningGames}}
-      <div class="game-vcard game-{{lowercase type}}">
-        {{#with opponent}}
-          <a href="#" class="user-icon">
-            <img src="{{avatarUrl}}" width="40" height="40">
-          </a>
-          <a href="{{profileUrl}}" class="name">{{name}}</a>
-        {{/with}}
+<div class="row">
+  {{#if runningGames}}
+    <section class="games-list">
+      <h2 class="bordered">Games you are involved in:</h2>
+      {{#each runningGames}}
+        <div class="game-vcard game-{{lowercase type}}">
+          {{#with opponent}}
+            <a href="#" class="user-icon">
+              <img src="{{avatarUrl}}" width="40" height="40">
+            </a>
+            <a href="{{profileUrl}}" class="name">{{name}}</a>
+          {{/with}}
 
-        <ul class="actions">
-          {{#if isTurn}}
-            <li><a href="/game/{{id}}">Make your turn</a></li>
-          {{else}}
+          <ul class="actions">
+            {{#if isTurn}}
+              <li><a href="/game/{{id}}">Make your turn</a></li>
+            {{else}}
+              <li><a href="/game/{{id}}">View the game</a></li>
+            {{/if}}
+          </ul>
+          <ul class="stats">
+            <li><span class="number">{{turns}}</span> Turns</li>
+            {{#if isTurn}}
+              <li>It's your turn</li>
+            {{else}}
+              <li>It's <a href="{{opponent.profileUrl}}">{{opponent.name}}</a>'s turn</li>
+            {{/if}}
+          </ul>
+        </div>
+      {{/each}}
+    </section>
+  {{/if}}
+
+  {{#if openGames}}
+    <section class="games-list">
+      <h2 class="bordered">Games you could join:</h2>
+      {{#each openGames}}
+        <div class="game-vcard game-{{lowercase type}}">
+          {{#with opponent}}
+            <a href="#" class="user-icon">
+              <img src="{{avatarUrl}}" width="40" height="40">
+            </a>
+            <a href="{{profileUrl}}" class="name">{{name}}</a>
+          {{/with}}
+
+          <ul class="actions">
+            <li><a href="/game/{{id}}/join" data-method="put">Join this game</a></li>
+          </ul>
+          <ul class="stats">
+            <li>Waiting for players</li>
+          </ul>
+        </div>
+      {{/each}}
+    </section>
+  {{/if}}
+
+  {{#if waitingGames}}
+    <section class="games-list">
+      <h2 class="bordered">Your games waiting for players</h2>
+      {{#each waitingGames}}
+        <div class="game-vcard game-{{lowercase type}}">
+          <span class="user-icon question">?</span>
+
+          <ul class="actions">
             <li><a href="/game/{{id}}">View the game</a></li>
-          {{/if}}
-        </ul>
-        <ul class="stats">
-          <li><span class="number">{{turns}}</span> Turns</li>
-          {{#if isTurn}}
-            <li>It's your turn</li>
-          {{else}}
-            <li>It's <a href="{{opponent.profileUrl}}">{{opponent.name}}</a>'s turn</li>
-          {{/if}}
-        </ul>
-      </div>
-    {{/each}}
-  </section>
-{{/if}}
-
-{{#if openGames}}
-  <section class="games-list">
-    <h2 class="bordered">Games you could join:</h2>
-    {{#each openGames}}
-      <div class="game-vcard game-{{lowercase type}}">
-        {{#with opponent}}
-          <a href="#" class="user-icon">
-            <img src="{{avatarUrl}}" width="40" height="40">
-          </a>
-          <a href="{{profileUrl}}" class="name">{{name}}</a>
-        {{/with}}
-
-        <ul class="actions">
-          <li><a href="/game/{{id}}/join" data-method="put">Join this game</a></li>
-        </ul>
-        <ul class="stats">
-          <li>Waiting for players</li>
-        </ul>
-      </div>
-    {{/each}}
-  </section>
-{{/if}}
-
-{{#if waitingGames}}
-  <section class="games-list">
-    <h2 class="bordered">Your games waiting for players</h2>
-    {{#each waitingGames}}
-      <div class="game-vcard game-{{lowercase type}}">
-        <span class="user-icon question">?</span>
-
-        <ul class="actions">
-          <li><a href="/game/{{id}}">View the game</a></li>
-          <li><a href="/game/{{id}}" data-method="delete">Delete game</a></li>
-        </ul>
-        <ul class="stats">
-          <li>Waiting for players</li>
-        </ul>
-      </div>
-    {{/each}}
-  </section>
-{{/if}}
+            <li><a href="/game/{{id}}" data-method="delete">Delete game</a></li>
+          </ul>
+          <ul class="stats">
+            <li>Waiting for players</li>
+          </ul>
+        </div>
+      {{/each}}
+    </section>
+  {{/if}}
+</div>
 
 
-<div id="chat">
+<div id="chat" class="chat hidden">
   <div class="content"></div>
   <input type="text">
 </div>
 {{{js 'webpage'}}}
 <script>
-  // TODO: make the chat work
-  var chat   = new Chat('#chat', io.connect('http://localhost:8124/chat'), { channel: '{{channel}}' });
+  var chat   = new Chat('#chat', io.connect('/chat'), {
+        channel: '{{channel}}',
+        username: '{{username}}',
+        hideable: true
+      });
 </script>
 
 <section id="game-layer-cloned" class="layer full-size is-closed">

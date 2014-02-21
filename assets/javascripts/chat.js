@@ -10,6 +10,9 @@
     this.$content = this.$container.find('.content');
     this._initSocket(socket);
     this._startObservers(this.$container);
+    if (options.hideable) {
+      this._setupHideable(this.$container);
+    }
   };
 
   Chat.prototype = {
@@ -44,13 +47,26 @@
       });
     },
     _startObservers: function($chatContainer) {
-      var self = this;
+      var self = this,
+          $input = $chatContainer.find('input');
+      $chatContainer.on('click', function(event) {
+        $input.focus();
+      });
       $chatContainer.on('keyup', 'input', function(event) {
         if (event.which === 13) {
           self.send(event.target.value);
           event.target.value = '';
         }
       });
+    },
+    _setupHideable: function _setupHideable($chatContainer) {
+      $chatContainer.find('input')
+        .on('focus', function() {
+          $chatContainer.removeClass('hidden');
+        })
+        .on('blur', function() {
+          $chatContainer.addClass('hidden');
+        });
     }
   };
 
