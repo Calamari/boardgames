@@ -92,6 +92,16 @@ describe('Game', function() {
       game.started.should.eql(false);
     });
 
+    it('writes into when person gets added', function() {
+      game.addPlayer('ralf');
+
+      expect(game.log.length).to.equal(1);
+      var line = game.log[0];
+      expect(line.name).to.equal('join');
+      expect(line.player).to.equal(1);
+      expect(line.playerName).to.equal('ralf');
+    });
+
     describe('when having enough players', function() {
       beforeEach(function() {
         game.addPlayer('alf');
@@ -163,6 +173,16 @@ describe('Game', function() {
       game.endGame(1);
       game.ended.should.eql(true);
       game.winner.should.eql(1);
+    });
+
+    it('writes into log', function() {
+      var previousLength = game.log.length;
+      game.endGame(1);
+
+      expect(game.log.length).to.equal(previousLength+1);
+      var line = game.log[previousLength];
+      expect(line.name).to.equal('win');
+      expect(line.player).to.equal(1);
     });
 
     it('adds gamesLost and gamesWon to appropriate user statistics on save', function(done) {
@@ -346,6 +366,19 @@ describe('Game', function() {
     it('sets timestamp endedAt', function() {
       game.giveUp('one');
       game.endedAt.should.not.eql(null);
+    });
+
+    it('writes into log', function() {
+      var previousLength = game.log.length;
+      game.giveUp('one');
+
+      expect(game.log.length).to.equal(previousLength+2);
+      var line = game.log[previousLength];
+      expect(line.name).to.equal('giveUp');
+      expect(line.player).to.equal(1);
+      line = game.log[previousLength+1];
+      expect(line.name).to.equal('win');
+      expect(line.player).to.equal(2);
     });
 
     it('sets winner to the other player', function() {

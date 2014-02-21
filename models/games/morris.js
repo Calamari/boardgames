@@ -156,6 +156,7 @@ var gameDef = {
             game.data.takeMode = false;
             game.markModified('data');
 
+            game.addToLog('take', playerNumber, { from: { x: from.x, y: from.y } });
             cb(null, {
               removePieces: removePieces,
               newPlayer   : game.actualPlayer,
@@ -205,6 +206,7 @@ var gameDef = {
             game.nextTurn();
           }
 
+          game.addToLog('move', playerNumber, { from: { x: from.x, y: from.y }, to: { x: to.x, y: to.y } });
           cb(null, {
             movePieces  : movePieces,
             newPlayer   : game.actualPlayer,
@@ -253,6 +255,7 @@ var gameDef = {
             game.markModified('data');
           }
 
+          game.addToLog('set', playerNumber, { to: { x: to.x, y: to.y } });
           cb(null, {
             addPieces : addPieces,
             newPlayer : game.actualPlayer,

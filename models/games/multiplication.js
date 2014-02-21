@@ -166,6 +166,7 @@ var gameDef = {
           capturedPieces = captureUnitsAround(game.board.stones, playerNumber, to.x, to.y);
           game.nextTurn();
           game.markModified('board');
+          game.addToLog('move', playerNumber, { from: { x: from.x, y: from.y }, to: { x: to.x, y: to.y } });
           cb(null, {
             addPieces      : addPieces,
             movePieces     : movePieces,

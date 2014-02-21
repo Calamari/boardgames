@@ -1,4 +1,5 @@
 var sinon     = require('sinon'),
+    expect    = require('expect.js'),
 
     GameTypes = require('../../../models/game_types'),
     Tafl      = require('../../../models/games/tafl'),
@@ -92,6 +93,22 @@ describe('Games/Tafl (Tablut)', function() {
             done();
           });
         });
+
+        it('writes into log', function(done) {
+          var previousLength = game.log.length;
+          Tablut.actions.move(game, { from: [4,3], to: [5,3], user: 'one' }, function(err) {
+            expect(game.log.length).to.equal(previousLength+1);
+            var line = game.log[previousLength];
+            expect(line.name).to.equal('move');
+            expect(line.from.x).to.equal(4);
+            expect(line.from.y).to.equal(3);
+            expect(line.to.x).to.equal(5);
+            expect(line.to.y).to.equal(3);
+            expect(line.player).to.equal(1);
+            done();
+          });
+        });
+
 
         it('moving a piece one field works', function(done) {
           Tablut.actions.move(game, { from: [4,3], to: [5,3], user: 'one' }, function(err) {

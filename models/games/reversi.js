@@ -171,6 +171,7 @@ var gameDef = {
         }
         game.markModified('board');
 
+        game.addToLog('set', playerNumber, { to: { x: to.x, y: to.y } });
         cb(null, {
           addPieces      : addPieces,
           capturedPieces : capturedPieces,

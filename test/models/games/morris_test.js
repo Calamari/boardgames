@@ -138,6 +138,19 @@ describe('Games/Morris', function() {
             });
           });
 
+          it('writes into log', function(done) {
+            var previousLength = game.log.length;
+            NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err) {
+              expect(game.log.length).to.equal(previousLength+1);
+              var line = game.log[previousLength];
+              expect(line.name).to.equal('set');
+              expect(line.to.x).to.equal(0);
+              expect(line.to.y).to.equal(0);
+              expect(line.player).to.equal(1);
+              done();
+            });
+          });
+
           it('sets next player after setting piece', function(done) {
             sinon.spy(game, 'nextTurn');
             NineMorris.actions.set(game, { to: [0,0], user: 'one' }, function(err) {
@@ -278,6 +291,21 @@ describe('Games/Morris', function() {
                 done();
               //});
             });
+
+          it('writes into log', function(done) {
+            var previousLength = game.log.length;
+            NineMorris.actions.move(game, { from: [6,0], to: [0,0], user: 'one' }, function(err, data) {
+              expect(game.log.length).to.equal(previousLength+1);
+              var line = game.log[previousLength];
+              expect(line.name).to.equal('move');
+              expect(line.from.x).to.equal(6);
+              expect(line.from.y).to.equal(0);
+              expect(line.to.x).to.equal(0);
+              expect(line.to.y).to.equal(0);
+              expect(line.player).to.equal(1);
+              done();
+            });
+          });
 
             describe('after moving piece', function() {
               var sendData;
@@ -463,6 +491,20 @@ describe('Games/Morris', function() {
             it('send error INVALID_MOVE if there is no stone', function(done) {
               NineMorris.actions.take(game, { from: [0,0], user: 'one' }, function(err) {
                 err.message.should.eql('INVALID_MOVE');
+                done();
+              });
+            });
+
+            it('writes into log', function(done) {
+              preset8Stones(game);
+              var previousLength = game.log.length;
+              NineMorris.actions.take(game, { from: [6,12], user: 'one' }, function(err, data) {
+                expect(game.log.length).to.equal(previousLength+1);
+                var line = game.log[previousLength];
+                expect(line.name).to.equal('take');
+                expect(line.from.x).to.equal(6);
+                expect(line.from.y).to.equal(12);
+                expect(line.player).to.equal(1);
                 done();
               });
             });

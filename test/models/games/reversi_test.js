@@ -73,6 +73,19 @@ describe('Games/Reversi', function() {
           });
         });
 
+        it('writes into log', function(done) {
+          var previousLength = game.log.length;
+          Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
+            expect(game.log.length).to.equal(previousLength+1);
+            var line = game.log[previousLength];
+            expect(line.name).to.equal('set');
+            expect(line.to.x).to.equal(3);
+            expect(line.to.y).to.equal(5);
+            expect(line.player).to.equal(1);
+            done();
+          });
+        });
+
         it('places the stone on the board', function(done) {
           Reversi.actions.set(game, { to: [3,5], user: 'one' }, function(err) {
             game.board.stones[5][3].should.eql(1);

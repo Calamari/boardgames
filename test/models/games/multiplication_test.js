@@ -1,4 +1,5 @@
 var sinon    = require('sinon'),
+    expect   = require('expect.js'),
 
     Multiplication = require('../../../models/games/multiplication').getDefinition();
     Game           = require('../../../models/game');
@@ -53,6 +54,21 @@ describe('Games/Multiplication', function() {
         it('send error INVALID_MOVE if move is not allowed', function(done) {
           Multiplication.actions.move(game, { from: [0,0], to: [3,0], user: 'one' }, function(err) {
             err.message.should.eql('INVALID_MOVE');
+            done();
+          });
+        });
+
+        it('writes into log', function(done) {
+          var previousLength = game.log.length;
+          Multiplication.actions.move(game, { from: [0,0], to: [1,0], user: 'one' }, function(err) {
+            expect(game.log.length).to.equal(previousLength+1);
+            var line = game.log[previousLength];
+            expect(line.name).to.equal('move');
+            expect(line.from.x).to.equal(0);
+            expect(line.from.y).to.equal(0);
+            expect(line.to.x).to.equal(1);
+            expect(line.to.y).to.equal(0);
+            expect(line.player).to.equal(1);
             done();
           });
         });

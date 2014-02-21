@@ -19,7 +19,7 @@ var gameSchema = mongoose.Schema({
     winner: { 'type': Number },                      // indiciates who one (in not zero player number)
     actualPlayer: { 'type': Number },                // who's turn is it (in not zero player number)
     turns: { 'type': Number, 'default': 0 },         // how many turns have been played
-    log: { 'type': [String] },                       // some log messages
+    log: { 'type': [Mixed] },                        // some log messages (name is mandatory, can have additional keys)
     createdAt: { 'type': Date, 'default': Date.now },// when was the game created
     startedAt: { 'type': Date },                     // when did the game start
     endedAt: { 'type': Date }                        // when did the game end
@@ -70,6 +70,7 @@ gameSchema.virtual('nextPlayerPosition').get(function () {
 gameSchema.methods.addPlayer = function(playerName) {
   if (this.players.length < this.definition.maxPlayers && this.players.indexOf(playerName) === -1) {
     this.players.push(playerName);
+    this.addToLog('join', this.players.length, { playerName: playerName });
     return true;
   } else {
     return false;
@@ -162,10 +163,18 @@ gameSchema.methods.action = function(action, data, cb) {
   }
 };
 
+gameSchema.methods.addToLog = function addToLog(name, player, data) {
+  data = data || {};
+  data.name = name;
+  data.player = player;
+  this.log.push(data);
+};
+
 gameSchema.methods.giveUp = function(player) {
   if (typeof player === 'number') {
     player = this.players[player-1];
   }
+  this.addToLog('giveUp', this.players.indexOf(player)+1);
   this.endGame(this.players[0] === player ? this.players[1] : this.players[0]);
 };
 
@@ -176,6 +185,7 @@ gameSchema.methods.endGame = function(winner) {
   this.ended = true;
   this.endedAt = Date.now();
   this.winner = typeof winner === 'number' ? winner : this.players.indexOf(winner) + 1;
+  this.addToLog('win', this.winner);
   this.pre('save', function(done) {
     if (called) { return done(); }
     called = true;
