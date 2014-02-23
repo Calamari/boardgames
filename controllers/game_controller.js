@@ -151,10 +151,7 @@ module.exports = function(app) {
         });
 
         game.save(function() {
-          req.user.statistics.increment('gamesStarted');
-          req.user.save(function() {
-            res.redirect('/game/' + game.id);
-          });
+          res.redirect('/game/' + game.id);
         });
       }
     });

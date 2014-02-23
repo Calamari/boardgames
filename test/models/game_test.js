@@ -63,6 +63,7 @@ describe('Game', function() {
 
   describe('#startGame', function() {
     var game,
+        gameCreator,
         testGameDef = {
           minPlayers: 2,
           maxPlayers: 2,
@@ -72,12 +73,21 @@ describe('Game', function() {
           onStart: function() {}
         },
         orig;
+
     beforeEach(function() {
       orig = GameTypes.get;
       sinon.spy(testGameDef, 'newBoard');
       sinon.spy(testGameDef, 'onStart');
       GameTypes.get = function() { return testGameDef; };
       game = new Game({ type: 'TestGame' });
+    });
+
+    beforeEach(function(done) {
+      User.remove(done);
+    });
+    beforeEach(function(done) {
+      gameCreator = new User({ username: 'alf', email: 'alf@alf.de', password: 'password' });
+      gameCreator.save(done);
     });
 
     afterEach(function() {
@@ -92,7 +102,7 @@ describe('Game', function() {
       game.started.should.eql(false);
     });
 
-    it('writes into when person gets added', function() {
+    it('writes into log when person gets added', function() {
       game.addPlayer('ralf');
 
       expect(game.log.length).to.equal(1);
@@ -106,6 +116,15 @@ describe('Game', function() {
       beforeEach(function() {
         game.addPlayer('alf');
         game.addPlayer('ralf');
+      });
+
+      it('increases statistics for gamesStarted for game creator', function(done) {
+        game.startGame(function() {
+          User.findOne({ username: 'alf' }, function(err, user) {
+            expect(user.statistics.gamesStarted).to.equal(1);
+            done();
+          });
+        });
       });
 
       it('calls onStart of game Definition', function() {

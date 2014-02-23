@@ -77,15 +77,27 @@ gameSchema.methods.addPlayer = function(playerName) {
   }
 };
 
-gameSchema.methods.startGame = function() {
-  var definition = this.definition;
+gameSchema.methods.startGame = function(cb) {
+  var definition = this.definition,
+      User       = mongoose.model('User'),
+      self       = this,
+      error;
+
   if (this.players.length < definition.minPlayers) {
-    return new Error('NOT_ENOUGH_PLAYERS');
+    error = new Error('NOT_ENOUGH_PLAYERS')
+    cb && cb(error);
+    return error;
   }
   this.board = definition.newBoard(this);
   definition.onStart(this);
   this.started = true;
   this.actualPlayer = 1;
+  User.findOne({ username: this.players[0] }, function(err, user) {
+    if (err) { return cb && cb(err); }
+    if (!user) { return cb && cb(new Error('User starting the game ' + self._id + ' not found.')); }
+    user.statistics.increment('gamesStarted');
+    user.save(cb);
+  });
 };
 
 gameSchema.methods.scoreOf = function(playerName) {
