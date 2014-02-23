@@ -16,6 +16,11 @@
       .on('click', '.help-link', function(event) {
         event.preventDefault();
         self.element.toggleClass('is-helping');
+      })
+      .on('click', '.success-link', function(event) {
+        config.onSuccess && config.onSuccess.call(self);
+        event.preventDefault();
+        self.close();
       });
     this.open();
   };

@@ -10,10 +10,10 @@
     <li id="score" class="score"></li>
     <li id="game-state"></li>
     {{#if canGiveUp}}
-      <li><a href="/game/{{game.id}}/give_up" data-method="put">give up</a></li>
+      <li><a data-confirm='{"title":"Do you really want to give up?"}' href="/game/{{game.id}}/give_up" data-method="put">give up</a></li>
     {{/if}}
     {{#if canCancel}}
-      <li><a href="/game/{{game.id}}/cancel" data-method="put">cancel game</a></li>
+      <li><a data-confirm='{"title":"Do you really want cancel that game?"}' href="/game/{{game.id}}/cancel" data-method="put">cancel game</a></li>
     {{/if}}
     {{#if canJoin}}
       <li><a href="/game/{{game.id}}/join" data-method="put">join</a></li>

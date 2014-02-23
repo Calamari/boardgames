@@ -9,6 +9,10 @@
 //= require canvas.js
 //= require canvas_board.js
 
+// MY BEHAVIORS
+//= require behaviors/data_layer.js
+//= require behaviors/data_method.js
+
 // BOARD RELATED
 //= require board/stone.js
 //= require board/field.js

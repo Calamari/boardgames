@@ -28,4 +28,22 @@
       return false;
     });
   });
+
+  $(doc).find('a[data-confirm]').on('click.behaviors', function(event) {
+    event.preventDefault();
+    var link  = $(event.currentTarget),
+        data  = link.data('confirm'),
+        layer = new Layer('#confirm-layer', {
+          onSuccess: function() {
+            if (link.data('method')) {
+              handleMethod(link);
+            } else {
+              location.href = link.attr('href');
+            }
+          }
+        });
+    layer.element.find('.text').html(data.text);
+    layer.element.find('.title').html(data.title);
+    return false;
+  });
 }(jQuery, document));
