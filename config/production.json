@@ -1,4 +1,8 @@
 {
+  "app": {
+    "address": "81.169.250.33",
+    "port":    8125
+  },
   "mongodb": {
     "url": "localhost",
     "port": 27017,
