@@ -34,7 +34,10 @@
     "mocha": "~1.17.1",
     "should": "*",
     "expect.js": "*",
-    "sinon": "*"
+    "sinon": "*",
+    "supertest": "~0.9.0",
+    "cheerio": "~0.13.1",
+    "factory-lady": "~0.1.0"
   },
   "scripts": {
     "start": "node server",

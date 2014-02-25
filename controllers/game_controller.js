@@ -43,11 +43,13 @@ module.exports = function(app) {
       req.game.remove(function(err) {
         if (err) {
           req.flash('error', 'Game could not be removed.');
+        } else {
+          req.flash('success', 'Game successfully removed.');
         }
         res.redirect('/');
       });
     } else {
-      req.flash('error', 'You cannot remove this game.');
+      req.flash('error', 'You can not remove this game.');
       res.redirect('/');
     }
   });
