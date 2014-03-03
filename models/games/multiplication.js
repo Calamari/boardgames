@@ -82,9 +82,8 @@ function countStones(game) {
 
 function canStoneOfPlayerMoveHere(board, x, y, playerNr) {
   var dx, dy;
-
-  for (dy=1; dy<=2; ++dy) {
-    for (dx=1; dx<=2; ++dx) {
+  for (dy=-2; dy<=2; ++dy) {
+    for (dx=-2; dx<=2; ++dx) {
       if (getStone(board, x+dx, y+dy) === playerNr) {
         return true;
       }
