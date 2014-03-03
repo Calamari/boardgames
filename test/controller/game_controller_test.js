@@ -14,7 +14,7 @@ var request = require('supertest'),
 require('../factories/user_factory');
 require('../factories/game_factory');
 
-describe.only('GameController', function() {
+describe('GameController', function() {
   var loggedInUser;
 
   before(function(done) {
