@@ -23,7 +23,7 @@
           self.element.toggleClass('is-helping');
         })
         .on('click.layer', '.success-link', function(event) {
-          config.onSuccess && config.onSuccess.call(self);
+          self._config.onSuccess && self._config.onSuccess.call(self);
           event.preventDefault();
           self.close();
         });
