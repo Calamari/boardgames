@@ -3,6 +3,8 @@ var mongoose = require('mongoose'),
     async    = require('async'),
     expect   = require('expect.js'),
 
+    Factory  = require('factory-lady'),
+
     User     = require('../../models/user');
 
 describe('User', function() {
@@ -39,9 +41,7 @@ describe('User', function() {
     it('does not allow strange chars in the username', function(done) {
       var wrongNames = ['äpfel', '<script>', 'feta cheese'];
       async.each(wrongNames, function(name, next) {
-        console.log(arguments);
         new User({ username: name }).save(function(err) {
-          console.log(err);
           expect(err.errors).to.have.key('username');
           next();
         });
@@ -148,6 +148,46 @@ describe('User', function() {
       var user = new User({ email: 'MeIs@cool.com ' });
       expect(user.avatarUrl).to.be('http://www.gravatar.com/avatar/' + hash.digest('hex') + '?d=retro');
       done();
+    });
+  });
+
+  describe('User#incrementStats', function() {
+    var user1, user2;
+    beforeEach(function(done) {
+      Factory.create('user', function(user) {
+        user1 = user;
+        done();
+      });
+    });
+    beforeEach(function(done) {
+      Factory.create('user', function(user) {
+        user2 = user;
+        done();
+      });
+    });
+
+    it('adds one to given stat for single user', function(done) {
+      User.incrementStats({ username: user1.username }, 'gamesWon', function(err) {
+        if (err) { throw err; }
+        User.findOne({ username: user1.username }, function(err, user) {
+          expect(user.statistics.gamesWon).to.be(1);
+          done();
+        });
+      });
+    });
+
+    it('adds one to given stat for multiple users', function(done) {
+      User.incrementStats({ username: { $in: [user1.username, user2.username] } }, 'gamesLost', function(err) {
+        if (err) { throw err; }
+        User.findOne({ username: user1.username }, function(err, user) {
+          expect(user.statistics.gamesLost).to.be(1);
+
+          User.findOne({ username: user2.username }, function(err, user) {
+            expect(user.statistics.gamesLost).to.be(1);
+            done();
+          });
+        });
+      });
     });
   });
 });

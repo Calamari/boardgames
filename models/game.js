@@ -2,6 +2,7 @@
 "use strict";
 
 var mongoose  = require('mongoose'),
+    async     = require('async'),
 
     Mixed     = mongoose.Schema.Types.Mixed,
     GameTypes = require('./game_types'),
@@ -201,24 +202,15 @@ gameSchema.methods.endGame = function(winner) {
   this.pre('save', function(done) {
     if (called) { return done(); }
     called = true;
-    User.findOne({ username: game.winnerName }, function(err, user) {
-      if (!err && user) {
-        user.statistics.increment('gamesWon');
-        user.save();
+
+    async.parallel([
+      function(cb) {
+        User.incrementStats({ username: game.winnerName }, 'gamesWon', cb);
+      },
+      function(cb) {
+        User.incrementStats({ username: { $in: game.looserNames } }, 'gamesLost', cb);
       }
-
-      User.find({ username: { $in: game.looserNames } }, function(err, users) {
-        if (!err && users) {
-          users.forEach(function(user) {
-            user.statistics.increment('gamesLost');
-            user.save();
-          });
-        }
-        done();
-      });
-
-    });
-
+    ], done);
   });
 };
 

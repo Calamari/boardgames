@@ -109,15 +109,12 @@ describe('Games/Multiplication', function() {
 
         describe('if there are some enemy pieces standing around', function() {
           beforeEach(function() {
-            console.log(game);
             game.board.stones[0][1] = 1;
-            console.log(game.board.stones);
           });
 
           it('does not end the game', function(done) {
             game.actualPlayer = 2;
             game.action('move', { from: [7,0], to: [6,0], user: 'two' }, function(err, data) {
-              console.log(arguments);
               expect(data.gameEnded).to.eql(null);
               done();
             });

@@ -163,8 +163,7 @@ describe('Game', function() {
           game = new Game({ type: 'Multiplication' });
           game.addPlayer('one');
           game.addPlayer('two');
-          game.startGame();
-          done();
+          game.startGame(done);
         });
       });
     });
@@ -212,6 +211,7 @@ describe('Game', function() {
           User.findOne({ username: 'one' }, function(err, winningUser) {
             expect(winningUser.statistics.gamesWon).to.eql(1);
             expect(winningUser.statistics.gamesLost).to.eql(0);
+
             User.findOne({ username: 'two' }, function(err, loosingUser) {
               expect(loosingUser.statistics.gamesWon).to.eql(0);
               expect(loosingUser.statistics.gamesLost).to.eql(1);

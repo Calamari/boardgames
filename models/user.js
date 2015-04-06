@@ -3,6 +3,7 @@
 
 var mongoose = require('mongoose'),
     bcrypt   = require('bcrypt'),
+    async    = require('async'),
 
     Statistics = require('./statistic'),
 
@@ -80,6 +81,19 @@ userSchema.pre('save', function(next) {
     });
   });
 });
+
+userSchema.statics.incrementStats = function incrementStats(where, statKey, cb) {
+  this.find(where, function(err, users) {
+    if (!err && users) {
+      async.parallel(users.map(function(user) {
+        return function(innerCb) {
+          user.statistics.increment(statKey);
+          user.save(innerCb);
+        };
+      }), cb);
+    } else { cb(err); }
+  });
+};
 
 var User = mongoose.model('User', userSchema);
 module.exports = User;
