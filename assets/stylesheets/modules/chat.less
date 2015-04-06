@@ -1,6 +1,7 @@
 .chat {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUCAIAAADDbMD2AAAAH0lEQVQImWN4++U7EyMDAwIzYmczQPF/ZPwfjc/AAAB//gwBtMlL7wAAAABJRU5ErkJggg==);
-  border-left: 1px solid #999;
+  // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUCAIAAADDbMD2AAAAH0lEQVQImWN4++U7EyMDAwIzYmczQPF/ZPwfjc/AAAB//gwBtMlL7wAAAABJRU5ErkJggg==);
+  background: #fff;
+  border-left: 1px solid #ccc;
   display: inline-block;
   font-family: @monospace;
   margin-left: 20px;
@@ -12,6 +13,7 @@
   vertical-align: top;
   width: 400px;
   .transition(right 250ms);
+  .material-shadow(1);
 
   &.hidden {
     right: -210px;
@@ -42,14 +44,14 @@
   }
 
   input {
-    width: 390px;
+    width: 400px;
     position: absolute;
-    bottom: 0;
+    font-size: 14px;
+    bottom: 6px;
+    padding: 0.4em;
   }
 
   p {
     font-size: 14px;
   }
 }
-
-

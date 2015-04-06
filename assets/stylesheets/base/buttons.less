@@ -7,19 +7,22 @@ button,
   cursor: pointer;
   font-size: 0.85em;
   padding: 8px 14px;
+  margin-right: 1em;
   .transition(background-color 200ms);
+  .material-shadow(1);
 
   &:hover {
     background: darken(@blue, 10%);
     color: #fff;
     text-decoration: none;
+    .material-shadow(0);
   }
 
   &.positive {
     background: @green;
 
     &:hover {
-      background: darken(@green, 10%);
+      // background: lighten(@green, 10%);
     }
   }
 

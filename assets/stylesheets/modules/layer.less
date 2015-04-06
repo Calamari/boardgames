@@ -4,14 +4,11 @@
   visibility: visible;
 
   .wrap {
-    background: #fff;
-    border: 1px solid @line-color;
-    padding: 20px 30px;
     position: absolute;
     top: 10%;
     z-index: 100;
-    .box-shadow(0 0 5px rgba(0, 0, 0, 0.2));
     .border-radius(3px);
+    .perspective(1000px);
 
     h1 {
       margin-top: 2px;
@@ -19,10 +16,13 @@
       padding-bottom: 6px;
       overflow: hidden;
     }
+
+    p {
+      margin-bottom: 1em;
+    }
   }
 
   .help-link {
-    float: right;
     font-family: @sans-serif;
     color: @grey;
 
@@ -32,6 +32,7 @@
   }
 
   h1 .help-link {
+    float: right;
     font-size: 0.6em;
   }
 
@@ -77,19 +78,36 @@
     visibility: hidden;
   }
 
+  .wrap > div {
+    background: #fff;
+    border: 1px solid @line-color;
+    padding: 20px 30px;
+    .backface-visibility(hidden);
+    .transform-style(preserve-3d);
+    .transition(all 0.4s ease-in-out);
+    .material-shadow(4);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .normal-text {
-    display: block;
+    z-index: 101;
+    .transform(rotateY(0deg));
   }
   .help-text {
-    display: none;
+    z-index: 100;
+    .transform(rotateY(-179deg));
   }
 
   &.is-helping {
     .normal-text {
-      display: none;
+      .transform(rotateY(179deg));
     }
     .help-text {
-      display: block;
+      .transform(rotateY(0deg));
     }
   }
 }

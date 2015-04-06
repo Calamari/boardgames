@@ -12,6 +12,8 @@
     this._startObservers(this.$container);
     if (options.hideable) {
       this._setupHideable(this.$container);
+    } else {
+      this.$container.removeClass('hidden');
     }
   };
 

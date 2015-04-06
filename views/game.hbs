@@ -22,7 +22,7 @@
 </div>
 <div class="wrap">
   <div id="gamefield"></div>
-  <div id="chat" class="chat">
+  <div id="chat" class="chat hidden">
     <div class="content"></div>
     <input type="text">
   </div>
@@ -35,7 +35,8 @@
 (function() {
   var chat   = new Chat('#chat', io.connect('/chat'), {
         channel: 'game-{{game.id}}',
-        username: '{{username}}'
+        username: '{{username}}',
+        hideable: window.innerWidth < 800
       }),
       logger = (function() {
         return {
