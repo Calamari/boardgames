@@ -1,3 +1,10 @@
+<div class="fixed-bar">
+  <ul class="nav-bar">
+    <li><a href="/" class="home">Boardgames</a></li>
+    <li class="username-you"><a href="/profile/{{username}}">{{user.username}}</a></li>
+  </ul>
+</div>
+
 <h1>User: {{user.username}}</h1>
 <img src="{{user.avatarUrl}}&s=120">
 {{#if isOwnProfile}}
