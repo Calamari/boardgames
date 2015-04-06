@@ -20,15 +20,15 @@
     {{/if}}
   </ul>
 </div>
-<div class="wrap">
-  <div id="gamefield"></div>
-  <div id="chat" class="chat hidden">
-    <div class="content"></div>
-    <input type="text">
-  </div>
-</div>
 
+<section class="game-area">
+  <div id="gamefield"></div>
+
+</section>
 <label><input type="checkbox" id="possibile-moves-switch"> Show possible moves</label>
+
+{{> partials/_chat}}
+
 {{{js 'webpage'}}}
 {{{js 'gamepage'}}}
 <script>

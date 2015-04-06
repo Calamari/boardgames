@@ -104,10 +104,7 @@
 </div>
 
 
-<div id="chat" class="chat hidden">
-  <div class="content"></div>
-  <input type="text">
-</div>
+{{> partials/_chat}}
 {{{js 'webpage'}}}
 <script>
   var chat   = new Chat('#chat', io.connect('/chat'), {
