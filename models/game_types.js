@@ -25,6 +25,10 @@ var GameTypes = (function() {
     newGame: function(type, config) {
       var Game = require('mongoose').model('Game');
       return new Game({ type: type, config: config });
+    },
+    newHotseatGame: function(type, config) {
+      var Game = require('mongoose').model('Game');
+      return new Game({ type: type, config: config, hotseat: true });
     }
   };
 }());

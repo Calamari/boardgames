@@ -28,6 +28,7 @@ module.exports = function(app) {
     req.socketeer.set('username', req.user.username);
     req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
     res.render('game', {
+      hotseat:            req.game.hotseat,
       canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
       canJoin:            !req.game.started && !req.game.isPlayer(req.user.username),
       canCancel:          !req.game.started && req.game.owner === req.user.username,
@@ -126,36 +127,52 @@ module.exports = function(app) {
     }
   });
 
-  app.post('/game/:type', auth.redirectIfLogin, function(req, res, next) {
-    var Game = mongoose.model('Game'),
-        type = req.params.type,
-        game;
+  function createGame(hotseat) {
+    return function(req, res, next) {
+      var Game = mongoose.model('Game'),
+          type = req.params.type,
+          game, config;
 
-    if (type === 'Morris') {
-      // TODO: That is a mock right now and has to be replaced with better game start process
-      game = GameTypes.newGame('Morris', { type: 9 });
-    } else if (type === 'Tafl') {
-      game = GameTypes.newGame('Tafl', { type: 'Tablut'});
-    } else {
-      game = GameTypes.newGame(type);
-    }
-
-    game.save(function(err) {
-      if (err) {
-        req.flash('error', 'Game of type "' + type + '" could not be created.');
-        res.redirect('/');
-      } else {
-        game.addPlayer(req.user.username);
-        req.socketeer.send('notification', {
-          title:    req.user.username + ' has created a new Game of ' + type,
-          url:      '/game/' + game.id,
-          linkText: 'Check it out'
-        });
-
-        game.save(function() {
-          res.redirect('/game/' + game.id);
-        });
+      if (type === 'Morris') {
+        // TODO: That is a mock right now and has to be replaced with better game start process
+        config = { type: 9 };
+      } else if (type === 'Tafl') {
+        config = { type: 'Tablut' };
       }
-    });
-  });
+      if (hotseat) {
+        game = GameTypes.newHotseatGame(type, config);
+      } else {
+        game = GameTypes.newGame(type, config);
+      }
+
+      game.save(function(err) {
+        if (err) {
+          req.flash('error', 'Game of type "' + type + '" could not be created.');
+          res.redirect('/');
+        } else {
+          game.addPlayer(req.user.username);
+          req.socketeer.send('notification', {
+            title:    req.user.username + ' has created a new Game of ' + type,
+            url:      '/game/' + game.id,
+            linkText: 'Check it out'
+          });
+
+          if (hotseat) {
+            game.startGame(function() {
+              game.save(function() {
+                res.redirect('/game/' + game.id);
+              });
+            });
+          } else {
+            game.save(function() {
+              res.redirect('/game/' + game.id);
+            });
+          }
+        }
+      });
+    }
+  }
+
+  app.post('/game/:type', auth.redirectIfLogin, createGame(false));
+  app.post('/hotseat/:type', auth.redirectIfLogin, createGame(true));
 };

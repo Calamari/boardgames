@@ -96,6 +96,29 @@ describe('Game', function() {
       testGameDef.onStart.restore();
     });
 
+    describe('hotseat game', function() {
+      beforeEach(function() {
+        game = new Game({ type: 'TestGame', hotseat: true });
+      });
+
+      it('increases statistics for hotseatGamesStarted instead of gamesStarted', function(done) {
+        game.addPlayer('alf');
+        game.startGame(function() {
+          User.findOne({ username: 'alf' }, function(err, user) {
+            expect(user.statistics.hotseatGamesStarted).to.equal(1);
+            expect(user.statistics.gamesStarted).to.equal(0);
+            done();
+          });
+        });
+      });
+
+      it('returns error if not enough players', function() {
+        var err = game.startGame();
+        err.message.should.eql('NOT_ENOUGH_PLAYERS');
+        game.started.should.eql(false);
+      });
+    });
+
     it('returns error if not enough players', function() {
       var err = game.startGame();
       err.message.should.eql('NOT_ENOUGH_PLAYERS');
@@ -217,6 +240,31 @@ describe('Game', function() {
               expect(loosingUser.statistics.gamesLost).to.eql(1);
               done();
             });
+          });
+        });
+      });
+    });
+  });
+
+  describe('hotseat game', function() {
+    describe('#endGame', function() {
+      var game, winningUser, loosingUser;
+      beforeEach(function(done) {
+        winningUser = new User({ username: 'one', password: 'qwertz', email: 'one@gmail.com' });
+        winningUser.save(function() {
+          game = new Game({ type: 'Multiplication', hotseat: true });
+          game.addPlayer('one');
+          game.startGame(done);
+        });
+      });
+
+      it('does not increase any win or loose statistics for user', function(done) {
+        game.endGame(1);
+        game.save(function() {
+          User.findOne({ username: 'one' }, function(err, user) {
+            expect(user.statistics.gamesWon).to.eql(0);
+            expect(user.statistics.gamesLost).to.eql(0);
+            done();
           });
         });
       });

@@ -17,7 +17,7 @@ function Statistic(user) {
   defineGetters(this);
 }
 
-Statistic.METRICS = ['gamesStarted', 'gamesJoined', 'gamesWon', 'gamesLost'];
+Statistic.METRICS = ['gamesStarted', 'gamesJoined', 'gamesWon', 'gamesLost', 'hotseatGamesStarted'];
 
 Statistic.prototype = {
   get: function(key, date) {

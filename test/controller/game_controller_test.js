@@ -35,6 +35,27 @@ describe('GameController', function() {
       express.request.user = loggedInUser;
     });
 
+    describe('POST /hotseat/:type', function() {
+      it('does create a hotseat game (that is of course started)', function(done) {
+        request(app)
+        .post('/hotseat/Reversi')
+        .expect('Content-Type', /text\/plain/)
+        .end(function(err, res) {
+          expect(res.status).to.equal(302);
+          expect(res.header.location).to.match(/^\/game\/[a-f0-9]+$/);
+          Game.findOne(function(err, game) {
+            expect(game.type).to.equal('Reversi');
+            expect(game.hotseat).to.be.true;
+            expect(game.players).to.have.length(2);
+            expect(game.players[0]).to.equal(loggedInUser.username);
+            expect(game.players[1]).to.equal(loggedInUser.username);
+            expect(game.started).to.be.true;
+            done();
+          });
+        });
+      });
+    });
+
     describe('POST /game/:type', function() {
       it('does create the game', function(done) {
         request(app)

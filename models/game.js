@@ -13,6 +13,7 @@ var gameSchema = mongoose.Schema({
     score: { 'type': [Number] },                     // the actual score of each player
     board: { 'type': Mixed, 'default': {} },         // data about the current board
     type: { 'type': String, 'required': true },      // which type of game it is
+    hotseat: { 'type': Boolean, 'default': false },  // Indicator if this game is a hotseat game (2 player on 1 screen)
     config: { 'type': Mixed, 'default': {} },        // contains game options like which kind of morris game
     data: { 'type': Mixed, 'default': {} },          // contains additional data about the game
     started: { 'type': Boolean, 'default': false },  // is game started?
@@ -84,6 +85,19 @@ gameSchema.methods.startGame = function(cb) {
       self       = this,
       error;
 
+  if (this.hotseat) {
+    // Hotseat games need on player and will be filled up with this player
+    if (this.players.length < 1) {
+      error = new Error('NOT_ENOUGH_PLAYERS')
+      cb && cb(error);
+      return error;
+    } else {
+      // Fill up the game with the same player
+      for (var i = definition.minPlayers - this.players.length; i--;) {
+        this.players.push(this.players[0]);
+      }
+    }
+  }
   if (this.players.length < definition.minPlayers) {
     error = new Error('NOT_ENOUGH_PLAYERS')
     cb && cb(error);
@@ -96,7 +110,7 @@ gameSchema.methods.startGame = function(cb) {
   User.findOne({ username: this.players[0] }, function(err, user) {
     if (err) { return cb && cb(err); }
     if (!user) { return cb && cb(new Error('User starting the game ' + self._id + ' not found.')); }
-    user.statistics.increment('gamesStarted');
+    user.statistics.increment( self.hotseat ? 'hotseatGamesStarted' : 'gamesStarted');
     user.save(cb);
   });
 };
@@ -199,19 +213,22 @@ gameSchema.methods.endGame = function(winner) {
   this.endedAt = Date.now();
   this.winner = typeof winner === 'number' ? winner : this.players.indexOf(winner) + 1;
   this.addToLog('win', this.winner);
-  this.pre('save', function(done) {
-    if (called) { return done(); }
-    called = true;
 
-    async.parallel([
-      function(cb) {
-        User.incrementStats({ username: game.winnerName }, 'gamesWon', cb);
-      },
-      function(cb) {
-        User.incrementStats({ username: { $in: game.looserNames } }, 'gamesLost', cb);
-      }
-    ], done);
-  });
+  if (!this.hotseat) {
+    this.pre('save', function(done) {
+      if (called) { return done(); }
+      called = true;
+
+      async.parallel([
+        function(cb) {
+          User.incrementStats({ username: game.winnerName }, 'gamesWon', cb);
+        },
+        function(cb) {
+          User.incrementStats({ username: { $in: game.looserNames } }, 'gamesLost', cb);
+        }
+      ], done);
+    });
+  }
 };
 
 gameSchema.methods.dataForGameStarted = function(events) {

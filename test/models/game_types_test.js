@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
 
+    expect   = require('expect.js'),
+
     GameTypes = require('../../models/game_types');
 
 describe('GameTypes', function() {
@@ -18,6 +20,15 @@ describe('GameTypes', function() {
   it('#containsType validates game type correclty', function(done) {
     GameTypes.containsType('Multiplication').should.eql(true);
     GameTypes.containsType('NoGame').should.eql(false);
+    done();
+  });
+
+  it('#newHotseatGame creates hotseat game', function(done) {
+    var givenConfig = { foo: 'config' };
+    var game = GameTypes.newHotseatGame('Multiplication', givenConfig);
+    expect(game.type).to.eql('Multiplication');
+    expect(game.config).to.eql(givenConfig);
+    expect(game.hotseat).to.be.true;
     done();
   });
 });
