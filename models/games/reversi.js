@@ -5,6 +5,9 @@ var jaz = require('jaz-toolkit'),
 
     undef;
 
+// TODOs:
+// - Win if you capture all enemy stones is missing
+
 function getNeighbours(x, y) {
   var fields = [],
       xi, yi;
@@ -145,7 +148,7 @@ var gameDef = {
   actions: {
     set: function(game, data, cb) {
       var to   = data.to,
-          playerNumber = game.getPlayerPosition(data.user),
+          playerNumber = game.actualPlayer,
           addPieces, removePieces, capturedPieces;
 
       // from and to can be point objects or arrays with 2 numbers
