@@ -81,14 +81,14 @@ describe('Games/Tafl (Tablut)', function() {
         });
 
         it('send error NOT_YOUR_PIECE if moving not your piece', function(done) {
-          Tablut.actions.move(game, { from: [7,7], to: [7,6], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [7,7], to: [7,6] }, function(err) {
             err.message.should.eql('NOT_YOUR_PIECE');
             done();
           });
         });
 
         it('send error INVALID_MOVE if move is not allowed', function(done) {
-          Tablut.actions.move(game, { from: [4,3], to: [8,0], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [8,0] }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
@@ -96,7 +96,7 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('writes into log', function(done) {
           var previousLength = game.log.length;
-          Tablut.actions.move(game, { from: [4,3], to: [5,3], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [5,3] }, function(err) {
             expect(game.log.length).to.equal(previousLength+1);
             var line = game.log[previousLength];
             expect(line.name).to.equal('move');
@@ -111,7 +111,7 @@ describe('Games/Tafl (Tablut)', function() {
 
 
         it('moving a piece one field works', function(done) {
-          Tablut.actions.move(game, { from: [4,3], to: [5,3], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [5,3] }, function(err) {
             game.board.stones[3][4].should.eql('');
             game.board.stones[3][5].should.eql('1s');
             done();
@@ -119,7 +119,7 @@ describe('Games/Tafl (Tablut)', function() {
         });
 
         it('moving a piece over more fields works', function(done) {
-          Tablut.actions.move(game, { from: [4,3], to: [6,3], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [6,3] }, function(err) {
             game.board.stones[3][4].should.eql('');
             game.board.stones[3][6].should.eql('1s');
             done();
@@ -127,7 +127,7 @@ describe('Games/Tafl (Tablut)', function() {
         });
 
         it('send error INVALID_MOVE if moving diagonal', function(done) {
-          Tablut.actions.move(game, { from: [4,3], to: [3,2], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [3,2] }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
@@ -135,14 +135,15 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('a simple stone cannot move to corner fields (player 1)', function(done) {
           game.board.stones[0][2] = '1s';
-          Tablut.actions.move(game, { from: [2,0], to: [0,0], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [2,0], to: [0,0] }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('a simple stone cannot move to corner fields (player 2)', function(done) {
-          Tablut.actions.move(game, { from: [3,0], to: [0,0], user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: [3,0], to: [0,0] }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
@@ -157,21 +158,22 @@ describe('Games/Tafl (Tablut)', function() {
           });
 
           it('the king cant go back to center field again', function(done) {
-            Tablut.actions.move(game, { from: [3,4], to: [4,4], user: 'one' }, function(err) {
+            Tablut.actions.move(game, { from: [3,4], to: [4,4] }, function(err) {
               err.message.should.eql('INVALID_MOVE');
               done();
             });
           });
 
           it('the swedes can not enter the center field', function(done) {
-            Tablut.actions.move(game, { from: [4,3], to: [4,4], user: 'one' }, function(err) {
+            Tablut.actions.move(game, { from: [4,3], to: [4,4] }, function(err) {
               err.message.should.eql('INVALID_MOVE');
               done();
             });
           });
 
           it('the moscovits can not enter the center field either', function(done) {
-            Tablut.actions.move(game, { from: [7,4], to: [4,4], user: 'two' }, function(err) {
+            game.actualPlayer = 2;
+            Tablut.actions.move(game, { from: [7,4], to: [4,4] }, function(err) {
               err.message.should.eql('INVALID_MOVE');
               done();
             });
@@ -180,7 +182,7 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('sets next player after moving piece', function(done) {
           sinon.spy(game, 'nextTurn');
-          Tablut.actions.move(game, { from: [4,3], to: [6,3], user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: [4,3], to: [6,3] }, function(err) {
             game.actualPlayer.should.eql(2);
             game.nextTurn.calledOnce.should.eql(true);
             done(err);
@@ -189,7 +191,7 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('also excepts {x:x,y:y} point objects as from and to', function(done) {
           sinon.spy(game, 'nextTurn');
-          Tablut.actions.move(game, { from: { x: 4, y: 3 }, to: { x: 6, y: 3 }, user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: { x: 4, y: 3 }, to: { x: 6, y: 3 } }, function(err) {
             game.actualPlayer.should.eql(2);
             game.nextTurn.calledOnce.should.eql(true);
             done(err);
@@ -198,21 +200,24 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('units cannot go through other units (x axis)', function(done) {
           game.board.stones[4][3] = '';
-          Tablut.actions.move(game, { from: { x: 0, y: 4 }, to: { x: 3, y: 4 }, user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 0, y: 4 }, to: { x: 3, y: 4 } }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('units cannot go through other units (y axis)', function(done) {
-          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 3 }, user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 3 } }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
         });
 
         it('units cannot go where other units stand', function(done) {
-          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 4 }, user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 4 } }, function(err) {
             err.message.should.eql('INVALID_MOVE');
             done();
           });
@@ -221,7 +226,8 @@ describe('Games/Tafl (Tablut)', function() {
         it('if a Swede is surrounded on opposing sides, it is caputured', function(done) {
           game.board.stones[4][3] = '';
           game.board.stones[0][3] = '2s';
-          Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 }, user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 } }, function(err) {
             game.board.stones[4][3].should.eql('2s');
             game.board.stones[4][2].should.eql(''); // this one was surrounded
             game.board.stones[0][3].should.eql('');
@@ -231,7 +237,7 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('if a Muscovite is surrounded on opposing sides, it is caputured', function(done) {
           game.board.stones[3][3] = '2s';
-          Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 3 }, user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 3 } }, function(err) {
             game.board.stones[3][2].should.eql('1s');
             game.board.stones[3][3].should.eql(''); // this one was surrounded
             game.board.stones[4][2].should.eql('');
@@ -243,7 +249,8 @@ describe('Games/Tafl (Tablut)', function() {
           game.board.stones[4][3] = '';
           game.board.stones[4][2] = '1k';
           game.board.stones[4][4] = '';
-          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 4 }, user: 'two' }, function(err) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 3, y: 8 }, to: { x: 3, y: 4 } }, function(err) {
             game.board.stones[4][3].should.eql('2s');
             game.board.stones[4][2].should.eql('1k'); // this one was surrounded
             game.board.stones[8][3].should.eql('');
@@ -254,7 +261,7 @@ describe('Games/Tafl (Tablut)', function() {
         it('if a Muscovite is not surrounded on opposing sides, it is not caputured', function(done) {
           game.board.stones[6][0] = '';
           game.board.stones[6][1] = '2s';
-          Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 6 }, user: 'one' }, function(err) {
+          Tablut.actions.move(game, { from: { x: 2, y: 4 }, to: { x: 2, y: 6 } }, function(err) {
             game.board.stones[6][1].should.eql('2s');
             done(err);
           });
@@ -262,11 +269,12 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('sends update information on captured pieces', function(done) {
           game.board.stones[4][3] = '';
-          Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 }, user: 'two' }, function(err, data) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 3, y: 0 }, to: { x: 3, y: 4 } }, function(err, data) {
             data.removePieces.should.be.instanceOf(Array);
             data.removePieces.should.have.lengthOf(1);
             data.removePieces.should.includeEql({ x: 2, y: 4 });
-            data.newPlayer.should.eql(2);
+            data.newPlayer.should.eql(1);
             done();
           });
         });
@@ -277,7 +285,8 @@ describe('Games/Tafl (Tablut)', function() {
           game.board.stones[4][2] = '1k';
           game.board.stones[4][4] = '2s';
           game.board.stones[8][2] = '2s';
-          Tablut.actions.move(game, { from: { x: 2, y: 8 }, to: { x: 2, y: 5 }, user: 'two' }, function(err, data) {
+          game.actualPlayer = 2;
+          Tablut.actions.move(game, { from: { x: 2, y: 8 }, to: { x: 2, y: 5 } }, function(err, data) {
             data.gameEnded.should.eql({ winner: 2 });
             done(err);
           });
@@ -285,7 +294,7 @@ describe('Games/Tafl (Tablut)', function() {
 
         it('if the king moves to a corner piece, the Swedes win', function(done) {
           game.board.stones[0][1] = '1k';
-          Tablut.actions.move(game, { from: { x: 1, y: 0 }, to: { x: 0, y: 0 }, user: 'one' }, function(err, data) {
+          Tablut.actions.move(game, { from: { x: 1, y: 0 }, to: { x: 0, y: 0 } }, function(err, data) {
             data.gameEnded.should.eql({ winner: 1 });
             done(err);
           });

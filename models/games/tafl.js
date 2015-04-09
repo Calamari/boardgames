@@ -187,7 +187,7 @@ var gameDef = {
         move: function(game, data, cb) {
           var from = data.from,
               to   = data.to,
-              playerNumber = game.getPlayerPosition(data.user),
+              playerNumber = game.actualPlayer,
               addPieces, movePieces, removePieces,
               piece;
 

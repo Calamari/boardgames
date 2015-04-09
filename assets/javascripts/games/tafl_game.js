@@ -1,3 +1,9 @@
+
+
+// TODOs:
+// - The king disappears, but noone has won??
+
+
 (function(win, doc, Game, extend, TaflStone) {
   "use strict";
 
@@ -36,7 +42,7 @@
         this.move(selected, field);
         board.deselect();
       } else {
-        if (parseInt(field.getPlayer(), 10) === this.thisPlayerNr) {
+        if (parseInt(field.getPlayer(), 10) === this.actualPlayer) {
           board.select(field);
           highlightField = field;
           highlightField.highlight('rgba(0,155,255,.7)');
@@ -71,7 +77,7 @@
   };
 
   TaflGame.prototype.move = function(from, to) {
-    if (parseInt(this._board.getField(from.x, from.y).getPlayer(), 10) === this.thisPlayerNr && !parseInt(this._board.getField(to.x, to.y).getPlayer(), 10)) {
+    if (parseInt(this._board.getField(from.x, from.y).getPlayer(), 10) === this.actualPlayer && !parseInt(this._board.getField(to.x, to.y).getPlayer(), 10)) {
       var self = this;
 
       this.nextPlayer();
@@ -93,7 +99,7 @@
     for (xi=-1; xi<=1; ++xi) {
       for (yi=-1; yi<=1; ++yi) {
         if (this._board[yi+y] && this._board[yi+y][xi+x]) {
-          this._board[yi+y][xi+x] = this.thisPlayerNr;
+          this._board[yi+y][xi+x] = this.actualPlayer;
         }
       }
     }
