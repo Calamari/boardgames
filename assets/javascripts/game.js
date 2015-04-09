@@ -1,3 +1,7 @@
+
+// TODOs:
+// - Refactor the player handling to use the player object smartly
+
 (function(win, doc, CanvasBoard, Score) {
   "use strict";
 
@@ -64,7 +68,7 @@
     },
     _endGame: function(winner) {
       if (this.isHotseat) {
-        this._logger.log('Game is over! ' + this.getActualPlayer().name + ' has won.');
+        this._logger.log('Game is over! ' + this.getWinner().name + ' has won.');
       } else if (!this.thisPlayerNr) {
         this._logger.log('Game is over!');
       } else if (this.thisPlayerNr === winner) {
