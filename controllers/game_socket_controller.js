@@ -17,9 +17,9 @@ module.exports = function(socketeer, app) {
           cb({ error: err.message });
         } else if (!game) {
           cb({ error: 'GAME_NOT_FOUND' });
-        } else if (game.actualPlayer != game.getPlayerPosition(socket.get('username'))) {
-          // TODO: this should be done in the game rules section
-          cb({ error: "NOT_YOUR_TURN", actualPlayer: game.actualPlayer });
+        // } else if (game.actualPlayer != game.getPlayerPosition(socket.get('username'))) {
+        //   // TODO: this should be done in the game rules section
+        //   cb({ error: "NOT_YOUR_TURN", actualPlayer: game.actualPlayer });
         } else {
           var action = data.action;
           data.user = socket.get('username');
@@ -41,6 +41,7 @@ module.exports = function(socketeer, app) {
         }
       });
     } catch(e) {
+      app.logger.error(e);
       cb({ error: 'RELOAD_BROWSER' });
     }
   });
