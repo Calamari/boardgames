@@ -116,7 +116,7 @@ var gameDef = {
     actions: {
       take: function(game, data, cb) {
         var from              = data.from,
-            playerNumber      = game.getPlayerPosition(data.user),
+            playerNumber      = game.actualPlayer,
             otherPlayerNumber = playerNumber === 1 ? 2 : 1,
             gameEnded         = null,
             stone, removePieces, otherStoneCount;
@@ -170,7 +170,7 @@ var gameDef = {
       move: function(game, data, cb) {
         var from         = data.from,
             to           = data.to,
-            playerNumber = game.getPlayerPosition(data.user),
+            playerNumber = game.actualPlayer,
             movePieces, closedALine;
 
         // from and to can be point objects or arrays with 2 numbers
@@ -218,7 +218,7 @@ var gameDef = {
       },
       set: function(game, data, cb) {
         var to           = data.to,
-            playerNumber = game.getPlayerPosition(data.user),
+            playerNumber = game.actualPlayer,
             addPieces, closedALine;
 
         if (Array.isArray(to)) {

@@ -3,7 +3,9 @@
 
 var auth      = require('../filters/authentication'),
     mongoose  = require('mongoose'),
-    GameTypes = require('../models/game_types');
+    GameTypes = require('../models/game_types'),
+
+    GamePlayersDecorator = require('../decorators/game_players_decorator');
 
 
 function loadGameOr404(req, res, next) {
@@ -29,6 +31,8 @@ module.exports = function(app) {
     req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
     res.render('game', {
       hotseat:            req.game.hotseat,
+      hasEnded:           req.game.ended,
+      gamePlayerDecorator:new GamePlayersDecorator(req.game),
       canGiveUp:          req.game.started && !req.game.ended && req.game.isPlayer(req.user.username),
       canJoin:            !req.game.started && !req.game.isPlayer(req.user.username),
       canCancel:          !req.game.started && req.game.owner === req.user.username,

@@ -119,6 +119,7 @@ gameSchema.methods.scoreOf = function(playerName) {
   return this.score[this.getPlayerPosition(playerName)-1];
 };
 
+// DEPRECATED: actualPlayer should be used instead
 gameSchema.methods.getPlayerPosition = function(playerName) {
   var index = this.players.indexOf(playerName);
   return index === -1 ? false : index+1;
@@ -129,6 +130,7 @@ gameSchema.methods.getPlayerName = function(playerPos) {
 };
 
 gameSchema.methods.isPlayersTurn = function(player) {
+  if (this.hotseat) { return true; }
   var index = typeof player === 'string' ? this.players.indexOf(player)+1 : player;
   return index === this.actualPlayer ? true : false;
 };
@@ -243,7 +245,7 @@ gameSchema.statics.createGame = function createGame(type,config) {
 
 //TODO: tests
 gameSchema.statics.findWherePlayerCanJoin = function(username, cb) {
-  this.find({ players: { $ne: username }, started: false }, function(err, games) {
+  this.find({ players: { $ne: username }, started: false, hotseat: false }, function(err, games) {
     if (err) {
       cb(err);
     } else {

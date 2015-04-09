@@ -8,6 +8,8 @@
     this.isSpectator = config.isSpectator;
     this.actualPlayer = config.actualPlayer;
     this.thisPlayerNr = config.thisPlayerNr;
+    this.players = config.players;
+    this.isHotseat = config.isHotseat;
     this._gameStarted = config.gameStarted;
     this._gameEnded = config.gameEnded;
     this._winner = config.winner;
@@ -26,7 +28,8 @@
     _initBoard: function(stones) {
       this._board.updateBoard(stones);
       if (!this._config.hideScore) {
-        this._score = new Score(this._config.score, this._config.players, this._config.username);
+        this._playerNames = this.players.map(function(p) { return p.name; });
+        this._score = new Score(this._config.score, this._playerNames, this._config.username);
       }
       this._countPieces();
     },
@@ -58,7 +61,9 @@
       this.fire('change');
     },
     _endGame: function(winner) {
-      if (!this.thisPlayerNr) {
+      if (this.isHotseat) {
+        this._logger.log('Game is over! ' + this.getActualPlayer().name + ' has won.');
+      } else if (!this.thisPlayerNr) {
         this._logger.log('Game is over!');
       } else if (this.thisPlayerNr === winner) {
         this._logger.log('You have won! Contrgrats.');
@@ -154,19 +159,16 @@
       this.fire('change');
     },
     _isTurn: function() {
-      return !this._gameEnded && this.actualPlayer === this.thisPlayerNr;
+      return !this._gameEnded && this.getActualPlayer().canPlay();
     },
     nextPlayer: function() {
       this.actualPlayer = this.actualPlayer === 1 ? 2 : 1;
     },
-    isPlayer: function(name) {
-      return this._config.players.indexOf(name) !== -1;
-    },
     getWinner: function() {
-      return this._config.players[this._winner-1];
+      return this.players[this._winner-1];
     },
     getActualPlayer: function() {
-      return this._config.players[this.actualPlayer-1];
+      return this.players[this.actualPlayer-1];
     },
     getGameState: function() {
       if (this._gameEnded) { return 'ended'; }

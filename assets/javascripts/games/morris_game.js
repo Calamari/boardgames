@@ -1,3 +1,9 @@
+
+
+// TODO: -highlight stone on hover when in TAKE mode
+// TODO: -show what phase we are in right now
+
+
 (function(win, doc, Game, extend) {
   "use strict";
 
@@ -51,7 +57,7 @@
       switch(key) {
         case 'takeMode':
           self._data.takeMode = value;
-          if (value === self.thisPlayerNr) {
+          if (value === self.actualPlayer && self.getActualPlayer().canPlay()) {
             self._logger.log('You build a line, please take a stone of the enemy');
           }
           break;
@@ -101,7 +107,7 @@
   };
 
   MorrisGame.prototype.takeStone = function(field) {
-    if (this._isTurn() && field.getPlayer() && field.getPlayer() !== this.thisPlayerNr) {
+    if (this._isTurn() && field.getPlayer() && field.getPlayer() !== this.actualPlayer) {
       this._socketeer.emit('action', { action: 'take', from: field.point }, this._handleSocketResponse.bind(this));
     }
   };
@@ -120,7 +126,7 @@
           this._move(selected, field);
         }
         board.deselect();
-      } else if (field.getPlayer() === this.thisPlayerNr) {
+      } else if (field.getPlayer() === this.actualPlayer) {
         board.select(field);
         field.highlight();
       }
@@ -131,15 +137,15 @@
   };
 
   MorrisGame.prototype._getPhase = function() {
-    return this._data.phases ? this._data.phases[this.thisPlayerNr-1] : null;
+    return this._data.phases ? this._data.phases[this.actualPlayer-1] : null;
   };
 
   MorrisGame.prototype._isPhase = function(phase) {
-    return this._data.phases ? this._data.phases[this.thisPlayerNr-1] === phase : false;
+    return this._data.phases ? this._data.phases[this.actualPlayer-1] === phase : false;
   };
 
   MorrisGame.prototype._isTaking = function(phase) {
-    return this._data.takeMode === this.thisPlayerNr;
+    return this._data.takeMode === this.actualPlayer && this.getActualPlayer().canPlay();
   };
 
   win.MorrisGame = MorrisGame;

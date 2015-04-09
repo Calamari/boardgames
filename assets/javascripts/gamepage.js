@@ -27,6 +27,7 @@
 
 // GAME RELATED
 //= require score.js
+//= require player.js
 //= require game_state_display.js
 //= require game.js
 //= require games/cloned_game.js

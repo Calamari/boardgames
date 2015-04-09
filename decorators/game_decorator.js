@@ -21,6 +21,7 @@ function decorator(game, currentUser, users) {
     opponent : opponent,
     id       : game.id,
     isTurn   : game.isPlayersTurn(currentUser),
+    isHotseat: game.hotseat,
     type     : game.type === 'Multiplication' ? 'cloned' : game.type,
     turns    : game.turns,
     hasWon   : game.winnerName === currentUser,
