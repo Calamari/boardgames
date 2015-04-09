@@ -1,7 +1,9 @@
 
 
-// TODO: -highlight stone on hover when in TAKE mode
-// TODO: -show what phase we are in right now
+// TODOs:
+// - highlight stone on hover when in TAKE mode
+// - show what phase we are in right now
+// - nice overall handling of error codes
 
 
 (function(win, doc, Game, extend) {

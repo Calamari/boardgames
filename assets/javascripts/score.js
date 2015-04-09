@@ -15,7 +15,7 @@
       self._element.html('');
       this._names.forEach(function(name, index) {
         var displayName = name === self._username ? 'You' : name;
-        self._element.append((index === 0 ? displayName + ' ' : '') + '<span class="' + name + ' player' + index + '"></span>' + (index === 1 ? ' ' + displayName : ''));
+        self._element.append((index === 0 ? displayName + ' ' : '') + '<span data-player="' + name + '" class="player' + index + '"></span>' + (index === 1 ? ' ' + displayName : ''));
       });
     },
     _count: function(board, size) {
@@ -42,7 +42,7 @@
       this._names.forEach(function(name, index) {
         var count = self._counters[index+1],
             size  = (sum > 0) ? (count / sum) * self.width : self.width / self._names.length;
-        self._element.find('.' + name).css({ width: size }).html(count);
+        self._element.find('[data-player="' + name + '"]').css({ width: size }).html(count);
       });
     }
   };

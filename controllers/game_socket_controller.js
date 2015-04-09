@@ -25,6 +25,7 @@ module.exports = function(socketeer, app) {
           data.user = socket.get('username');
           game.action(action, data, function(err, data) {
             if (err) {
+              // TODO: err.message can be "No matching document found." if cloned game ends early (all stones are captured)
               cb({ error: err.message, actualPlayer: game.actualPlayer });
             } else {
               if (data.gameEnded) {

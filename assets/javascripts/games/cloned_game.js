@@ -35,7 +35,7 @@
         this.move(selected, field);
         board.deselect();
       } else {
-        if (field.getPlayer() === this.thisPlayerNr) {
+        if (field.getPlayer() === this.actualPlayer) {
           board.select(field);
           for (xi=-2; xi<=2; ++xi) {
             for (yi=-2; yi<=2; ++yi) {
@@ -51,7 +51,7 @@
     }
   };
   ClonedGame.prototype.move = function(from, to) {
-    if (this._board.getField(from.x, from.y).getPlayer() === this.thisPlayerNr && !this._board.getField(to.x, to.y).getPlayer()) {
+    if (this._board.getField(from.x, from.y).getPlayer() === this.actualPlayer && !this._board.getField(to.x, to.y).getPlayer()) {
       var distance = getDistance(from, to),
           self     = this;
 
@@ -64,6 +64,9 @@
         // this._captureEnemies(to.x, to.y);
         this.nextPlayer();
         this._socketeer.emit('action', { action: 'move', from: from.point, to: to.point }, function(data) {
+          if (data.error) {
+            self._logger.log('ERROR: ' + data.error);
+          }
       //    self._updateGame(data);
         });
       }
@@ -84,7 +87,7 @@
     for (xi=-1; xi<=1; ++xi) {
       for (yi=-1; yi<=1; ++yi) {
         if (this._board[yi+y] && this._board[yi+y][xi+x]) {
-          this._board[yi+y][xi+x] = this.thisPlayerNr;
+          this._board[yi+y][xi+x] = this.actualPlayer;
         }
       }
     }
