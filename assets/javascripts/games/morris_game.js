@@ -14,8 +14,8 @@
     config.hideScore = true;
     Game.call(this, container, config);
     this._data = config.data;
-    if (this._isTaking()) {
-      this._logger.log('You build a line, please take a stone of the enemy');
+    if (this._gameEnded) {
+      return;
     }
     if (this._isPhase('set')) {
       this._logger.log('You are in set phase.');
@@ -25,6 +25,9 @@
     }
     if (this._isPhase('fly')) {
       this._logger.log('You have only three stones left, move your stones around freely');
+    }
+    if (this._isTaking()) {
+      this._logger.log('You just build a line, please take a stone of the enemy');
     }
     // TODO: substiture score with indicator how far we are in set phase
   };
