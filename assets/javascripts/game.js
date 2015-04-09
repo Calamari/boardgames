@@ -51,6 +51,8 @@
         this._endGame(this._winner);
       } else if (this.isSpectator) {
         this._logger.log('You are just spectating.');
+      } else if (this.isHotseat) {
+        this._logger.log('It\'s turn of ' + this.getActualPlayer().name + '.');
       } else if (this.actualPlayer === this.thisPlayerNr) {
         this._logger.log('It\'s your turn.');
       } else {
