@@ -279,16 +279,28 @@ describe('Games/Tafl (Tablut)', function() {
           });
         });
 
-        it('if the king is surrounded on all four sides by Muscovites, the Muscovites win', function(done) {
-          game.board.stones[3][2] = '2s';
-          game.board.stones[4][3] = '2s';
-          game.board.stones[4][2] = '1k';
-          game.board.stones[4][4] = '2s';
-          game.board.stones[8][2] = '2s';
-          game.actualPlayer = 2;
-          Tablut.actions.move(game, { from: { x: 2, y: 8 }, to: { x: 2, y: 5 } }, function(err, data) {
-            data.gameEnded.should.eql({ winner: 2 });
-            done(err);
+        describe('if the king is surrounded on all four sides by Muscovites', function() {
+          beforeEach(function() {
+            game.board.stones[3][2] = '2s';
+            game.board.stones[4][3] = '2s';
+            game.board.stones[4][2] = '1k';
+            game.board.stones[4][4] = '2s';
+            game.board.stones[8][2] = '2s';
+            game.actualPlayer = 2;
+          });
+
+          it('the Muscovites win', function(done) {
+            Tablut.actions.move(game, { from: { x: 2, y: 8 }, to: { x: 2, y: 5 } }, function(err, data) {
+              data.gameEnded.should.eql({ winner: 2 });
+              done(err);
+            });
+          });
+
+          it('the king is not removed from board', function(done) {
+            Tablut.actions.move(game, { from: { x: 2, y: 8 }, to: { x: 2, y: 5 } }, function(err, data) {
+              data.removePieces.should.not.includeEql({ x: 2, y: 4, king: true });
+              done(err);
+            });
           });
         });
 

@@ -102,9 +102,9 @@ function checkForGameEnding(stones, removePieces) {
   if (stones[0][0] === '1k' || stones[0][8] === '1k' || stones[8][0] === '1k' || stones[8][8] === '1k') {
     return { winner: 1 };
   }
-  if (_.filter(removePieces, function(piece) {
-    return !!piece.king;
-  }).length) {
+  var indexOfKing = _.findIndex(removePieces, function(piece) { return piece.king; });
+  if (indexOfKing !== -1) {
+    removePieces.splice(indexOfKing, 1);
     return { winner: 2 };
   }
 }
