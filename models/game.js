@@ -155,6 +155,10 @@ gameSchema.methods.canCancel = function(player) {
   return !this.started && this.owner === player;
 };
 
+gameSchema.methods.canDelete = function(player) {
+  return this.hotseat && this.owner === player;
+};
+
 gameSchema.methods.getOpponents = function(playerName) {
   return this.players.filter(function(name) {
     return name !== playerName;

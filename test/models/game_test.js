@@ -475,6 +475,35 @@ describe('Game', function() {
     });
   });
 
+  describe('#canDelete', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('snow');
+    });
+
+    it('returns true for hotseat game and owner', function() {
+      game.hotseat = true;
+      game.canDelete('jon').should.equal(true);
+    });
+
+    it('returns false if hotseat game has started', function() {
+      game.hotseat = false;
+      game.canDelete('jon').should.equal(false);
+    });
+
+    it('returns false if player is not the owner', function() {
+      game.hotseat = true;
+      game.canDelete('snow').should.equal(false);
+    });
+
+    it('returns false if player is not in game', function() {
+      game.hotseat = true;
+      game.canDelete('bilbo').should.equal(false);
+    });
+  });
+
   describe('#giveUp', function() {
     var game, clock;
     beforeEach(function() {

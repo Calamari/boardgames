@@ -9,11 +9,11 @@
     <li> in a game of {{game.type}}:</li>
     <li id="score" class="score"></li>
     <li id="game-state"></li>
-    {{#if hotseat}}
+    {{#if canDelete}}
       {{#if hasEnded}}
-        <li><a data-confirm='{"title":"Do you really want to delete that game?"}' href="/game/{{game.id}}/cancel" data-method="put">delete game</a></li>
+        <li><a data-confirm='{"title":"Do you really want to delete that game?"}' href="/game/{{game.id}}" data-method="delete">delete game</a></li>
       {{else}}
-        <li><a data-confirm='{"title":"Do you really want to end that game?"}' href="/game/{{game.id}}/cancel" data-method="put">end game</a></li>
+        <li><a data-confirm='{"title":"Do you really want to end that game?"}' href="/game/{{game.id}}" data-method="delete">end game</a></li>
       {{/if}}
     {{else}}
       {{#if canGiveUp}}

@@ -31,8 +31,8 @@ module.exports = function(app) {
     req.socketeer.where({ gameId: req.game.id }).send('events.' + req.game.id, { userEntered: req.user.username });
     res.render('game', {
       hotseat:            req.game.hotseat,
-      hasEnded:           req.game.ended,
       gamePlayerDecorator:new GamePlayersDecorator(req.game),
+      canDelete:          req.game.canDelete(req.user.username),
       canGiveUp:          req.game.canGiveUp(req.user.username),
       canJoin:            req.game.canJoin(req.user.username),
       canCancel:          req.game.canCancel(req.user.username),
@@ -44,7 +44,7 @@ module.exports = function(app) {
   });
 
   app.delete('/game/:id', auth.redirectIfLogin, loadGameOr404, function(req, res, next) {
-    if (!req.game.started && req.game.owner === req.user.username) {
+    if (req.game.canDelete(req.user.username)) {
       req.game.remove(function(err) {
         if (err) {
           req.flash('error', 'Game could not be removed.');

@@ -275,7 +275,7 @@ describe('GameController', function() {
       describe('on own game that is not started', function() {
         var game;
         beforeEach(function(done) {
-          Factory.create('game', { players: [loggedInUser.username] }, function(g) {
+          Factory.create('game', { players: [loggedInUser.username], hotseat: true }, function(g) {
             game = g;
             done();
           });
