@@ -416,6 +416,65 @@ describe('Game', function() {
     });
   });
 
+  describe('#canGiveUp', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('snow');
+    });
+
+    it('returns false if game has not started', function() {
+      game.started = false;
+      game.canGiveUp('jon').should.equal(false);
+    });
+
+    it('returns false if player is not in game', function() {
+      game.started = true;
+      game.canGiveUp('bilbo').should.equal(false);
+    });
+
+    it('returns false if player is not in game', function() {
+      game.started = true;
+      game.ended = true;
+      game.canGiveUp('jon').should.equal(false);
+    });
+
+    it('returns true otherwise', function() {
+      game.started = true;
+      game.canGiveUp('jon').should.equal(true);
+    });
+  });
+
+  describe('#canCancel', function() {
+    var game;
+    beforeEach(function() {
+      game = new Game({ type: 'Multiplication' });
+      game.addPlayer('jon');
+      game.addPlayer('snow');
+    });
+
+    it('returns false if game has started', function() {
+      game.started = true;
+      game.canCancel('jon').should.equal(false);
+    });
+
+    it('returns false if player is not the owner', function() {
+      game.started = false;
+      game.canCancel('snow').should.equal(false);
+    });
+
+    it('returns false if player is not in game', function() {
+      game.started = false;
+      game.canCancel('bilbo').should.equal(false);
+    });
+
+    it('returns true for owner on not started games', function() {
+      game.started = false;
+      game.canCancel('jon').should.equal(true);
+    });
+  });
+
   describe('#giveUp', function() {
     var game, clock;
     beforeEach(function() {

@@ -144,10 +144,15 @@ gameSchema.methods.nextTurn = function(player) {
 };
 
 gameSchema.methods.canJoin = function(player) {
-  if (!this.started && this.players.length < this.definition.maxPlayers && !this.isPlayer(player)) {
-    return true;
-  }
-  return false;
+  return !this.started && this.players.length < this.definition.maxPlayers && !this.isPlayer(player);
+};
+
+gameSchema.methods.canGiveUp = function(player) {
+  return this.started && !this.ended && this.isPlayer(player);
+};
+
+gameSchema.methods.canCancel = function(player) {
+  return !this.started && this.owner === player;
 };
 
 gameSchema.methods.getOpponents = function(playerName) {
